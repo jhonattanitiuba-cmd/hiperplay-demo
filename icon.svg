@@ -1,7 +1,12 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-  <rect width="512" height="512" rx="112" fill="#1CA9F1"/>
-  <path d="M205 150 L205 330 L360 240 Z" fill="#ffffff" stroke="#ffffff" stroke-width="34" stroke-linejoin="round"/>
-  <circle cx="188" cy="396" r="24" fill="#ff5a5f"/>
-  <circle cx="256" cy="396" r="24" fill="#ffc534"/>
-  <circle cx="324" cy="396" r="24" fill="#27c08a"/>
+  <defs><linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#28b4f5"/><stop offset="1" stop-color="#1492d6"/></linearGradient></defs>
+  <rect width="512" height="512" rx="112" fill="url(#bg)"/>
+  <g font-family="'Baloo 2','Trebuchet MS',Verdana,sans-serif" font-weight="800" text-anchor="middle" paint-order="stroke" stroke="#ffffff" stroke-width="16" stroke-linejoin="round">
+    <text x="256" y="252" font-size="118">
+      <tspan fill="#ff5a5f">H</tspan><tspan fill="#ff8a3d">i</tspan><tspan fill="#27c08a">p</tspan><tspan fill="#ffc534">e</tspan><tspan fill="#ff5a5f">r</tspan>
+    </text>
+    <text x="256" y="392" font-size="118">
+      <tspan fill="#8b5cf6">P</tspan><tspan fill="#ffc534">l</tspan><tspan fill="#27c08a">a</tspan><tspan fill="#ff8a3d">y</tspan>
+    </text>
+  </g>
 </svg>
