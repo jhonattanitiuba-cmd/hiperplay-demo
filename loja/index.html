@@ -95,7 +95,7 @@
         <h2 id="catTitulo" class="brand text-3xl font-extrabold">Catálogo</h2>
         <p id="catSub" class="text-[var(--muted)] text-sm mt-1"></p>
       </div>
-      <div class="flex gap-2" id="lineTabs"></div>
+      <div class="flex flex-wrap gap-2 w-full sm:w-auto" id="lineTabs"></div>
     </div>
     <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-5" id="grid"></div>
   </div>
@@ -178,12 +178,16 @@ const SEED_ECOPLAY=[
   {nome:"Casinha Eco Madeira",tipo:"Madeira",descricao:"Casinha ecológica em madeira de reflorestamento.",preco:"Sob consulta",prazo:"a combinar",cores:[],ic:"tree-pine"},
   {nome:"Circuito Eco Aventura",tipo:"Madeira",descricao:"Circuito completo com balanço, ponte e muro de escalada.",preco:"Sob consulta",prazo:"a combinar",cores:[],ic:"mountain"},
 ];
-function carregarDiverkids(){
-  try{ const s=localStorage.getItem('hiperplay_db'); if(s){ const db=JSON.parse(s); if(db.produtos&&db.produtos.length) return db.produtos.map(p=>({nome:p.n,tipo:p.cat,descricao:p.desc,preco:p.pre,prazo:p.prazo,cores:p.cores||[],ic:p.ic})); } }catch(e){}
-  return SEED_DIVERKIDS;
-}
+// lê o catálogo do sistema (mesma origem) e agrupa por linha; linhas vazias caem na semente
 function carregarProdutos(){
-  return { DiverKids:carregarDiverkids(), HomePlay:SEED_HOMEPLAY, EcoPlay:SEED_ECOPLAY };
+  const base={DiverKids:[],HomePlay:[],EcoPlay:[]};
+  let sys=[];
+  try{ const s=localStorage.getItem('hiperplay_db'); if(s){ const db=JSON.parse(s); if(db.produtos) sys=db.produtos; } }catch(e){}
+  sys.forEach(p=>{ const ln=LINHAS[p.linha]?p.linha:'DiverKids'; base[ln].push({nome:p.n,tipo:p.cat,descricao:p.desc,preco:p.pre,prazo:p.prazo,cores:p.cores||[],ic:p.ic}); });
+  if(!base.DiverKids.length) base.DiverKids=SEED_DIVERKIDS;
+  if(!base.HomePlay.length) base.HomePlay=SEED_HOMEPLAY;
+  if(!base.EcoPlay.length) base.EcoPlay=SEED_ECOPLAY;
+  return base;
 }
 const corMap={V:'#e23b3b',A:'#ffc534',Az:'#1CA9F1'};
 function getFoto(nome){ try{ return localStorage.getItem('hiperplay_foto_'+slug(nome)); }catch(e){ return null; } }
@@ -262,9 +266,9 @@ function comprar(p){
     <div class="space-y-2">
       <input id="ck_nome" placeholder="Seu nome" class="card w-full px-3 py-2.5 text-sm">
       <input id="ck_fone" placeholder="Seu WhatsApp (com DDD)" class="card w-full px-3 py-2.5 text-sm">
-      <div class="flex gap-2">
-        <input id="ck_cep" placeholder="CEP" inputmode="numeric" class="card w-32 px-3 py-2.5 text-sm" oninput="buscarCep()">
-        <input id="ck_cidade" placeholder="Cidade" class="card flex-1 px-3 py-2.5 text-sm">
+      <div class="flex flex-wrap gap-2">
+        <input id="ck_cep" placeholder="CEP" inputmode="numeric" class="card flex-1 min-w-[120px] px-3 py-2.5 text-sm" oninput="buscarCep()">
+        <input id="ck_cidade" placeholder="Cidade" class="card flex-1 min-w-[150px] px-3 py-2.5 text-sm">
         <input id="ck_uf" placeholder="UF" maxlength="2" class="card w-16 px-3 py-2.5 text-sm uppercase">
       </div>
       <input id="ck_end" placeholder="Endereço, número e bairro" class="card w-full px-3 py-2.5 text-sm">
@@ -329,6 +333,12 @@ function initReveal(){
   const io=new IntersectionObserver(es=>es.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target);} }),{threshold:.12});
   document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
 }
+
+// ===== sync ao vivo com o sistema (mesma origem) =====
+function resync(){ DADOS=carregarProdutos(); renderGrid(); }
+window.addEventListener('storage',e=>{ if(!e.key || e.key.indexOf('hiperplay')===0) resync(); }); // edição em outra aba
+document.addEventListener('visibilitychange',()=>{ if(!document.hidden) resync(); });
+window.addEventListener('focus',resync);
 
 // init
 renderLinhas();
