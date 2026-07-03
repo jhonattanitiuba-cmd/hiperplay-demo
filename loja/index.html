@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Hiper Play Playgrounds — Você sonha, a gente realiza</title>
+<meta name="theme-color" content="#1CA9F1">
+<link rel="icon" type="image/svg+xml" href="../icon.svg">
+<link rel="apple-touch-icon" href="../icon.svg">
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://unpkg.com/lucide@latest"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Baloo+2:wght@600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --blue:#1CA9F1; --blue-d:#1492d6; --ink:#16324a; --muted:#65788c; --ice:#eef4fb; --line:#e2e9f2;
+    --green:#34c88f; --rosa:#ff7fb0; --amarelo:#ffcf5c; --roxo:#a78bfa; --laranja:#ff9a62;
+    --wpp:#25D366;
+  }
+  *{font-family:'Montserrat',sans-serif;-webkit-tap-highlight-color:transparent;}
+  body{color:var(--ink);background:#fff;overflow-x:hidden;}
+  .brand{font-family:'Baloo 2',cursive;}
+  .wordmark span{-webkit-text-stroke:3px #fff;paint-order:stroke fill;}
+  img{-webkit-user-drag:none;user-select:none;}
+  ::-webkit-scrollbar{width:9px}::-webkit-scrollbar-thumb{background:#cdd8e6;border-radius:9px}
+  .reveal{opacity:0;transform:translateY(26px);transition:opacity .7s ease,transform .7s cubic-bezier(.2,.8,.3,1);}
+  .reveal.in{opacity:1;transform:none;}
+  .card{background:#fff;border:1px solid var(--line);border-radius:22px;}
+  .chip{border-radius:999px;font-weight:700;font-size:12px;padding:7px 15px;cursor:pointer;transition:.18s;}
+  .btn{border-radius:14px;font-weight:700;transition:.18s;cursor:pointer;}
+  .btn:active{transform:scale(.96)}
+  @keyframes floaty{0%,100%{transform:translateY(0)}50%{transform:translateY(-9px)}}
+  .floaty{animation:floaty 3.5s ease-in-out infinite}
+  @keyframes pop{from{opacity:0;transform:translateY(16px) scale(.96)}to{opacity:1;transform:none}}
+  .blob{position:absolute;border-radius:50%;filter:blur(6px);opacity:.5;}
+  .prod:hover{transform:translateY(-6px);box-shadow:0 22px 40px -24px rgba(20,50,80,.5)}
+  .prod{transition:.2s}
+  .line-tab.active{color:#fff !important;}
+  /* modal */
+  #modal{position:fixed;inset:0;z-index:80;display:none;align-items:center;justify-content:center;padding:1rem}
+  #modal.open{display:flex}
+  #modal .bg{position:absolute;inset:0;background:rgba(10,30,50,.55)}
+  #modal .box{position:relative;max-width:460px;width:100%;max-height:90vh;overflow:auto;animation:pop .3s ease}
+  input,select{outline:none}
+  .wfloat{position:fixed;right:18px;bottom:18px;z-index:70;box-shadow:0 14px 30px -10px rgba(37,211,102,.7)}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="sticky top-0 z-50 bg-white/90 backdrop-blur border-b border-[var(--line)]">
+  <div class="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between gap-3">
+    <div class="wordmark brand text-2xl sm:text-3xl font-extrabold leading-none select-none">
+      <span style="color:var(--rosa)">H</span><span style="color:var(--laranja)">i</span><span style="color:var(--green)">p</span><span style="color:var(--amarelo)">e</span><span style="color:var(--rosa)">r</span>
+      <span style="color:var(--roxo)">P</span><span style="color:var(--amarelo)">l</span><span style="color:var(--green)">a</span><span style="color:var(--laranja)">y</span>
+    </div>
+    <a href="https://wa.me/5515997670033?text=Ol%C3%A1!%20Vim%20pela%20loja%20da%20Hiper%20Play%20e%20quero%20mais%20informa%C3%A7%C3%B5es." target="_blank" class="btn text-white text-sm px-4 py-2.5 flex items-center gap-2" style="background:var(--wpp)">
+      <svg viewBox="0 0 24 24" fill="currentColor" style="width:18px;height:18px"><path d="M.057 24l1.687-6.163a11.867 11.867 0 01-1.587-5.945C.16 5.335 5.495 0 12.05 0a11.817 11.817 0 018.413 3.488 11.824 11.824 0 013.48 8.414c-.003 6.557-5.338 11.892-11.893 11.892a11.9 11.9 0 01-5.688-1.448L.057 24zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884a9.86 9.86 0 001.51 5.26l-.999 3.648 3.978-1.042zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413z"/></svg>
+      <span class="hidden sm:inline">Falar no WhatsApp</span><span class="sm:hidden">WhatsApp</span>
+    </a>
+  </div>
+</header>
+
+<!-- HERO -->
+<section class="relative overflow-hidden" style="background:linear-gradient(135deg,#28b4f5,#1492d6)">
+  <div class="blob floaty" style="width:120px;height:120px;background:var(--amarelo);top:30px;left:8%"></div>
+  <div class="blob floaty" style="width:80px;height:80px;background:var(--rosa);bottom:40px;right:12%;animation-delay:.6s"></div>
+  <div class="blob floaty" style="width:60px;height:60px;background:var(--green);top:60%;left:20%;animation-delay:1.1s"></div>
+  <div class="max-w-6xl mx-auto px-4 py-16 sm:py-20 relative text-center text-white">
+    <div class="inline-flex items-center gap-2 chip mb-4" style="background:#ffffff2e"><i data-lucide="map-pin" style="width:14px;height:14px"></i> Araçoiaba da Serra · SP · entregamos para todo o Brasil</div>
+    <h1 class="brand text-4xl sm:text-6xl font-extrabold leading-tight">Você sonha, a gente realiza</h1>
+    <p class="mt-4 text-white/90 max-w-xl mx-auto">Fábrica de playgrounds e casinhas infantis de alta qualidade. Escolha uma linha e monte a diversão da criançada com segurança.</p>
+    <div class="mt-7 flex flex-wrap gap-3 justify-center">
+      <a href="#linhas" class="btn bg-white text-[var(--blue-d)] px-6 py-3 flex items-center gap-2"><i data-lucide="blocks" style="width:18px;height:18px"></i> Ver produtos</a>
+      <a href="https://wa.me/5515997670033" target="_blank" class="btn px-6 py-3 text-white flex items-center gap-2" style="background:var(--wpp)"><i data-lucide="message-circle" style="width:18px;height:18px"></i> Pedir orçamento</a>
+    </div>
+  </div>
+  <svg viewBox="0 0 1440 80" class="block w-full" style="margin-bottom:-2px"><path fill="#ffffff" d="M0,40 C240,90 480,0 720,30 C960,60 1200,10 1440,40 L1440,80 L0,80 Z"/></svg>
+</section>
+
+<!-- SELETOR DE LINHAS -->
+<section id="linhas" class="max-w-6xl mx-auto px-4 py-12">
+  <div class="text-center reveal">
+    <h2 class="brand text-3xl font-extrabold">Escolha a sua linha</h2>
+    <p class="text-[var(--muted)] mt-2">Cada linha tem um universo. Toque para ver o catálogo.</p>
+  </div>
+  <div class="grid sm:grid-cols-3 gap-5 mt-8" id="lineCards"></div>
+</section>
+
+<!-- CATÁLOGO -->
+<section id="catalogo" class="py-12" style="background:var(--ice)">
+  <div class="max-w-6xl mx-auto px-4">
+    <div class="flex flex-wrap items-center justify-between gap-4 mb-6">
+      <div>
+        <h2 id="catTitulo" class="brand text-3xl font-extrabold">Catálogo</h2>
+        <p id="catSub" class="text-[var(--muted)] text-sm mt-1"></p>
+      </div>
+      <div class="flex gap-2" id="lineTabs"></div>
+    </div>
+    <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-5" id="grid"></div>
+  </div>
+</section>
+
+<!-- COMO FUNCIONA -->
+<section class="max-w-6xl mx-auto px-4 py-14">
+  <h2 class="brand text-3xl font-extrabold text-center reveal">Como funciona</h2>
+  <div class="grid sm:grid-cols-3 gap-5 mt-8">
+    <div class="card p-6 text-center reveal"><div class="w-14 h-14 rounded-2xl grid place-items-center mx-auto text-white" style="background:var(--rosa)"><i data-lucide="hand-heart"></i></div><h3 class="font-bold mt-3">Escolha</h3><p class="text-sm text-[var(--muted)] mt-1">Selecione a linha e o brinquedo que combina com o espaço.</p></div>
+    <div class="card p-6 text-center reveal"><div class="w-14 h-14 rounded-2xl grid place-items-center mx-auto text-white" style="background:var(--green)"><i data-lucide="truck"></i></div><h3 class="font-bold mt-3">Frete</h3><p class="text-sm text-[var(--muted)] mt-1">Região de Sorocaba (100km): entrega em até <b>7 dias úteis</b>. Demais regiões: a combinar.</p></div>
+    <div class="card p-6 text-center reveal"><div class="w-14 h-14 rounded-2xl grid place-items-center mx-auto text-white" style="background:var(--roxo)"><i data-lucide="party-popper"></i></div><h3 class="font-bold mt-3">Diversão</h3><p class="text-sm text-[var(--muted)] mt-1">Instalação com segurança e a alegria garantida dos pequenos.</p></div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="text-white" style="background:#0f2740">
+  <div class="max-w-6xl mx-auto px-4 py-10 grid sm:grid-cols-3 gap-8">
+    <div>
+      <div class="wordmark brand text-3xl font-extrabold">
+        <span style="color:var(--rosa)">Hiper</span> <span style="color:var(--amarelo)">Play</span>
+      </div>
+      <p class="text-white/70 text-sm mt-2">Fábrica de Playgrounds e Casinhas. <br>Você sonha, a gente realiza.</p>
+    </div>
+    <div class="text-sm text-white/80">
+      <div class="font-bold text-white mb-2">Contato</div>
+      <div class="flex items-center gap-2 mb-1"><i data-lucide="phone" style="width:15px;height:15px"></i> (15) 99767-0033</div>
+      <div class="flex items-center gap-2"><i data-lucide="map-pin" style="width:15px;height:15px"></i> Rod. Raposo Tavares, km 129 — Araçoiaba da Serra/SP</div>
+    </div>
+    <div>
+      <div class="font-bold mb-2">Fale conosco</div>
+      <a href="https://wa.me/5515997670033" target="_blank" class="btn inline-flex text-white px-5 py-2.5 items-center gap-2" style="background:var(--wpp)"><i data-lucide="message-circle" style="width:18px;height:18px"></i> WhatsApp</a>
+    </div>
+  </div>
+  <div class="text-center text-white/50 text-xs pb-6">© Hiper Play Playgrounds · powered by Brava</div>
+</footer>
+
+<!-- WhatsApp flutuante -->
+<a href="https://wa.me/5515997670033?text=Ol%C3%A1!%20Quero%20falar%20com%20a%20Hiper%20Play." target="_blank" class="wfloat w-14 h-14 rounded-full grid place-items-center text-white floaty" style="background:var(--wpp)" title="WhatsApp">
+  <svg viewBox="0 0 24 24" fill="currentColor" style="width:28px;height:28px"><path d="M.057 24l1.687-6.163a11.867 11.867 0 01-1.587-5.945C.16 5.335 5.495 0 12.05 0a11.817 11.817 0 018.413 3.488 11.824 11.824 0 013.48 8.414c-.003 6.557-5.338 11.892-11.893 11.892a11.9 11.9 0 01-5.688-1.448L.057 24zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884a9.86 9.86 0 001.51 5.26l-.999 3.648 3.978-1.042zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413z"/></svg>
+</a>
+
+<!-- MODAL checkout -->
+<div id="modal"><div class="bg" onclick="fecharModal()"></div><div class="box card p-6" id="modalBox"></div></div>
+
+<script>
+const WPP='5515997670033';
+const slug=s=>(s||'').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[^a-z0-9]+/g,'_');
+
+// ===== LINHAS =====
+const LINHAS={
+  DiverKids:{sub:'Linha de Ferro',desc:'Playgrounds em estrutura metálica: balanças, gangorras, escorregadores e gira-giras.',cor:'var(--blue)',ic:'blocks'},
+  HomePlay:{sub:'Casinhas de Boneca',desc:'Casinhas encantadas — com escorregador, na árvore e modelos compactos.',cor:'var(--rosa)',ic:'castle'},
+  EcoPlay:{sub:'Playgrounds de Madeira',desc:'Linha ecológica em madeira tratada, natural e resistente.',cor:'var(--green)',ic:'trees'},
+};
+
+// ===== CATÁLOGO (ponto único de troca p/ Supabase futuramente) =====
+// DiverKids = mesmo catálogo do sistema (localStorage compartilhado na mesma origem) OU semente embutida.
+const SEED_DIVERKIDS=[
+  {nome:"Conjunto Playgrounds Infantil 3 em 1",tipo:"Conjuntos",descricao:"Balança dupla, gangorra e escorregador acoplados. Corrente 4mm.",preco:"R$ 2.999,99",prazo:"20 dias úteis",cores:["V","A","Az"],ic:"blocks"},
+  {nome:"Balança com 2 Assentos",tipo:"Balanças",descricao:"Estrutura de ferro com assentos em madeira tratada. Corrente 4mm.",preco:"R$ 1.450,00",prazo:"15 dias úteis",cores:["V","A","Az"],ic:"armchair"},
+  {nome:"Balança com 3 Assentos",tipo:"Balanças",descricao:"Estrutura de ferro com assentos em madeira tratada.",preco:"R$ 1.920,00",prazo:"15 dias úteis",cores:["V","A","Az"],ic:"armchair"},
+  {nome:"Balança com 4 Assentos",tipo:"Balanças",descricao:"Estrutura de ferro com assentos em madeira tratada.",preco:"R$ 2.980,00",prazo:"15 dias úteis",cores:["V","A","Az"],ic:"armchair"},
+  {nome:"Gangorra Simples",tipo:"Gangorras",descricao:"Gangorra individual com assentos em madeira tratada.",preco:"R$ 950,00",prazo:"15 dias úteis",cores:["V","A","Az"],ic:"scale"},
+  {nome:"Gangorra Dupla",tipo:"Gangorras",descricao:"2 gangorras acopladas com assentos em madeira tratada.",preco:"R$ 1.450,00",prazo:"15 dias úteis",cores:["V","A","Az"],ic:"scale"},
+  {nome:"Escorregador Pequeno",tipo:"Escorregadores",descricao:"Rampa 2,30m; altura 1,30m; escada de 5 degraus.",preco:"R$ 1.150,00",prazo:"15 dias úteis",cores:["V","A"],ic:"triangle-right"},
+  {nome:"Escorregador Médio",tipo:"Escorregadores",descricao:"Rampa 2,50m; altura 1,50m; escada de 6 degraus.",preco:"R$ 1.450,00",prazo:"15 dias úteis",cores:["V","A"],ic:"triangle-right"},
+  {nome:"Escorregador Grande",tipo:"Escorregadores",descricao:"Rampa 3,00m; altura 1,70m; escada de 7 degraus.",preco:"R$ 1.650,00",prazo:"15 dias úteis",cores:["V","A"],ic:"triangle-right"},
+  {nome:"Gira-gira Sextavado (6 lugares)",tipo:"Gira-gira",descricao:"6 lugares, assentos em madeira tratada e estrutura reforçada.",preco:"R$ 1.500,00",prazo:"15 dias úteis",cores:["V","A","Az"],ic:"loader"},
+];
+const SEED_HOMEPLAY=[
+  {nome:"Casinha de Boneca Encanto",tipo:"Casinha",descricao:"Casinha em madeira com varanda e janelas coloridas.",preco:"Sob consulta",prazo:"a combinar",cores:[],ic:"castle"},
+  {nome:"Casinha com Escorregador",tipo:"Casinha",descricao:"Casinha suspensa com escorregador e escada segura.",preco:"Sob consulta",prazo:"a combinar",cores:[],ic:"castle"},
+  {nome:"Casinha na Árvore",tipo:"Casinha",descricao:"Casinha modelo árvore, aventura e imaginação.",preco:"Sob consulta",prazo:"a combinar",cores:[],ic:"tent-tree"},
+  {nome:"Casinha Compacta",tipo:"Casinha",descricao:"Modelo compacto ideal para quintais menores.",preco:"Sob consulta",prazo:"a combinar",cores:[],ic:"home"},
+];
+const SEED_ECOPLAY=[
+  {nome:"Playground Eco Floresta",tipo:"Madeira",descricao:"Torre, escorregador e ponte em madeira tratada ecológica.",preco:"Sob consulta",prazo:"a combinar",cores:[],ic:"trees"},
+  {nome:"Torre Eco com Escorregador",tipo:"Madeira",descricao:"Torre em madeira natural com escorregador.",preco:"Sob consulta",prazo:"a combinar",cores:[],ic:"tent-tree"},
+  {nome:"Casinha Eco Madeira",tipo:"Madeira",descricao:"Casinha ecológica em madeira de reflorestamento.",preco:"Sob consulta",prazo:"a combinar",cores:[],ic:"tree-pine"},
+  {nome:"Circuito Eco Aventura",tipo:"Madeira",descricao:"Circuito completo com balanço, ponte e muro de escalada.",preco:"Sob consulta",prazo:"a combinar",cores:[],ic:"mountain"},
+];
+function carregarDiverkids(){
+  try{ const s=localStorage.getItem('hiperplay_db'); if(s){ const db=JSON.parse(s); if(db.produtos&&db.produtos.length) return db.produtos.map(p=>({nome:p.n,tipo:p.cat,descricao:p.desc,preco:p.pre,prazo:p.prazo,cores:p.cores||[],ic:p.ic})); } }catch(e){}
+  return SEED_DIVERKIDS;
+}
+function carregarProdutos(){
+  return { DiverKids:carregarDiverkids(), HomePlay:SEED_HOMEPLAY, EcoPlay:SEED_ECOPLAY };
+}
+const corMap={V:'#e23b3b',A:'#ffc534',Az:'#1CA9F1'};
+function getFoto(nome){ try{ return localStorage.getItem('hiperplay_foto_'+slug(nome)); }catch(e){ return null; } }
+
+let DADOS=carregarProdutos(), linhaAtual='DiverKids';
+
+// ===== RENDER LINHAS (cards + tabs) =====
+function renderLinhas(){
+  document.getElementById('lineCards').innerHTML=Object.entries(LINHAS).map(([k,l])=>`
+    <button onclick="selecionarLinha('${k}')" class="card p-6 text-left reveal prod" style="border-top:5px solid ${l.cor}">
+      <div class="w-14 h-14 rounded-2xl grid place-items-center text-white" style="background:${l.cor}"><i data-lucide="${l.ic}"></i></div>
+      <h3 class="brand text-2xl font-extrabold mt-3">${k}</h3>
+      <div class="text-sm font-semibold" style="color:${l.cor}">${l.sub}</div>
+      <p class="text-sm text-[var(--muted)] mt-2">${l.desc}</p>
+      <div class="mt-3 text-sm font-bold flex items-center gap-1" style="color:${l.cor}">Ver catálogo <i data-lucide="arrow-right" style="width:15px;height:15px"></i></div>
+    </button>`).join('');
+  document.getElementById('lineTabs').innerHTML=Object.keys(LINHAS).map(k=>`
+    <button class="line-tab chip ${k===linhaAtual?'active':'card'}" data-l="${k}" style="${k===linhaAtual?'background:'+LINHAS[k].cor:''}" onclick="selecionarLinha('${k}',true)">${k}</button>`).join('');
+  lucide.createIcons();
+}
+
+function selecionarLinha(k,scroll){
+  if(scroll===undefined) scroll=true;
+  linhaAtual=k; DADOS=carregarProdutos();
+  const l=LINHAS[k];
+  document.getElementById('catTitulo').textContent=k;
+  document.getElementById('catSub').textContent=l.sub+' · '+l.desc;
+  document.querySelectorAll('#lineTabs .line-tab').forEach(b=>{ const on=b.dataset.l===k; b.classList.toggle('active',on); b.classList.toggle('card',!on); b.style.background=on?l.cor:''; });
+  renderGrid();
+  if(scroll) document.getElementById('catalogo').scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+function renderGrid(){
+  const l=LINHAS[linhaAtual], list=DADOS[linhaAtual]||[];
+  document.getElementById('grid').innerHTML=list.map((p,i)=>{
+    const foto=getFoto(p.nome);
+    const msg=encodeURIComponent(`Olá! Tenho interesse no *${p.nome}* (linha ${linhaAtual}). Poderia me passar mais informações?`);
+    return `
+    <div class="card prod overflow-hidden flex flex-col" style="animation:pop .4s ease ${i*0.05}s both">
+      <div class="relative aspect-[4/3]" style="background:linear-gradient(135deg,#eef4fb,#dbe7f5)">
+        ${foto?`<img src="${foto}" class="w-full h-full object-contain bg-white p-3">`:`<div class="w-full h-full grid place-items-center"><i data-lucide="${p.ic||'blocks'}" style="width:52px;height:52px;color:${l.cor};opacity:.55"></i></div>`}
+        <span class="absolute top-3 left-3 chip text-white" style="background:${l.cor};padding:5px 12px">${linhaAtual}</span>
+        <a href="https://wa.me/${WPP}?text=${msg}" target="_blank" onclick="event.stopPropagation()" class="absolute top-3 right-3 w-10 h-10 rounded-full grid place-items-center text-white shadow-lg" style="background:var(--wpp)" title="Chamar no WhatsApp sobre este brinquedo">
+          <svg viewBox="0 0 24 24" fill="currentColor" style="width:20px;height:20px"><path d="M.057 24l1.687-6.163a11.867 11.867 0 01-1.587-5.945C.16 5.335 5.495 0 12.05 0a11.817 11.817 0 018.413 3.488 11.824 11.824 0 013.48 8.414c-.003 6.557-5.338 11.892-11.893 11.892a11.9 11.9 0 01-5.688-1.448L.057 24zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884a9.86 9.86 0 001.51 5.26l-.999 3.648 3.978-1.042zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413z"/></svg>
+        </a>
+      </div>
+      <div class="p-5 flex flex-col flex-1">
+        <span class="text-xs font-semibold text-[var(--muted)]">${p.tipo||''}</span>
+        <h3 class="font-bold text-lg leading-snug mt-1">${p.nome}</h3>
+        <p class="text-sm text-[var(--muted)] mt-1 flex-1">${p.descricao||''}</p>
+        ${(p.cores&&p.cores.length)?`<div class="flex items-center gap-1.5 mt-3 text-xs text-[var(--muted)]">Cores: ${p.cores.map(c=>`<span style="width:14px;height:14px;border-radius:99px;display:inline-block;background:${corMap[c]};border:1px solid #0001"></span>`).join('')}</div>`:''}
+        <div class="flex items-center justify-between mt-4 pt-4 border-t border-[var(--line)]">
+          <div><div class="font-extrabold text-lg" style="color:${l.cor}">${p.preco}</div><div class="text-[11px] text-[var(--muted)]">Prazo: ${p.prazo}</div></div>
+          <button class="btn text-white text-sm px-4 py-2 flex items-center gap-1.5" style="background:var(--blue)" onclick='comprar(${JSON.stringify(p).replace(/'/g,"&#39;")})'><i data-lucide="shopping-cart" style="width:15px;height:15px"></i> Comprar</button>
+        </div>
+      </div>
+    </div>`;
+  }).join('')||'<div class="text-[var(--muted)]">Em breve nesta linha.</div>';
+  lucide.createIcons();
+}
+
+// ===== CHECKOUT =====
+const RAIO100=['sorocaba','votorantim','aracoiaba da serra','capela do alto','salto de pirapora','ipero','iperó','boituva','tatui','tatuí','cerquilho','piedade','aluminio','alumínio','mairinque','sao roque','são roque','itu','porto feliz','cabreuva','cabreúva','araraquara?','pilar do sul','sarapui','sarapuí','tiete','tietê','laranjal paulista','quadra','porangaba','torre de pedra','cesario lange','cesário lange','bofete','anhembi','conchas','pereiras','jumirim','ibiuna','ibiúna'];
+let _pedido=null;
+function comprar(p){
+  _pedido=p;
+  abrirModal(`
+    <div class="flex items-center justify-between mb-3">
+      <h3 class="brand text-2xl font-extrabold">Comprar</h3>
+      <button onclick="fecharModal()" class="text-[var(--muted)] p-1"><i data-lucide="x"></i></button>
+    </div>
+    <div class="card p-3 flex items-center gap-3 mb-4" style="background:var(--ice)">
+      <div class="w-10 h-10 rounded-xl grid place-items-center text-white shrink-0" style="background:${LINHAS[linhaAtual].cor}"><i data-lucide="${p.ic||'blocks'}" style="width:20px;height:20px"></i></div>
+      <div class="min-w-0"><div class="font-bold text-sm truncate">${p.nome}</div><div class="text-xs text-[var(--muted)]">${linhaAtual} · ${p.preco}</div></div>
+    </div>
+    <div class="space-y-2">
+      <input id="ck_nome" placeholder="Seu nome" class="card w-full px-3 py-2.5 text-sm">
+      <input id="ck_fone" placeholder="Seu WhatsApp (com DDD)" class="card w-full px-3 py-2.5 text-sm">
+      <div class="flex gap-2">
+        <input id="ck_cep" placeholder="CEP" inputmode="numeric" class="card w-32 px-3 py-2.5 text-sm" oninput="buscarCep()">
+        <input id="ck_cidade" placeholder="Cidade" class="card flex-1 px-3 py-2.5 text-sm">
+        <input id="ck_uf" placeholder="UF" maxlength="2" class="card w-16 px-3 py-2.5 text-sm uppercase">
+      </div>
+      <input id="ck_end" placeholder="Endereço, número e bairro" class="card w-full px-3 py-2.5 text-sm">
+      <div id="ck_frete" class="text-sm rounded-xl p-3 hidden"></div>
+    </div>
+    <button class="btn w-full mt-4 py-3 text-white flex items-center justify-center gap-2" style="background:var(--wpp)" onclick="enviarPedido()">
+      <i data-lucide="message-circle" style="width:18px;height:18px"></i> Enviar pedido pelo WhatsApp
+    </button>
+    <p class="text-[11px] text-[var(--muted)] mt-2 text-center">Região de Sorocaba (100km): entrega em até 7 dias úteis. Demais regiões: frete a combinar.</p>
+  `);
+}
+function buscarCep(){
+  const cep=(document.getElementById('ck_cep').value||'').replace(/\D/g,'');
+  if(cep.length!==8) return;
+  fetch('https://viacep.com.br/ws/'+cep+'/json/').then(r=>r.json()).then(d=>{
+    if(d.erro) return;
+    document.getElementById('ck_cidade').value=d.localidade||'';
+    document.getElementById('ck_uf').value=d.uf||'';
+    if(d.logradouro) document.getElementById('ck_end').value=d.logradouro+(d.bairro?' - '+d.bairro:'');
+    avaliarFrete();
+  }).catch(()=>{});
+}
+function normalizar(s){ return (s||'').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').trim(); }
+function dentroRaio(){
+  const cidade=normalizar(document.getElementById('ck_cidade').value), uf=(document.getElementById('ck_uf').value||'').toUpperCase();
+  return uf==='SP' && RAIO100.includes(cidade);
+}
+function avaliarFrete(){
+  const box=document.getElementById('ck_frete'); if(!box) return;
+  const cidade=document.getElementById('ck_cidade').value; if(!cidade){ box.classList.add('hidden'); return; }
+  box.classList.remove('hidden');
+  if(dentroRaio()){ box.style.background='#e7f8ee'; box.style.color='#1a9e54'; box.innerHTML='<b>Região de Sorocaba (até 100km).</b> Entrega em até <b>7 dias úteis</b>.'; }
+  else{ box.style.background='#fff3e0'; box.style.color='#b26a00'; box.innerHTML='<b>Fora do raio de 100km.</b> Frete a combinar — finalizamos pelo WhatsApp.'; }
+}
+function enviarPedido(){
+  const nome=(document.getElementById('ck_nome').value||'').trim();
+  const fone=(document.getElementById('ck_fone').value||'').trim();
+  const cep=(document.getElementById('ck_cep').value||'').trim();
+  const cidade=(document.getElementById('ck_cidade').value||'').trim();
+  const uf=(document.getElementById('ck_uf').value||'').trim().toUpperCase();
+  const end=(document.getElementById('ck_end').value||'').trim();
+  if(!nome||!cidade){ avaliarFrete(); alert('Preencha ao menos nome e cidade.'); return; }
+  const frete = dentroRaio() ? 'Região de Sorocaba (100km) — entrega em até 7 dias úteis' : 'Fora do raio de 100km — frete a combinar';
+  const txt =
+`*Pedido pela loja Hiper Play*%0A%0A`+
+`*Produto:* ${encodeURIComponent(_pedido.nome)}%0A`+
+`*Linha:* ${linhaAtual}%0A`+
+`*Valor:* ${encodeURIComponent(_pedido.preco)}%0A%0A`+
+`*Cliente:* ${encodeURIComponent(nome)}%0A`+
+`*WhatsApp:* ${encodeURIComponent(fone)}%0A`+
+`*Endereço:* ${encodeURIComponent(end)}, ${encodeURIComponent(cidade)}-${uf}${cep?(' — CEP '+encodeURIComponent(cep)):''}%0A%0A`+
+`*Frete:* ${encodeURIComponent(frete)}`;
+  window.open('https://wa.me/'+WPP+'?text='+txt,'_blank');
+}
+
+function abrirModal(html){ document.getElementById('modalBox').innerHTML=html; document.getElementById('modal').classList.add('open'); lucide.createIcons(); }
+function fecharModal(){ document.getElementById('modal').classList.remove('open'); }
+document.addEventListener('keydown',e=>{ if(e.key==='Escape') fecharModal(); });
+
+// ===== reveal on scroll =====
+function initReveal(){
+  const io=new IntersectionObserver(es=>es.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target);} }),{threshold:.12});
+  document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+}
+
+// init
+renderLinhas();
+selecionarLinha('DiverKids',false); // carrega catálogo sem rolar a página
+initReveal();
+lucide.createIcons();
+</script>
+</body>
+</html>
