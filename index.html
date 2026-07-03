@@ -1154,15 +1154,41 @@ function editProduto(i){
   });
 }
 function delProduto(i){ DB.produtos.splice(i,1); saveDB(); renderCatalogo(); toast('Produto removido','trash-2'); }
+// comprime/redimensiona qualquer foto no navegador (sem limite de tamanho de entrada)
+function compressImage(file,maxDim,quality){
+  return new Promise((resolve,reject)=>{
+    const img=new Image(), url=URL.createObjectURL(file);
+    img.onload=()=>{
+      URL.revokeObjectURL(url);
+      let w=img.naturalWidth||img.width, h=img.naturalHeight||img.height;
+      if(Math.max(w,h)>maxDim){ const s=maxDim/Math.max(w,h); w=Math.round(w*s); h=Math.round(h*s); }
+      const cv=document.createElement('canvas'); cv.width=w; cv.height=h;
+      const ctx=cv.getContext('2d'); ctx.fillStyle='#fff'; ctx.fillRect(0,0,w,h); ctx.drawImage(img,0,0,w,h);
+      resolve(cv.toDataURL('image/jpeg',quality));
+    };
+    img.onerror=()=>{ URL.revokeObjectURL(url); reject(new Error('decode')); };
+    img.src=url;
+  });
+}
+// salva no localStorage, reduzindo mais se estourar a cota
+async function salvarFotoLS(file,key,done){
+  try{
+    let d=await compressImage(file,1400,0.82);
+    try{ localStorage.setItem(key,d); }
+    catch(e){ d=await compressImage(file,1000,0.65); localStorage.setItem(key,d); }
+    done(d);
+  }catch(e){
+    try{ const d2=await compressImage(file,800,0.55); localStorage.setItem(key,d2); done(d2); }
+    catch(e2){ toast('Não foi possível processar a foto (tente outra imagem)','alert-triangle'); }
+  }
+}
 function uploadFotoProduto(i){
   const p=DB.produtos[i]; if(!p) return;
   const inp=document.createElement('input'); inp.type='file'; inp.accept='image/*';
   inp.onchange=e=>{
     const f=e.target.files[0]; if(!f) return;
-    if(f.size>2.5*1024*1024){ toast('Imagem muito grande (máx. 2,5MB)','alert-triangle'); return; }
-    const r=new FileReader();
-    r.onload=()=>{ try{ localStorage.setItem(fotoKey(p),r.result); renderCatalogo(); if(document.getElementById('modal').classList.contains('open')) openProduct(i); toast('Foto do produto atualizada','check-circle'); }catch(err){ toast('Não foi possível salvar a foto','alert-triangle'); } };
-    r.readAsDataURL(f);
+    toast('Processando foto...','image');
+    salvarFotoLS(f,fotoKey(p),()=>{ renderCatalogo(); if(document.getElementById('modal').classList.contains('open')) openProduct(i); toast('Foto do produto atualizada','check-circle'); });
   };
   inp.click();
 }
@@ -1301,10 +1327,8 @@ function removeAvatar(){ localStorage.removeItem('hiperplay_avatar'); applyAvata
 const avatarInput=document.getElementById('avatarInput');
 if(avatarInput) avatarInput.addEventListener('change',e=>{
   const f=e.target.files[0]; if(!f) return;
-  if(f.size>2.5*1024*1024){ toast('Imagem muito grande (máx. 2,5MB)','alert-triangle'); return; }
-  const r=new FileReader();
-  r.onload=()=>{ try{ localStorage.setItem('hiperplay_avatar',r.result); applyAvatar(r.result); toast('Foto de perfil atualizada','check-circle'); }catch(err){ toast('Não foi possível salvar a foto','alert-triangle'); } };
-  r.readAsDataURL(f);
+  toast('Processando foto...','image');
+  salvarFotoLS(f,'hiperplay_avatar',(d)=>{ applyAvatar(d); toast('Foto de perfil atualizada','check-circle'); });
 });
 applyAvatar(localStorage.getItem('hiperplay_avatar'));
 
