@@ -1,7 +1,7 @@
 {
   "redirects": [
-    { "source": "/loja", "destination": "/catalogo", "permanent": false },
-    { "source": "/loja/", "destination": "/catalogo", "permanent": false },
+    { "source": "/loja", "destination": "/", "permanent": false },
+    { "source": "/loja/", "destination": "/", "permanent": false },
     { "source": "/login", "destination": "https://hiper-play.vercel.app/login", "permanent": false },
     { "source": "/entrar", "destination": "https://hiper-play.vercel.app/login", "permanent": false },
     { "source": "/app", "destination": "https://hiper-play.vercel.app", "permanent": false },

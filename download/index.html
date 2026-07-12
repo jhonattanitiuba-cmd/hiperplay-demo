@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Instalar o app · Hiper Play Playgrounds</title>
+<meta name="theme-color" content="#1CA9F1">
+<link rel="icon" type="image/svg+xml" href="/icon.svg">
+<link rel="apple-touch-icon" href="/icon.svg">
+<link rel="manifest" href="/manifest.webmanifest">
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://unpkg.com/lucide@latest"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Baloo+2:wght@600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{--blue:#1CA9F1}
+  *{font-family:Montserrat,system-ui,sans-serif;-webkit-tap-highlight-color:transparent}
+  .brand{font-family:'Baloo 2',cursive}
+  body{margin:0;background:linear-gradient(160deg,#eaf6ff 0%,#ffffff 55%)}
+  .wordmark span{-webkit-text-stroke:1.5px #fff;paint-order:stroke fill}
+  .card{background:#fff;border:1px solid #e6eef6;border-radius:22px;box-shadow:0 18px 50px -25px rgba(28,169,241,.5)}
+  .btn{border-radius:14px;font-weight:700;transition:transform .15s,box-shadow .15s}
+  .btn:hover{transform:translateY(-2px)}
+  .btn:active{transform:translateY(0)}
+  .pop{animation:pop .5s ease both}
+  @keyframes pop{from{opacity:0;transform:translateY(14px) scale(.98)}to{opacity:1;transform:none}}
+</style>
+</head>
+<body class="min-h-screen flex flex-col items-center px-4 py-8">
+
+  <div class="wordmark brand text-3xl font-extrabold leading-none select-none mb-6 pop">
+    <span style="color:#ff5a5f">H</span><span style="color:#ff8a3d">i</span><span style="color:#27c08a">p</span><span style="color:#ffc534">e</span><span style="color:#ff5a5f">r</span>
+    <span style="color:#8b5cf6">P</span><span style="color:#ffc534">l</span><span style="color:#27c08a">a</span><span style="color:#ff8a3d">y</span>
+  </div>
+
+  <div class="card max-w-md w-full p-7 text-center pop" style="animation-delay:.05s">
+    <div class="w-20 h-20 mx-auto rounded-3xl grid place-items-center text-white mb-4" style="background:linear-gradient(135deg,#28b4f5,#1492d6)">
+      <i data-lucide="smartphone" style="width:38px;height:38px"></i>
+    </div>
+    <h1 class="text-2xl font-extrabold text-slate-800">Instale o app Hiper Play</h1>
+    <p class="text-slate-500 mt-2 text-sm">Tenha o sistema fixo na tela inicial do seu celular — abre em tela cheia, rápido e sem barra do navegador.</p>
+
+    <button id="installBtn" class="btn w-full text-white text-base px-5 py-4 mt-6 flex items-center justify-center gap-2" style="background:var(--blue);box-shadow:0 12px 28px -10px rgba(28,169,241,.8)">
+      <i data-lucide="download" style="width:20px;height:20px"></i> Instalar app
+    </button>
+    <p id="installHint" class="text-xs text-slate-400 mt-2"></p>
+
+    <div class="mt-6 pt-5 border-t border-slate-100 text-left space-y-4">
+      <div>
+        <div class="flex items-center gap-2 font-bold text-slate-700 text-sm"><i data-lucide="chrome" style="width:17px;height:17px;color:var(--blue)"></i> Android / Chrome</div>
+        <p class="text-xs text-slate-500 mt-1">Toque em <b>Instalar app</b> acima. Se não aparecer, abra o menu <b>⋮</b> do Chrome → <b>Instalar aplicativo</b> / <b>Adicionar à tela inicial</b>.</p>
+      </div>
+      <div>
+        <div class="flex items-center gap-2 font-bold text-slate-700 text-sm"><i data-lucide="apple" style="width:17px;height:17px;color:var(--blue)"></i> iPhone / Safari</div>
+        <p class="text-xs text-slate-500 mt-1">Toque em <b>Compartilhar</b> <i data-lucide="share" style="width:12px;height:12px;display:inline"></i> → <b>Adicionar à Tela de Início</b> → <b>Adicionar</b>.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="flex items-center gap-3 mt-6 pop" style="animation-delay:.1s">
+    <a href="/" class="text-sm font-semibold text-slate-500 hover:text-slate-700 flex items-center gap-1"><i data-lucide="store" style="width:15px;height:15px"></i> Loja</a>
+    <span class="text-slate-300">·</span>
+    <a href="/login" class="text-sm font-semibold text-slate-500 hover:text-slate-700 flex items-center gap-1"><i data-lucide="log-in" style="width:15px;height:15px"></i> Entrar</a>
+  </div>
+
+<script>
+  lucide.createIcons();
+  let deferred=null;
+  const btn=document.getElementById('installBtn'), hint=document.getElementById('installHint');
+  window.addEventListener('beforeinstallprompt',e=>{ e.preventDefault(); deferred=e; hint.textContent=''; });
+  window.addEventListener('appinstalled',()=>{ hint.textContent='App instalado! Procure o ícone Hiper Play na tela inicial.'; });
+  const isIOS=/iphone|ipad|ipod/i.test(navigator.userAgent);
+  const standalone=window.matchMedia('(display-mode: standalone)').matches||navigator.standalone;
+  if(standalone){ btn.disabled=true; btn.style.opacity=.6; btn.innerHTML='<i data-lucide="check"></i> App já instalado'; lucide.createIcons(); }
+  btn.addEventListener('click',async()=>{
+    if(deferred){ deferred.prompt(); const {outcome}=await deferred.userChoice; hint.textContent = outcome==='accepted'?'Instalando…':'Instalação cancelada.'; deferred=null; return; }
+    if(isIOS){ hint.textContent='No iPhone: toque em Compartilhar → Adicionar à Tela de Início.'; }
+    else{ hint.textContent='Abra o menu ⋮ do navegador → Instalar aplicativo / Adicionar à tela inicial.'; }
+  });
+</script>
+</body>
+</html>

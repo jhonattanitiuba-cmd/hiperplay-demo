@@ -5,10 +5,12 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Hiper Play Playgrounds · Você sonha, a gente realiza</title>
 <meta name="theme-color" content="#1CA9F1">
-<link rel="icon" type="image/svg+xml" href="../icon.svg">
-<link rel="apple-touch-icon" href="../icon.svg">
+<link rel="icon" type="image/svg+xml" href="/icon.svg">
+<link rel="apple-touch-icon" href="/icon.svg">
+<link rel="manifest" href="/manifest.webmanifest">
 <script src="https://cdn.tailwindcss.com"></script>
 <script src="https://unpkg.com/lucide@latest"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Baloo+2:wght@600;700;800&display=swap" rel="stylesheet">
 <style>
@@ -67,6 +69,7 @@
       <span style="color:#8b5cf6">P</span><span style="color:#ffc534">l</span><span style="color:#27c08a">a</span><span style="color:#ff8a3d">y</span>
     </div>
     <div class="flex items-center gap-2">
+    <a href="/login" title="Acesso ao sistema" class="hidden sm:flex items-center gap-1.5 text-white text-sm font-semibold px-3 py-2 rounded-full transition hover:bg-white/25" style="background:#ffffff1f"><i data-lucide="log-in" style="width:16px;height:16px"></i> Entrar</a>
     <a href="https://www.instagram.com/hiperplaygrounds/" target="_blank" title="Instagram" class="w-10 h-10 rounded-full grid place-items-center text-white transition hover:bg-white/30" style="background:#ffffff26"><i data-lucide="instagram" style="width:19px;height:19px"></i></a>
     <a href="https://wa.me/5515997670033?text=Ol%C3%A1!%20Vim%20pela%20loja%20da%20Hiper%20Play%20e%20quero%20mais%20informa%C3%A7%C3%B5es." target="_blank" class="btn text-white text-sm px-4 py-2.5 flex items-center gap-2" style="background:var(--wpp)">
       <svg viewBox="0 0 24 24" fill="currentColor" style="width:18px;height:18px"><path d="M.057 24l1.687-6.163a11.867 11.867 0 01-1.587-5.945C.16 5.335 5.495 0 12.05 0a11.817 11.817 0 018.413 3.488 11.824 11.824 0 013.48 8.414c-.003 6.557-5.338 11.892-11.893 11.892a11.9 11.9 0 01-5.688-1.448L.057 24zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884a9.86 9.86 0 001.51 5.26l-.999 3.648 3.978-1.042zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413z"/></svg>
@@ -210,6 +213,37 @@ function carregarProdutos(){
 }
 const corMap={V:'#e23b3b',A:'#ffc534',Az:'#1CA9F1'};
 function getFoto(nome){ try{ return localStorage.getItem('hiperplay_foto_'+slug(nome)); }catch(e){ return null; } }
+const corVal=c=>corMap[c] || (typeof c==='string'&&c[0]==='#'?c:'#cbd5e1');
+
+// ===== integração Supabase (catálogo em tempo real / plug-and-play) =====
+const SB_URL='https://fzdhuyxwgasjkqyyojwc.supabase.co';
+const SB_ANON='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZ6ZGh1eXh3Z2FzamtxeXlvandjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODI4MTE5NTYsImV4cCI6MjA5ODM4Nzk1Nn0.hg1tsb4tFadL8o0FHx4CSk-ASsNCkDxf9yTG9jrbOrE';
+const SB_ORG='cfc1030d-4905-4718-9095-05ca66ec6705';
+let sb=null; try{ if(window.supabase) sb=window.supabase.createClient(SB_URL,SB_ANON); }catch(e){}
+function fmtBRL(v){ const n=Number(v); if(v==null||!isFinite(n)||n===0) return 'Sob consulta'; return n.toLocaleString('pt-BR',{style:'currency',currency:'BRL'}); }
+function mapProduto(r){ return { nome:r.name, tipo:'', descricao:r.description||'', preco:fmtBRL(r.price), prazo:(r.lead_time_days?(r.lead_time_days+' dias úteis'):'a combinar'), cores:Array.isArray(r.colors)?r.colors:[], foto:r.image_url||null, ic:(LINHAS[r.linha]||{}).ic||'blocks' }; }
+async function carregarSupabase(){
+  if(!sb) return false;
+  try{
+    const { data, error } = await sb.from('products')
+      .select('name,description,price,currency,lead_time_days,image_url,colors,linha,active')
+      .eq('org_id',SB_ORG).eq('active',true).order('name');
+    if(error){ console.warn('supabase:',error.message); return false; }
+    if(!data || !data.length) return false;
+    const base={DiverKids:[],HomePlay:[],EcoPlay:[]};
+    data.forEach(r=>{ const ln=LINHAS[r.linha]?r.linha:'DiverKids'; base[ln].push(mapProduto(r)); });
+    DADOS=base; renderGrid(); return true;
+  }catch(e){ console.warn('supabase:',e.message||e); return false; }
+}
+async function bootstrapCatalogo(){
+  const ok=await carregarSupabase();
+  if(!ok){ DADOS=carregarProdutos(); renderGrid(); }   // fallback: catálogo-semente
+  if(sb){
+    sb.channel('pub-products')
+      .on('postgres_changes',{event:'*',schema:'public',table:'products'}, async ()=>{ const k=await carregarSupabase(); if(!k){ DADOS=carregarProdutos(); renderGrid(); } })
+      .subscribe();
+  }
+}
 
 let DADOS=carregarProdutos(), linhaAtual='DiverKids';
 
@@ -230,7 +264,7 @@ function renderLinhas(){
 
 function selecionarLinha(k,scroll){
   if(scroll===undefined) scroll=true;
-  linhaAtual=k; DADOS=carregarProdutos();
+  linhaAtual=k;
   const l=LINHAS[k];
   document.getElementById('catTitulo').textContent=k;
   document.getElementById('catSub').textContent=l.sub+' · '+l.desc;
@@ -242,7 +276,7 @@ function selecionarLinha(k,scroll){
 function renderGrid(){
   const l=LINHAS[linhaAtual], list=DADOS[linhaAtual]||[];
   document.getElementById('grid').innerHTML=list.map((p,i)=>{
-    const foto=getFoto(p.nome);
+    const foto=p.foto||getFoto(p.nome);
     const ref='HP-'+slug(p.nome).slice(0,22).toUpperCase();
     const msg=encodeURIComponent(`Olá! Tenho interesse neste brinquedo da *Loja Hiper Play*:\n\n*Produto:* ${p.nome}\n*Linha:* ${linhaAtual}\n*Valor:* ${p.preco}\n\n_Origem: Loja • Ref: ${ref}_`);
     return `
@@ -255,7 +289,7 @@ function renderGrid(){
         <span class="text-xs font-semibold text-[var(--muted)]">${p.tipo||''}</span>
         <h3 class="font-bold text-lg leading-snug mt-1">${p.nome}</h3>
         <p class="text-sm text-[var(--muted)] mt-1 flex-1">${p.descricao||''}</p>
-        ${(p.cores&&p.cores.length)?`<div class="flex items-center gap-1.5 mt-3 text-xs text-[var(--muted)]">Cores: ${p.cores.map(c=>`<span style="width:14px;height:14px;border-radius:99px;display:inline-block;background:${corMap[c]};border:1px solid #0001"></span>`).join('')}</div>`:''}
+        ${(p.cores&&p.cores.length)?`<div class="flex items-center gap-1.5 mt-3 text-xs text-[var(--muted)]">Cores: ${p.cores.map(c=>`<span style="width:14px;height:14px;border-radius:99px;display:inline-block;background:${corVal(c)};border:1px solid #0001"></span>`).join('')}</div>`:''}
         <div class="flex items-center justify-between mt-4 pt-4 border-t border-[var(--line)]">
           <div><div class="font-extrabold text-lg" style="color:${l.cor}">${p.preco}</div><div class="text-[11px] text-[var(--muted)]">Prazo: ${p.prazo}</div></div>
           <div class="flex items-center gap-2.5">
@@ -375,15 +409,15 @@ function initReveal(){
   document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
 }
 
-// ===== sync ao vivo com o sistema (mesma origem) =====
-function resync(){ DADOS=carregarProdutos(); renderGrid(); }
-window.addEventListener('storage',e=>{ if(!e.key || e.key.indexOf('hiperplay')===0) resync(); }); // edição em outra aba
+// ===== sync ao vivo (Supabase; fallback: catálogo-semente) =====
+async function resync(){ const ok=await carregarSupabase(); if(!ok){ DADOS=carregarProdutos(); renderGrid(); } }
 document.addEventListener('visibilitychange',()=>{ if(!document.hidden) resync(); });
 window.addEventListener('focus',resync);
 
 // init
 renderLinhas();
-selecionarLinha('DiverKids',false); // carrega catálogo sem rolar a página
+selecionarLinha('DiverKids',false); // render inicial (semente) sem rolar a página
+bootstrapCatalogo();                // busca no Supabase + assina realtime (plug-and-play)
 initReveal();
 lucide.createIcons();
 </script>
