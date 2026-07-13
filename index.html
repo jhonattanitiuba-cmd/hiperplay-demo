@@ -37,6 +37,9 @@
   .blob{position:absolute;border-radius:50%;filter:blur(6px);opacity:.5;}
   .prod:hover{transform:translateY(-6px);box-shadow:0 22px 40px -24px rgba(20,50,80,.5)}
   .prod{transition:.2s}
+  .carousel::-webkit-scrollbar{display:none}
+  .cx-nav{position:absolute;top:50%;transform:translateY(-50%);z-index:2;width:30px;height:30px;border-radius:99px;background:rgba(255,255,255,.9);border:none;cursor:pointer;font-size:20px;line-height:1;color:#334;box-shadow:0 2px 8px rgba(0,0,0,.18);display:grid;place-items:center}
+  .cx-nav:hover{background:#fff}
   /* cards de linha: hover/tap preenche na cor da linha e inverte */
   .line-card{transition:.25s;cursor:pointer}
   .line-card:hover,.line-card:active{background:var(--lc);border-color:var(--lc);transform:translateY(-6px);box-shadow:0 22px 44px -22px var(--lc)}
@@ -167,16 +170,17 @@
 const WPP='5515997670033';
 const slug=s=>(s||'').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[^a-z0-9]+/g,'_');
 
-// ===== LINHAS =====
-const LINHAS={
-  DiverKids:{sub:'Linha de Ferro',desc:'Playgrounds em estrutura metálica: balanças, gangorras, escorregadores e gira-giras.',cor:'var(--blue)',ic:'blocks'},
-  HomePlay:{sub:'Casinhas de Boneca',desc:'Casinhas encantadas: com escorregador, na árvore e modelos compactos.',cor:'var(--rosa)',ic:'castle'},
-  EcoPlay:{sub:'Playgrounds de Madeira',desc:'Linha ecológica em madeira tratada, natural e resistente.',cor:'var(--green)',ic:'trees'},
+// ===== LINHAS (dinâmicas: vêm do Supabase; fallback nos 3 padrões) =====
+const LINHAS_DEFAULT={
+  DiverKids:{sub:'Linha de Ferro',desc:'Playgrounds em estrutura metálica: balanças, gangorras, escorregadores e gira-giras.',cor:'#1CA9F1',ic:'blocks'},
+  HomePlay:{sub:'Casinhas de Boneca',desc:'Casinhas encantadas: com escorregador, na árvore e modelos compactos.',cor:'#ff7fb0',ic:'castle'},
+  EcoPlay:{sub:'Playgrounds de Madeira',desc:'Linha ecológica em madeira tratada, natural e resistente.',cor:'#34c88f',ic:'trees'},
 };
+let LINHAS={...LINHAS_DEFAULT};
 
 // ===== CATÁLOGO — fonte única: Supabase (produtos reais cadastrados no sistema) =====
 // Sem produtos-semente: o catálogo só exibe o que o admin cadastra no sistema (real time).
-function carregarProdutos(){ return {DiverKids:[],HomePlay:[],EcoPlay:[]}; }
+function carregarProdutos(){ const b={}; Object.keys(LINHAS).forEach(k=>b[k]=[]); return b; }
 const corMap={V:'#e23b3b',A:'#ffc534',Az:'#1CA9F1'};
 function getFoto(nome){ try{ return localStorage.getItem('hiperplay_foto_'+slug(nome)); }catch(e){ return null; } }
 const corVal=c=>corMap[c] || (typeof c==='string'&&c[0]==='#'?c:'#cbd5e1');
@@ -187,26 +191,46 @@ const SB_ANON='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJl
 const SB_ORG='cfc1030d-4905-4718-9095-05ca66ec6705';
 let sb=null; try{ if(window.supabase) sb=window.supabase.createClient(SB_URL,SB_ANON); }catch(e){}
 function fmtBRL(v){ const n=Number(v); if(v==null||!isFinite(n)||n===0) return 'Sob consulta'; return n.toLocaleString('pt-BR',{style:'currency',currency:'BRL'}); }
-function mapProduto(r){ return { nome:r.name, tipo:'', descricao:r.description||'', preco:fmtBRL(r.price), prazo:(r.lead_time_days?(r.lead_time_days+' dias úteis'):'a combinar'), cores:Array.isArray(r.colors)?r.colors:[], foto:r.image_url||null, ic:(LINHAS[r.linha]||{}).ic||'blocks' }; }
+function mapProduto(r){
+  const imgs=Array.isArray(r.images)&&r.images.length?r.images.filter(Boolean):(r.image_url?[r.image_url]:[]);
+  return { nome:r.name, tipo:'', descricao:r.description||'', preco:fmtBRL(r.price), prazo:(r.lead_time_days?(r.lead_time_days+' dias úteis'):'a combinar'), cores:Array.isArray(r.colors)?r.colors:[], foto:imgs[0]||null, imgs, ic:(LINHAS[r.linha]||{}).ic||'blocks' };
+}
+async function carregarLinhas(){
+  if(!sb) return false;
+  try{
+    const { data, error } = await sb.from('product_lines')
+      .select('name,subtitle,description,color,icon,position')
+      .eq('org_id',SB_ORG).eq('active',true).order('position');
+    if(error||!data||!data.length) return false;
+    const m={}; data.forEach(l=>{ m[l.name]={sub:l.subtitle||'',desc:l.description||'',cor:l.color||'#1CA9F1',ic:l.icon||'blocks'}; });
+    LINHAS=m;
+    if(!LINHAS[linhaAtual]) linhaAtual=Object.keys(LINHAS)[0]||'';
+    return true;
+  }catch(e){ return false; }
+}
 async function carregarSupabase(){
   if(!sb) return false;
   try{
     const { data, error } = await sb.from('products')
-      .select('name,description,price,currency,lead_time_days,image_url,colors,linha,active')
+      .select('name,description,price,currency,lead_time_days,image_url,images,colors,linha,active')
       .eq('org_id',SB_ORG).eq('active',true).order('name');
     if(error){ console.warn('supabase:',error.message); return false; }
     if(!data || !data.length) return false;
-    const base={DiverKids:[],HomePlay:[],EcoPlay:[]};
-    data.forEach(r=>{ const ln=LINHAS[r.linha]?r.linha:'DiverKids'; base[ln].push(mapProduto(r)); });
+    const base={}; Object.keys(LINHAS).forEach(k=>base[k]=[]);
+    const primeira=Object.keys(LINHAS)[0];
+    data.forEach(r=>{ const ln=LINHAS[r.linha]?r.linha:primeira; if(!base[ln])base[ln]=[]; base[ln].push(mapProduto(r)); });
     DADOS=base; renderGrid(); return true;
   }catch(e){ console.warn('supabase:',e.message||e); return false; }
 }
 async function bootstrapCatalogo(){
+  const okL=await carregarLinhas();
+  if(okL){ renderLinhas(); selecionarLinha(linhaAtual,false); }
   const ok=await carregarSupabase();
-  if(!ok){ DADOS=carregarProdutos(); renderGrid(); }   // fallback: catálogo-semente
+  if(!ok){ DADOS=carregarProdutos(); renderGrid(); }   // fallback: sem produtos → empty state
   if(sb){
-    sb.channel('pub-products')
+    sb.channel('pub-catalogo')
       .on('postgres_changes',{event:'*',schema:'public',table:'products'}, async ()=>{ const k=await carregarSupabase(); if(!k){ DADOS=carregarProdutos(); renderGrid(); } })
+      .on('postgres_changes',{event:'*',schema:'public',table:'product_lines'}, async ()=>{ await carregarLinhas(); renderLinhas(); selecionarLinha(linhaAtual,false); await carregarSupabase(); })
       .subscribe();
   }
 }
@@ -257,13 +281,23 @@ function renderGrid(){
   }
   gridEl.innerHTML=list.map((p,i)=>{
     const foto=p.foto||getFoto(p.nome);
+    const imgs=(p.imgs&&p.imgs.length)?p.imgs:(foto?[foto]:[]);
     const ref='HP-'+slug(p.nome).slice(0,22).toUpperCase();
     const msg=encodeURIComponent(`Olá! Tenho interesse neste brinquedo da *Loja Hiper Play*:\n\n*Produto:* ${p.nome}\n*Linha:* ${linhaAtual}\n*Valor:* ${p.preco}\n\n_Origem: Loja • Ref: ${ref}_`);
     return `
     <div class="card prod overflow-hidden flex flex-col" style="animation:pop .4s ease ${i*0.05}s both">
-      <div class="relative aspect-[4/3]" style="background:linear-gradient(135deg,#eef4fb,#dbe7f5)">
-        ${foto?`<img src="${foto}" class="w-full h-full object-contain bg-white p-3">`:`<div class="w-full h-full grid place-items-center"><i data-lucide="${p.ic||'blocks'}" style="width:52px;height:52px;color:${l.cor};opacity:.55"></i></div>`}
-        <span class="absolute top-3 left-3 chip text-white" style="background:${l.cor};padding:5px 12px">${linhaAtual}</span>
+      <div class="relative aspect-[4/3] overflow-hidden" style="background:linear-gradient(135deg,#eef4fb,#dbe7f5)">
+        ${imgs.length?`
+          <div class="carousel" id="cx${i}" style="display:flex;height:100%;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none">
+            ${imgs.map(u=>`<img src="${u}" class="object-contain bg-white p-3" style="flex:0 0 100%;width:100%;height:100%;scroll-snap-align:center" loading="lazy">`).join('')}
+          </div>
+          ${imgs.length>1?`
+            <button onclick="event.stopPropagation();cxScroll(${i},-1)" class="cx-nav" style="left:6px">‹</button>
+            <button onclick="event.stopPropagation();cxScroll(${i},1)" class="cx-nav" style="right:6px">›</button>
+            <span class="absolute bottom-2 right-2 chip" style="background:rgba(0,0,0,.55);color:#fff;padding:2px 8px;font-size:11px">${imgs.length} fotos</span>
+          `:''}
+        `:`<div class="w-full h-full grid place-items-center"><i data-lucide="${p.ic||'blocks'}" style="width:52px;height:52px;color:${l.cor};opacity:.55"></i></div>`}
+        <span class="absolute top-3 left-3 chip text-white" style="background:${l.cor};padding:5px 12px;z-index:2">${linhaAtual}</span>
       </div>
       <div class="p-5 flex flex-col flex-1">
         <span class="text-xs font-semibold text-[var(--muted)]">${p.tipo||''}</span>
@@ -381,6 +415,7 @@ function sucessoPedido(frete){
 
 function abrirModal(html){ document.getElementById('modalBox').innerHTML=html; document.getElementById('modal').classList.add('open'); lucide.createIcons(); }
 function fecharModal(){ document.getElementById('modal').classList.remove('open'); }
+function cxScroll(i,dir){ const el=document.getElementById('cx'+i); if(el) el.scrollBy({left:dir*el.clientWidth,behavior:'smooth'}); }
 document.addEventListener('keydown',e=>{ if(e.key==='Escape') fecharModal(); });
 
 // ===== reveal on scroll =====
@@ -396,8 +431,8 @@ window.addEventListener('focus',resync);
 
 // init
 renderLinhas();
-selecionarLinha('DiverKids',false); // render inicial (semente) sem rolar a página
-bootstrapCatalogo();                // busca no Supabase + assina realtime (plug-and-play)
+selecionarLinha(Object.keys(LINHAS)[0],false); // render inicial (linhas padrão) sem rolar a página
+bootstrapCatalogo();                // busca linhas+produtos no Supabase + assina realtime (plug-and-play)
 initReveal();
 lucide.createIcons();
 </script>
