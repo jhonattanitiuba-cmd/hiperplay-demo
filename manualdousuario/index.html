@@ -6,23 +6,32 @@
 <title>Manual do Usuário · Hiper Play</title>
 <link rel="icon" href="/icon.svg" />
 <style>
-  :root{ --azul:#1CA9F1; --verde:#25D366; --roxo:#7b2fbe; --tinta:#12203a; --muted:#5b6b82; --bg:#f4f8fc; --card:#fff; --bd:#e4ecf5; }
+  :root{ --azul:#1CA9F1; --verde:#25D366; --roxo:#7b2fbe; --laranja:#f5a623; --tinta:#12203a; --muted:#5b6b82; --bg:#f4f8fc; --card:#fff; --bd:#e4ecf5; }
   *{box-sizing:border-box} html,body{margin:0}
   body{font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:var(--bg);color:var(--tinta);line-height:1.55}
-  .wrap{max-width:820px;margin:0 auto;padding:20px 16px 60px}
-  header{background:linear-gradient(135deg,#28b4f5,#1492d6);color:#fff;border-radius:22px;padding:24px;margin-bottom:20px}
-  header h1{margin:.2em 0 .1em;font-size:1.5rem}
-  header p{margin:0;opacity:.9}
+  .wrap{max-width:860px;margin:0 auto;padding:20px 16px 64px}
+  header{background:linear-gradient(135deg,#28b4f5,#1492d6);color:#fff;border-radius:22px;padding:26px;margin-bottom:18px}
+  header h1{margin:.2em 0 .1em;font-size:1.55rem}
+  header p{margin:0;opacity:.92}
   .logo{font-weight:800;font-size:1.1rem;letter-spacing:.3px}
-  .card{background:var(--card);border:1px solid var(--bd);border-radius:18px;padding:18px 18px 6px;margin-bottom:14px}
-  .card h2{display:flex;align-items:center;gap:8px;font-size:1.05rem;margin:.1em 0 .4em}
-  .ico{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;color:#fff;flex:0 0 auto}
+  .sumario{background:var(--card);border:1px solid var(--bd);border-radius:18px;padding:16px 18px;margin-bottom:16px}
+  .sumario h2{font-size:1rem;margin:.1em 0 .6em;color:var(--muted);text-transform:uppercase;letter-spacing:.6px}
+  .sumario ol{margin:0;padding-left:0;list-style:none;counter-reset:s;columns:2;column-gap:22px}
+  .sumario li{counter-increment:s;margin:.3em 0;break-inside:avoid}
+  .sumario a{color:var(--tinta);text-decoration:none;display:flex;gap:8px;align-items:baseline}
+  .sumario a::before{content:counter(s);background:var(--azul);color:#fff;font-size:.7rem;font-weight:800;min-width:20px;height:20px;border-radius:6px;display:inline-grid;place-items:center;flex:0 0 auto}
+  .sumario a:hover{color:var(--azul)}
+  .card{background:var(--card);border:1px solid var(--bd);border-radius:18px;padding:18px 18px 8px;margin-bottom:12px;scroll-margin-top:14px}
+  .card h2{display:flex;align-items:center;gap:10px;font-size:1.08rem;margin:.1em 0 .35em}
+  .ico{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;color:#fff;font-size:1rem;flex:0 0 auto}
+  .card p{margin:.2em 0 .6em;color:#37485f}
   ul{margin:.2em 0 1em;padding-left:0;list-style:none}
-  li{display:flex;gap:8px;margin:.35em 0;color:#37485f}
-  li::before{content:"•";color:var(--verde);font-weight:800}
+  li.item{display:flex;gap:8px;margin:.35em 0;color:#37485f}
+  li.item::before{content:"›";color:var(--verde);font-weight:800}
   b{color:var(--tinta)}
   .cta{display:inline-flex;align-items:center;gap:8px;background:var(--verde);color:#fff;text-decoration:none;font-weight:700;padding:12px 18px;border-radius:14px;margin-top:6px}
-  footer{text-align:center;color:var(--muted);font-size:.85rem;margin-top:24px}
+  footer{text-align:center;color:var(--muted);font-size:.85rem;margin-top:22px}
+  @media(max-width:600px){ .sumario ol{columns:1} }
 </style>
 </head>
 <body>
@@ -30,53 +39,128 @@
   <header>
     <div class="logo">🛝 Hiper Play</div>
     <h1>Manual do Usuário</h1>
-    <p>Guia rápido do sistema de gestão e atendimento.</p>
+    <p>Guia completo do sistema de gestão, catálogo e atendimento com a SARAH.</p>
   </header>
 
-  <div class="card">
-    <h2><span class="ico" style="background:#1CA9F1">📱</span> Instalar no celular</h2>
-    <ul>
-      <li>Abra <b>app.hiperplay.com.br</b> no Chrome (Android) ou Safari (iPhone).</li>
-      <li>Android: menu <b>⋮</b> → “Instalar app”.</li>
-      <li>iPhone: <b>Compartilhar</b> → “Adicionar à Tela de Início”.</li>
-      <li>Abre como aplicativo, em tela cheia.</li>
-    </ul>
-  </div>
+  <nav class="sumario">
+    <h2>Sumário</h2>
+    <ol>
+      <li><a href="#instalar">Instalar no celular</a></li>
+      <li><a href="#visao">Visão Geral (painel)</a></li>
+      <li><a href="#catalogo">Catálogo e Linhas</a></li>
+      <li><a href="#orcamentos">Orçamentos e Vendas</a></li>
+      <li><a href="#producao">Produção e PCP</a></li>
+      <li><a href="#instalacao">Projetos e Instalação</a></li>
+      <li><a href="#mapa">Mapa</a></li>
+      <li><a href="#whatsapp">WhatsApp (atendimento)</a></li>
+      <li><a href="#agente">Meu Agente (SARAH)</a></li>
+      <li><a href="#config">Configurações</a></li>
+    </ol>
+  </nav>
 
-  <div class="card">
-    <h2><span class="ico" style="background:#25D366">💬</span> WhatsApp (atendimento)</h2>
+  <section class="card" id="instalar">
+    <h2><span class="ico" style="background:#1CA9F1">📱</span> 1. Instalar no celular</h2>
+    <p>O sistema funciona como aplicativo (PWA). Não precisa baixar nada na loja.</p>
     <ul>
-      <li>Na barra de baixo o <b>WhatsApp vem em 1º</b> — arraste para o lado para ver as demais seções.</li>
-      <li>Abas: <b>Minhas</b> (transferidas p/ você), <b>IA</b> (a SARAH atende), <b>Não lidas</b>, <b>Todas</b>.</li>
-      <li>Cada conversa mostra os <b>dois lados no mesmo chat</b>. Bolinha verde = mensagem nova; some ao abrir.</li>
-      <li>No topo da conversa: botão <b>IA</b> (liga/desliga a SARAH só naquele contato) e <b>Cliente/Copilot</b>.</li>
-      <li>Se você responder manualmente, a IA <b>pausa sozinha</b>.</li>
+      <li class="item">Abra <b>app.hiperplay.com.br</b> no Chrome (Android) ou Safari (iPhone).</li>
+      <li class="item">Android: toque no menu de três pontos e escolha <b>“Instalar app”</b>.</li>
+      <li class="item">iPhone: toque em <b>Compartilhar</b> e depois em <b>“Adicionar à Tela de Início”</b>.</li>
+      <li class="item">Faça login com seu e mail e senha. Pronto: abre em tela cheia, como um app.</li>
     </ul>
-  </div>
+  </section>
 
-  <div class="card">
-    <h2><span class="ico" style="background:#7b2fbe">🤖</span> SARAH e “Meu Agente”</h2>
+  <section class="card" id="visao">
+    <h2><span class="ico" style="background:#0b6aa1">📊</span> 2. Visão Geral (painel)</h2>
+    <p>É a tela inicial. Mostra o resumo do negócio num relance.</p>
     <ul>
-      <li>A SARAH atende o cliente, apresenta produtos, tira dúvidas, calcula frete e <b>monta orçamento</b>.</li>
-      <li>Ao fechar uma venda (ou quando o cliente pede), ela <b>transfere e avisa a equipe com som</b>.</li>
-      <li>Em <b>Meu Agente</b>: número que recebe a notificação, ferramentas da IA e o padrão.</li>
-      <li>Ela <b>nunca inventa</b> preço, garantia ou desconto — encaminha para o comercial.</li>
+      <li class="item">Indicadores de vendas, orçamentos em aberto e produção do momento.</li>
+      <li class="item">Atalhos rápidos para as áreas mais usadas.</li>
+      <li class="item">Use a busca no topo para achar produto, cliente ou orçamento.</li>
     </ul>
-  </div>
+  </section>
 
-  <div class="card">
-    <h2><span class="ico" style="background:#f5a623">📦</span> Catálogo, Orçamentos e Produção</h2>
+  <section class="card" id="catalogo">
+    <h2><span class="ico" style="background:#f5a623">📦</span> 3. Catálogo e Linhas</h2>
+    <p>Onde ficam os produtos que aparecem no site público em tempo real.</p>
     <ul>
-      <li><b>Catálogo</b>: crie/edite produtos, escolha a Linha e anexe várias fotos (a 1ª é a capa).</li>
-      <li>O que você publica aparece no site <b>hiperplay.com.br</b> em tempo real.</li>
-      <li><b>Orçamentos/Vendas</b>: acompanhe estágio (enviado, negociação, vendido) e assuma o atendimento.</li>
-      <li><b>Produção</b> e <b>Instalação</b>: acompanhe a fabricação e a entrega/montagem (com Mapa).</li>
+      <li class="item"><b>Novo produto</b>: nome, preço, prazo, descrição, escolha a Linha e anexe várias fotos (a 1ª vira capa).</li>
+      <li class="item"><b>Linhas</b>: crie e organize as famílias (DiverKids, HomePlay, EcoPlay, HiperPlay, Promoção do Mês).</li>
+      <li class="item">Tudo que você ativa aparece na hora em <b>hiperplay.com.br</b>, na rota da linha (ex.: /diverkids).</li>
+      <li class="item">Apagar uma linha com produtos fica bloqueado, para não deixar item órfão.</li>
     </ul>
-  </div>
+  </section>
+
+  <section class="card" id="orcamentos">
+    <h2><span class="ico" style="background:#27c08a">🧾</span> 4. Orçamentos e Vendas</h2>
+    <p>Registra e acompanha cada proposta até virar venda.</p>
+    <ul>
+      <li class="item">Crie um orçamento manual ou receba os que a SARAH montou no WhatsApp.</li>
+      <li class="item">Cada orçamento tem número automático, itens, valor e estágio (enviado, negociação, vendido).</li>
+      <li class="item">Ao fechar, a equipe assume e dá andamento na produção.</li>
+    </ul>
+  </section>
+
+  <section class="card" id="producao">
+    <h2><span class="ico" style="background:#8b5cf6">🏭</span> 5. Produção e PCP</h2>
+    <p>Controle do que está sendo fabricado.</p>
+    <ul>
+      <li class="item">Acompanhe as ordens em produção e o andamento de cada uma.</li>
+      <li class="item">Ligado aos orçamentos vendidos, para não perder prazo.</li>
+    </ul>
+  </section>
+
+  <section class="card" id="instalacao">
+    <h2><span class="ico" style="background:#e63c66">🚚</span> 6. Projetos e Instalação</h2>
+    <p>Da fábrica até a montagem no cliente.</p>
+    <ul>
+      <li class="item">Agende e acompanhe entregas e montagens.</li>
+      <li class="item">Registre o status de cada projeto (a caminho, montado, concluído).</li>
+    </ul>
+  </section>
+
+  <section class="card" id="mapa">
+    <h2><span class="ico" style="background:#16a6b6">📍</span> 7. Mapa</h2>
+    <p>Visão geográfica dos clientes e instalações.</p>
+    <ul>
+      <li class="item">Veja onde estão os projetos e planeje rotas de entrega.</li>
+    </ul>
+  </section>
+
+  <section class="card" id="whatsapp">
+    <h2><span class="ico" style="background:#25D366">💬</span> 8. WhatsApp (atendimento)</h2>
+    <p>O WhatsApp da empresa dentro do sistema, com a SARAH atendendo.</p>
+    <ul>
+      <li class="item">Na barra de baixo (celular) o <b>WhatsApp vem em 1º</b>. Arraste para o lado para ver as outras seções.</li>
+      <li class="item">Abas: <b>Minhas</b> (transferidas para você), <b>IA</b> (a SARAH atende), <b>Não lidas</b> e <b>Todas</b>.</li>
+      <li class="item">Cada conversa mostra os <b>dois lados no mesmo chat</b>. Bolinha verde significa mensagem nova e some ao abrir.</li>
+      <li class="item">No topo da conversa: botão <b>IA</b> (liga ou desliga a SARAH só naquele contato) e <b>Cliente / Copilot</b>.</li>
+      <li class="item">Se você responder manualmente, a IA <b>pausa sozinha</b> e a conversa vai para a aba Minhas.</li>
+    </ul>
+  </section>
+
+  <section class="card" id="agente">
+    <h2><span class="ico" style="background:#7b2fbe">🤖</span> 9. Meu Agente (SARAH)</h2>
+    <p>Onde você configura a atendente virtual, de forma simples.</p>
+    <ul>
+      <li class="item">A SARAH apresenta produtos, tira dúvidas, calcula frete e <b>monta o orçamento</b>.</li>
+      <li class="item">Ao fechar uma venda (ou quando o cliente pede), ela <b>transfere e avisa a equipe com som</b>.</li>
+      <li class="item">Configure o número que recebe a notificação, as ferramentas da IA e o padrão de ativação.</li>
+      <li class="item">Ela <b>nunca inventa</b> preço, garantia ou desconto: nesses casos encaminha para o comercial.</li>
+    </ul>
+  </section>
+
+  <section class="card" id="config">
+    <h2><span class="ico" style="background:#5b6b82">⚙️</span> 10. Configurações</h2>
+    <p>Ajustes da conta e da equipe.</p>
+    <ul>
+      <li class="item">Perfil: seu nome, foto e dados de acesso.</li>
+      <li class="item">Membros: convide e defina o papel de cada pessoa da equipe.</li>
+    </ul>
+  </section>
 
   <a class="cta" href="https://wa.me/5511991612610?text=Preciso%20de%20ajuda%20com%20o%20sistema%20Hiper%20Play" target="_blank" rel="noopener">💬 Falar com o suporte</a>
 
-  <footer>Hiper Play · Fábrica de Sonhos — app.hiperplay.com.br</footer>
+  <footer>Hiper Play · Fábrica de Sonhos · app.hiperplay.com.br</footer>
 </div>
 </body>
 </html>
