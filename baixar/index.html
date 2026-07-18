@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Baixar o app · Hiper Play</title>
+<meta name="theme-color" content="#1CA9F1">
+<link rel="icon" type="image/svg+xml" href="/icon.svg">
+<link rel="apple-touch-icon" href="/icon.svg">
+<link rel="manifest" href="/manifest.webmanifest">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;700;800&family=Baloo+2:wght@800&display=swap" rel="stylesheet">
+<style>
+  /* Sem Tailwind nem Lucide de CDN de proposito: a pagina toda tem que aparecer
+     de primeira num 4G ruim, que e onde ela vai ser aberta. */
+  :root { --azul: #1CA9F1; }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  body {
+    margin: 0; min-height: 100dvh; display: grid; place-items: center; padding: 24px;
+    font-family: Montserrat, system-ui, sans-serif; color: #1e293b;
+    background: linear-gradient(160deg, #eaf6ff 0%, #fff 60%);
+  }
+  .caixa { width: 100%; max-width: 380px; text-align: center; }
+  .marca { font-family: "Baloo 2", cursive; font-size: 30px; font-weight: 800; margin-bottom: 22px; }
+  .marca span { -webkit-text-stroke: 1.5px #fff; paint-order: stroke fill; }
+  .icone {
+    width: 84px; height: 84px; margin: 0 auto 18px; border-radius: 24px; display: grid; place-items: center;
+    background: linear-gradient(135deg, #28b4f5, #1492d6); box-shadow: 0 16px 34px -14px rgba(28,169,241,.85);
+  }
+  h1 { font-size: 22px; font-weight: 800; margin: 0 0 8px; }
+  p.sub { font-size: 14px; color: #64748b; margin: 0 0 24px; line-height: 1.5; }
+  button {
+    width: 100%; border: 0; border-radius: 16px; padding: 17px 20px; font: inherit; font-weight: 700; font-size: 16px;
+    color: #fff; background: var(--azul); cursor: pointer; box-shadow: 0 12px 26px -10px rgba(28,169,241,.9);
+    transition: transform .15s;
+  }
+  button:active { transform: scale(.97); }
+  button[disabled] { opacity: .55; box-shadow: none; cursor: default; }
+  .dica { font-size: 13px; color: #64748b; margin-top: 14px; line-height: 1.5; min-height: 20px; }
+  .equipe { margin-top: 30px; font-size: 13px; color: #94a3b8; }
+  .equipe a { color: #475569; font-weight: 700; text-decoration: none; }
+</style>
+</head>
+<body>
+  <div class="caixa">
+    <div class="marca">
+      <span style="color:#ff5a5f">H</span><span style="color:#ff8a3d">i</span><span style="color:#27c08a">p</span><span style="color:#ffc534">e</span><span style="color:#ff5a5f">r</span>
+      <span style="color:#8b5cf6">P</span><span style="color:#ffc534">l</span><span style="color:#27c08a">a</span><span style="color:#ff8a3d">y</span>
+    </div>
+
+    <div class="icone">
+      <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="5" y="2" width="14" height="20" rx="2"></rect><path d="M12 18h.01"></path>
+      </svg>
+    </div>
+
+    <h1>Leve a Hiper Play no celular</h1>
+    <p class="sub">O catálogo completo na tela inicial, abrindo em tela cheia e sem barra de navegador.</p>
+
+    <button id="btn">Instalar</button>
+    <p class="dica" id="dica"></p>
+
+    <p class="equipe">É da equipe? <a href="https://app.hiperplay.com.br/login">Entrar no sistema</a></p>
+  </div>
+
+<script>
+  var btn = document.getElementById("btn");
+  var dica = document.getElementById("dica");
+  var adiado = null;
+
+  var iOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
+  var instalado = window.matchMedia("(display-mode: standalone)").matches || navigator.standalone;
+
+  // O Chrome so dispara isso quando o site cumpre os requisitos de PWA. Enquanto
+  // nao dispara, nao da para abrir o instalador por codigo: o clique cai na
+  // instrucao manual, que e o unico caminho honesto.
+  window.addEventListener("beforeinstallprompt", function (e) {
+    e.preventDefault();
+    adiado = e;
+    dica.textContent = "";
+  });
+
+  window.addEventListener("appinstalled", function () {
+    btn.disabled = true;
+    btn.textContent = "Instalado";
+    dica.textContent = "Procure o ícone Hiper Play na tela inicial.";
+  });
+
+  if (instalado) {
+    btn.disabled = true;
+    btn.textContent = "Já instalado";
+    dica.textContent = "Você já está usando o app.";
+  }
+
+  // No iPhone o Safari nao tem instalacao por botao: a instrucao ja aparece de
+  // cara, senao a pessoa clica, nada acontece e ela desiste achando que quebrou.
+  if (iOS && !instalado) {
+    dica.textContent = "No iPhone: toque em Compartilhar e depois em Adicionar à Tela de Início.";
+  }
+
+  btn.addEventListener("click", function () {
+    if (adiado) {
+      adiado.prompt();
+      adiado.userChoice.then(function (r) {
+        dica.textContent = r.outcome === "accepted" ? "Instalando..." : "Instalação cancelada.";
+      });
+      adiado = null;
+      return;
+    }
+    dica.textContent = iOS
+      ? "No iPhone: toque em Compartilhar e depois em Adicionar à Tela de Início."
+      : "Abra o menu do navegador e escolha Instalar aplicativo ou Adicionar à tela inicial.";
+  });
+</script>
+</body>
+</html>
