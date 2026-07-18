@@ -294,7 +294,10 @@ function renderAtalhos(){
 
 /** Atalho clicado: seleciona a linha, atualiza a URL e desce até o catálogo. */
 function irParaLinha(k){
-  selecionarLinha(k,true);
+  // scroll=false: o selecionarLinha tem rolagem própria, e duas rolagens suaves
+  // disparadas juntas se cancelam (a página ficava parada no topo). A daqui é a
+  // que vale, porque desconta o header e a barra de atalhos.
+  selecionarLinha(k,false);
   const alvo=document.getElementById('catalogo');
   if(alvo){
     // desconta a altura do header + barra de atalhos, senão o topo do catálogo
