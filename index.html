@@ -548,14 +548,18 @@ document.addEventListener('keydown',e=>{ if(e.key==='Escape') fecharModal(); });
 // ninguém nunca mandava aparecer: a seção "Escolha a sua linha" virava um bloco
 // branco de 1600px. Era esse o espaço vazio na tela.
 let _io=null;
-function initReveal(){
+function garantirObservador(){
   if(!_io){
     _io=new IntersectionObserver(es=>es.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('in'); _io.unobserve(e.target);} }),{threshold:.12});
   }
-  observarNovos();
+  return _io;
 }
+function initReveal(){ observarNovos(); }
 function observarNovos(){
-  if(!_io) return;
+  // Cria o observador na hora, se ainda não existir. Desistir quando ele era
+  // nulo foi o que manteve o bloco branco na primeira correção: renderLinhas()
+  // roda ANTES do initReveal(), então a chamada caía fora e nada reobservava.
+  garantirObservador();
   document.querySelectorAll('.reveal:not(.in)').forEach(el=>_io.observe(el));
   // Rede de segurança: elemento criado já dentro da área visível nem sempre
   // dispara o observador. Sem isto o bloco branco voltaria calado.
