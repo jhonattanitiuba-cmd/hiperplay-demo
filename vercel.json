@@ -12,6 +12,7 @@
     { "source": "/homeplay", "destination": "/" },
     { "source": "/ecoplay", "destination": "/" },
     { "source": "/hiperplay", "destination": "/" },
-    { "source": "/promocao-do-mes", "destination": "/" }
+    { "source": "/promocao-do-mes", "destination": "/" },
+    { "source": "/manualdousuario", "destination": "/manualdousuario/index.html" }
   ]
 }
