@@ -6,5 +6,12 @@
     { "source": "/entrar", "destination": "https://app.hiperplay.com.br/login", "permanent": false },
     { "source": "/app", "destination": "https://app.hiperplay.com.br", "permanent": false },
     { "source": "/dashboard", "destination": "https://app.hiperplay.com.br/dashboard", "permanent": false }
+  ],
+  "rewrites": [
+    { "source": "/diverkids", "destination": "/" },
+    { "source": "/homeplay", "destination": "/" },
+    { "source": "/ecoplay", "destination": "/" },
+    { "source": "/hiperplay", "destination": "/" },
+    { "source": "/promocao-do-mes", "destination": "/" }
   ]
 }

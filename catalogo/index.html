@@ -40,6 +40,14 @@
   .carousel::-webkit-scrollbar{display:none}
   .cx-nav{position:absolute;top:50%;transform:translateY(-50%);z-index:2;width:30px;height:30px;border-radius:99px;background:rgba(255,255,255,.9);border:none;cursor:pointer;font-size:20px;line-height:1;color:#334;box-shadow:0 2px 8px rgba(0,0,0,.18);display:grid;place-items:center}
   .cx-nav:hover{background:#fff}
+  /* Linha HiperPlay (representação): branco, minimalista, blocos sólidos */
+  .hp-line-card{transition:.25s;cursor:pointer;background:#fff;border:1px solid var(--line);border-top:5px solid transparent;border-image:linear-gradient(90deg,#7b2fbe,#f5a623,#ffd23f,#16a6b6,#4aa3df,#e63c66) 1}
+  .hp-line-card:hover,.hp-line-card:active{transform:translateY(-6px);box-shadow:0 22px 44px -22px rgba(123,47,190,.45)}
+  .hp-swatch{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;width:56px}
+  .hp-swatch span{height:26px;border-radius:6px}
+  .selo-parceiro{display:inline-flex;align-items:center;gap:8px;background:#fff;border:1px solid #ece7f5;border-radius:999px;padding:6px 13px;font-size:12px;font-weight:600;color:#5b4a76}
+  .selo-parceiro .sw{display:grid;grid-template-columns:repeat(3,5px);gap:2px}
+  .selo-parceiro .sw span{width:5px;height:5px;border-radius:1px}
   /* cards de linha: hover/tap preenche na cor da linha e inverte */
   .line-card{transition:.25s;cursor:pointer}
   .line-card:hover,.line-card:active{background:var(--lc);border-color:var(--lc);transform:translateY(-6px);box-shadow:0 22px 44px -22px var(--lc)}
@@ -115,6 +123,7 @@
       <div>
         <h2 id="catTitulo" class="brand text-3xl font-extrabold">Catálogo</h2>
         <p id="catSub" class="text-[var(--muted)] text-sm mt-1"></p>
+        <div id="catSelo" class="mt-2"></div>
       </div>
       <div class="flex flex-wrap gap-2 w-full sm:w-auto" id="lineTabs"></div>
     </div>
@@ -169,6 +178,14 @@
 <script>
 const WPP='5515997670033';
 const slug=s=>(s||'').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[^a-z0-9]+/g,'_');
+// ===== Linha HiperPlay (representação Nátali-Brink) + rotas por linha =====
+const NB_PALETTE=['#7b2fbe','#f5a623','#ffd23f','#16a6b6','#4aa3df','#e63c66'];
+const HP_LINE='HiperPlay';
+const isHP=k=>k===HP_LINE;
+const lineSlug=s=>slug(s).replace(/_/g,'-');                 // "Promoção do Mês" -> "promocao-do-mes"
+const swatchHTML=cls=>`<div class="${cls}">${NB_PALETTE.map(c=>`<span style="background:${c}"></span>`).join('')}</div>`;
+const seloParceiro=`<span class="selo-parceiro"><span class="sw">${NB_PALETTE.map(c=>`<span style="background:${c}"></span>`).join('')}</span> Nátali-Brink · Representação comercial formalizada</span>`;
+function lineByPath(){ const s=(location.pathname||'').replace(/^\/+|\/+$/g,'').toLowerCase(); if(!s) return null; return Object.keys(LINHAS).find(k=>lineSlug(k)===s)||null; }
 
 // ===== LINHAS (dinâmicas: vêm do Supabase; fallback nos 3 padrões) =====
 const LINHAS_DEFAULT={
@@ -224,13 +241,13 @@ async function carregarSupabase(){
 }
 async function bootstrapCatalogo(){
   const okL=await carregarLinhas();
-  if(okL){ renderLinhas(); selecionarLinha(linhaAtual,false); }
+  if(okL){ renderLinhas(); const byPath=lineByPath(); selecionarLinha(byPath||linhaAtual,false,false); }
   const ok=await carregarSupabase();
   if(!ok){ DADOS=carregarProdutos(); renderGrid(); }   // fallback: sem produtos → empty state
   if(sb){
     sb.channel('pub-catalogo')
       .on('postgres_changes',{event:'*',schema:'public',table:'products'}, async ()=>{ const k=await carregarSupabase(); if(!k){ DADOS=carregarProdutos(); renderGrid(); } })
-      .on('postgres_changes',{event:'*',schema:'public',table:'product_lines'}, async ()=>{ await carregarLinhas(); renderLinhas(); selecionarLinha(linhaAtual,false); await carregarSupabase(); })
+      .on('postgres_changes',{event:'*',schema:'public',table:'product_lines'}, async ()=>{ await carregarLinhas(); renderLinhas(); selecionarLinha(linhaAtual,false,false); await carregarSupabase(); })
       .subscribe();
   }
 }
@@ -239,7 +256,14 @@ let DADOS=carregarProdutos(), linhaAtual='DiverKids';
 
 // ===== RENDER LINHAS (cards + tabs) =====
 function renderLinhas(){
-  document.getElementById('lineCards').innerHTML=Object.entries(LINHAS).map(([k,l])=>`
+  document.getElementById('lineCards').innerHTML=Object.entries(LINHAS).map(([k,l])=> isHP(k) ? `
+    <button onclick="selecionarLinha('${k}')" class="hp-line-card card p-6 text-left reveal">
+      ${swatchHTML('hp-swatch')}
+      <h3 class="brand text-2xl font-extrabold mt-3">${k}</h3>
+      <div class="text-sm font-semibold" style="color:#7b2fbe">${l.sub}</div>
+      <p class="text-sm text-[var(--muted)] mt-2">${l.desc}</p>
+      <div class="mt-3 text-sm font-bold flex items-center gap-1" style="color:#7b2fbe">Ver catálogo <i data-lucide="arrow-right" class="vc-arrow" style="width:15px;height:15px"></i></div>
+    </button>` : `
     <button onclick="selecionarLinha('${k}')" class="line-card card p-6 text-left reveal" style="--lc:${l.cor};border-top:5px solid ${l.cor}">
       <div class="lc-icon w-14 h-14 rounded-2xl grid place-items-center text-white" style="background:${l.cor}"><i data-lucide="${l.ic}"></i></div>
       <h3 class="brand text-2xl font-extrabold mt-3">${k}</h3>
@@ -248,23 +272,28 @@ function renderLinhas(){
       <div class="mt-3 text-sm font-bold flex items-center gap-1" style="color:${l.cor}">Ver catálogo <i data-lucide="arrow-right" class="vc-arrow" style="width:15px;height:15px"></i></div>
     </button>`).join('');
   document.getElementById('lineTabs').innerHTML=Object.keys(LINHAS).map(k=>`
-    <button class="line-tab chip ${k===linhaAtual?'active':'card'}" data-l="${k}" style="${k===linhaAtual?'background:'+LINHAS[k].cor:''}" onclick="selecionarLinha('${k}',true)">${k}</button>`).join('');
+    <button class="line-tab chip ${k===linhaAtual?'active':'card'}" data-l="${k}" style="${k===linhaAtual?'background:'+(isHP(k)?'#7b2fbe':LINHAS[k].cor):''}" onclick="selecionarLinha('${k}',true)">${k}</button>`).join('');
   lucide.createIcons();
 }
 
-function selecionarLinha(k,scroll){
+function selecionarLinha(k,scroll,updateUrl){
   if(scroll===undefined) scroll=true;
+  if(updateUrl===undefined) updateUrl=true;
+  if(!LINHAS[k]) k=Object.keys(LINHAS)[0];
   linhaAtual=k;
   const l=LINHAS[k];
   document.getElementById('catTitulo').textContent=k;
   document.getElementById('catSub').textContent=l.sub+' · '+l.desc;
-  document.querySelectorAll('#lineTabs .line-tab').forEach(b=>{ const on=b.dataset.l===k; b.classList.toggle('active',on); b.classList.toggle('card',!on); b.style.background=on?l.cor:''; });
+  document.getElementById('catSelo').innerHTML = isHP(k) ? seloParceiro : '';
+  document.querySelectorAll('#lineTabs .line-tab').forEach(b=>{ const on=b.dataset.l===k; b.classList.toggle('active',on); b.classList.toggle('card',!on); b.style.background=on?(isHP(k)?'#7b2fbe':l.cor):''; });
   renderGrid();
+  if(updateUrl){ try{ history.replaceState({},'', '/'+lineSlug(k)); }catch(e){} }   // rota por linha (compartilhável)
   if(scroll) document.getElementById('catalogo').scrollIntoView({behavior:'smooth',block:'start'});
 }
 
 function renderGrid(){
   const l=LINHAS[linhaAtual], list=DADOS[linhaAtual]||[];
+  const hp=isHP(linhaAtual), acc=hp?'#7b2fbe':l.cor, priceColor=hp?'#16324a':l.cor;
   const gridEl=document.getElementById('grid');
   if(!list.length){
     const msg=encodeURIComponent(`Olá! Gostaria de conhecer os modelos da linha *${linhaAtual}* da Hiper Play.`);
@@ -296,8 +325,8 @@ function renderGrid(){
             <button onclick="event.stopPropagation();cxScroll(${i},1)" class="cx-nav" style="right:6px">›</button>
             <span class="absolute bottom-2 right-2 chip" style="background:rgba(0,0,0,.55);color:#fff;padding:2px 8px;font-size:11px">${imgs.length} fotos</span>
           `:''}
-        `:`<div class="w-full h-full grid place-items-center"><i data-lucide="${p.ic||'blocks'}" style="width:52px;height:52px;color:${l.cor};opacity:.55"></i></div>`}
-        <span class="absolute top-3 left-3 chip text-white" style="background:${l.cor};padding:5px 12px;z-index:2">${linhaAtual}</span>
+        `:`<div class="w-full h-full grid place-items-center"><i data-lucide="${p.ic||'blocks'}" style="width:52px;height:52px;color:${acc};opacity:.55"></i></div>`}
+        <span class="absolute top-3 left-3 chip text-white" style="background:${acc};padding:5px 12px;z-index:2">${linhaAtual}</span>
       </div>
       <div class="p-5 flex flex-col flex-1">
         <span class="text-xs font-semibold text-[var(--muted)]">${p.tipo||''}</span>
@@ -305,12 +334,12 @@ function renderGrid(){
         <p class="text-sm text-[var(--muted)] mt-1 flex-1">${p.descricao||''}</p>
         ${(p.cores&&p.cores.length)?`<div class="flex items-center gap-1.5 mt-3 text-xs text-[var(--muted)]">Cores: ${p.cores.map(c=>`<span style="width:14px;height:14px;border-radius:99px;display:inline-block;background:${corVal(c)};border:1px solid #0001"></span>`).join('')}</div>`:''}
         <div class="flex items-center justify-between mt-4 pt-4 border-t border-[var(--line)]">
-          <div><div class="font-extrabold text-lg" style="color:${l.cor}">${p.preco}</div><div class="text-[11px] text-[var(--muted)]">Prazo: ${p.prazo}</div></div>
+          <div><div class="font-extrabold text-lg" style="color:${priceColor}">${p.preco}</div><div class="text-[11px] text-[var(--muted)]">Prazo: ${p.prazo}</div></div>
           <div class="flex items-center gap-2.5">
             <a href="https://wa.me/${WPP}?text=${msg}" target="_blank" onclick="event.stopPropagation()" title="Falar no WhatsApp sobre este brinquedo (rastreio p/ CRM)" class="grid place-items-center hover:scale-110 transition">
               <svg viewBox="0 0 24 24" fill="#25D366" style="width:29px;height:29px"><path d="M.057 24l1.687-6.163a11.867 11.867 0 01-1.587-5.945C.16 5.335 5.495 0 12.05 0a11.817 11.817 0 018.413 3.488 11.824 11.824 0 013.48 8.414c-.003 6.557-5.338 11.892-11.893 11.892a11.9 11.9 0 01-5.688-1.448L.057 24zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884a9.86 9.86 0 001.51 5.26l-.999 3.648 3.978-1.042zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413z"/></svg>
             </a>
-            <button class="btn text-white text-sm px-4 py-2 flex items-center gap-1.5" style="background:var(--blue)" onclick='comprar(${JSON.stringify(p).replace(/'/g,"&#39;")})'><i data-lucide="shopping-cart" style="width:15px;height:15px"></i> Comprar</button>
+            <button class="btn text-white text-sm px-4 py-2 flex items-center gap-1.5" style="background:${hp?'#7b2fbe':'var(--blue)'}" onclick='comprar(${JSON.stringify(p).replace(/'/g,"&#39;")})'><i data-lucide="shopping-cart" style="width:15px;height:15px"></i> Comprar</button>
           </div>
         </div>
       </div>
@@ -431,7 +460,7 @@ window.addEventListener('focus',resync);
 
 // init
 renderLinhas();
-selecionarLinha(Object.keys(LINHAS)[0],false); // render inicial (linhas padrão) sem rolar a página
+selecionarLinha(lineByPath()||Object.keys(LINHAS)[0],false,false); // render inicial (sem rolar; URL preservada)
 bootstrapCatalogo();                // busca linhas+produtos no Supabase + assina realtime (plug-and-play)
 initReveal();
 lucide.createIcons();
