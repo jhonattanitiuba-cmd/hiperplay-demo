@@ -2,91 +2,135 @@
 <html lang="pt-BR">
 <head>
 <meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 <title>Manual do Usuário · Hiper Play</title>
 <link rel="icon" href="/icon.svg" />
 <style>
-  :root{ --azul:#1CA9F1; --verde:#25D366; --roxo:#7b2fbe; --laranja:#f5a623; --tinta:#12203a; --muted:#5b6b82; --bg:#f4f8fc; --card:#fff; --bd:#e4ecf5; }
-  *{box-sizing:border-box} html,body{margin:0}
-  body{font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:var(--bg);color:var(--tinta);line-height:1.55}
-  .wrap{max-width:860px;margin:0 auto;padding:20px 16px 64px}
-  header{background:linear-gradient(135deg,#28b4f5,#1492d6);color:#fff;border-radius:22px;padding:26px;margin-bottom:18px}
-  header h1{margin:.2em 0 .1em;font-size:1.55rem}
-  header p{margin:0;opacity:.92}
-  .logo{font-weight:800;font-size:1.1rem;letter-spacing:.3px}
-  .sumario{background:var(--card);border:1px solid var(--bd);border-radius:18px;padding:16px 18px;margin-bottom:16px}
-  .sumario h2{font-size:1rem;margin:.1em 0 .6em;color:var(--muted);text-transform:uppercase;letter-spacing:.6px}
-  .sumario ol{margin:0;padding-left:0;list-style:none;counter-reset:s;columns:2;column-gap:22px}
-  .sumario li{counter-increment:s;margin:.3em 0;break-inside:avoid}
-  .sumario a{color:var(--tinta);text-decoration:none;display:flex;gap:8px;align-items:baseline}
-  .sumario a::before{content:counter(s);background:var(--azul);color:#fff;font-size:.7rem;font-weight:800;min-width:20px;height:20px;border-radius:6px;display:inline-grid;place-items:center;flex:0 0 auto}
-  .sumario a:hover{color:var(--azul)}
-  .card{background:var(--card);border:1px solid var(--bd);border-radius:18px;padding:18px 18px 8px;margin-bottom:12px;scroll-margin-top:14px}
-  .card h2{display:flex;align-items:center;gap:10px;font-size:1.08rem;margin:.1em 0 .35em}
-  .ico{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;color:#fff;font-size:1rem;flex:0 0 auto}
-  .card p{margin:.2em 0 .6em;color:#37485f}
-  ul{margin:.2em 0 1em;padding-left:0;list-style:none}
-  li.item{display:flex;gap:8px;margin:.35em 0;color:#37485f}
-  li.item::before{content:"›";color:var(--verde);font-weight:800}
+  :root{
+    --azul:#1CA9F1; --azul2:#1492d6; --verde:#25D366; --roxo:#7b2fbe; --laranja:#f5a623;
+    --tinta:#122036; --muted:#5b6b82; --bg:#eef5fb; --card:#fff; --bd:#e2ecf6; --sombra:0 10px 30px -14px rgba(17,40,80,.28);
+  }
+  @media (prefers-color-scheme: dark){
+    :root{ --tinta:#e9f1fb; --muted:#9fb2c8; --bg:#0e1726; --card:#141f31; --bd:#243349; --sombra:0 12px 34px -14px rgba(0,0,0,.55); }
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:var(--bg);color:var(--tinta);line-height:1.55;-webkit-font-smoothing:antialiased}
+
+  /* barra de progresso de leitura */
+  #progress{position:fixed;top:0;left:0;height:3px;width:0;z-index:60;background:linear-gradient(90deg,var(--verde),var(--azul));transition:width .12s ease-out}
+
+  .wrap{max-width:900px;margin:0 auto;padding:16px clamp(14px,4vw,24px) 80px}
+
+  header{position:relative;overflow:hidden;color:#fff;border-radius:22px;padding:clamp(22px,6vw,34px);margin-bottom:16px;
+    background:linear-gradient(120deg,#28b4f5,#1492d6,#7b2fbe);background-size:220% 220%;animation:grad 14s ease infinite}
+  @keyframes grad{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+  header .logo{font-weight:800;font-size:1.05rem;letter-spacing:.3px;opacity:.95}
+  header h1{margin:.15em 0 .12em;font-size:clamp(1.5rem,6vw,2.1rem);line-height:1.1}
+  header p{margin:0;opacity:.94;font-size:clamp(.95rem,3.5vw,1.05rem);max-width:44ch}
+  header .blob{position:absolute;right:-40px;top:-40px;width:180px;height:180px;border-radius:50%;
+    background:radial-gradient(circle at 30% 30%,rgba(255,255,255,.35),transparent 60%);animation:float 9s ease-in-out infinite}
+  @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(16px)}}
+
+  .sumario{background:var(--card);border:1px solid var(--bd);border-radius:18px;padding:14px 16px;margin-bottom:16px;box-shadow:var(--sombra);
+    position:sticky;top:10px;z-index:20}
+  .sumario h2{font-size:.72rem;margin:.1em 0 .55em;color:var(--muted);text-transform:uppercase;letter-spacing:.8px}
+  .chips{display:flex;gap:8px;overflow-x:auto;padding-bottom:2px;scrollbar-width:none}
+  .chips::-webkit-scrollbar{display:none}
+  .chips a{flex:0 0 auto;display:inline-flex;align-items:center;gap:7px;padding:8px 13px;border-radius:999px;text-decoration:none;
+    font-size:.82rem;font-weight:600;color:var(--muted);background:var(--bg);border:1px solid var(--bd);white-space:nowrap;transition:.18s;scroll-snap-align:start}
+  .chips a .n{font-size:.66rem;font-weight:800;min-width:18px;height:18px;border-radius:6px;display:grid;place-items:center;background:var(--azul);color:#fff}
+  .chips a:hover{transform:translateY(-1px)}
+  .chips a.active{color:#fff;background:linear-gradient(120deg,var(--azul),var(--azul2));border-color:transparent}
+  .chips a.active .n{background:rgba(255,255,255,.28)}
+
+  .card{background:var(--card);border:1px solid var(--bd);border-radius:18px;padding:clamp(16px,4.5vw,20px);margin-bottom:12px;
+    scroll-margin-top:84px;box-shadow:var(--sombra);
+    opacity:0;transform:translateY(18px);transition:opacity .5s ease,transform .5s cubic-bezier(.2,.7,.2,1)}
+  .card.in{opacity:1;transform:none}
+  .card:active{transform:scale(.995)}
+  .card h2{display:flex;align-items:center;gap:11px;font-size:clamp(1.02rem,4.2vw,1.14rem);margin:.05em 0 .3em}
+  .ico{width:38px;height:38px;border-radius:11px;display:grid;place-items:center;color:#fff;font-size:1.05rem;flex:0 0 auto;box-shadow:0 6px 14px -6px rgba(0,0,0,.4)}
+  .card p{margin:.1em 0 .7em;color:var(--muted)}
+  ul{margin:.1em 0 .3em;padding-left:0;list-style:none}
+  li.item{display:flex;gap:9px;margin:.45em 0;color:var(--tinta);opacity:.92}
+  li.item::before{content:"›";color:var(--verde);font-weight:800;font-size:1.05em;line-height:1.35}
   b{color:var(--tinta)}
-  .cta{display:inline-flex;align-items:center;gap:8px;background:var(--verde);color:#fff;text-decoration:none;font-weight:700;padding:12px 18px;border-radius:14px;margin-top:6px}
-  footer{text-align:center;color:var(--muted);font-size:.85rem;margin-top:22px}
-  @media(max-width:600px){ .sumario ol{columns:1} }
+
+  .cta{display:inline-flex;align-items:center;gap:9px;background:var(--verde);color:#fff;text-decoration:none;font-weight:700;
+    padding:14px 20px;border-radius:15px;margin-top:8px;box-shadow:0 12px 24px -12px rgba(37,211,102,.7);transition:.18s}
+  .cta:hover{transform:translateY(-2px)}
+  footer{text-align:center;color:var(--muted);font-size:.84rem;margin-top:24px}
+
+  /* voltar ao topo */
+  #top{position:fixed;right:16px;bottom:calc(16px + env(safe-area-inset-bottom));z-index:50;width:46px;height:46px;border:none;border-radius:50%;
+    background:linear-gradient(135deg,#4fc3f7,var(--azul));color:#fff;font-size:1.2rem;box-shadow:var(--sombra);cursor:pointer;
+    opacity:0;transform:translateY(12px) scale(.9);pointer-events:none;transition:.25s}
+  #top.show{opacity:1;transform:none;pointer-events:auto}
+
+  @media (prefers-reduced-motion: reduce){
+    *{animation:none!important}
+    html{scroll-behavior:auto}
+    .card{opacity:1;transform:none;transition:none}
+  }
 </style>
 </head>
 <body>
+<div id="progress"></div>
+
 <div class="wrap">
   <header>
+    <span class="blob"></span>
     <div class="logo">🛝 Hiper Play</div>
     <h1>Manual do Usuário</h1>
-    <p>Guia completo do sistema de gestão, catálogo e atendimento com a SARAH.</p>
+    <p>Guia do sistema de gestão, catálogo e atendimento com a SARAH.</p>
   </header>
 
-  <nav class="sumario">
+  <nav class="sumario" aria-label="Sumário">
     <h2>Sumário</h2>
-    <ol>
-      <li><a href="#instalar">Instalar no celular</a></li>
-      <li><a href="#visao">Visão Geral (painel)</a></li>
-      <li><a href="#catalogo">Catálogo e Linhas</a></li>
-      <li><a href="#orcamentos">Orçamentos e Vendas</a></li>
-      <li><a href="#producao">Produção e PCP</a></li>
-      <li><a href="#instalacao">Projetos e Instalação</a></li>
-      <li><a href="#mapa">Mapa</a></li>
-      <li><a href="#whatsapp">WhatsApp (atendimento)</a></li>
-      <li><a href="#agente">Meu Agente (SARAH)</a></li>
-      <li><a href="#config">Configurações</a></li>
-    </ol>
+    <div class="chips" id="chips">
+      <a href="#instalar"><span class="n">1</span>Instalar</a>
+      <a href="#visao"><span class="n">2</span>Visão Geral</a>
+      <a href="#catalogo"><span class="n">3</span>Catálogo</a>
+      <a href="#orcamentos"><span class="n">4</span>Orçamentos</a>
+      <a href="#producao"><span class="n">5</span>Produção</a>
+      <a href="#instalacao"><span class="n">6</span>Instalação</a>
+      <a href="#mapa"><span class="n">7</span>Mapa</a>
+      <a href="#whatsapp"><span class="n">8</span>WhatsApp</a>
+      <a href="#agente"><span class="n">9</span>Meu Agente</a>
+      <a href="#config"><span class="n">10</span>Config</a>
+    </div>
   </nav>
 
   <section class="card" id="instalar">
     <h2><span class="ico" style="background:#1CA9F1">📱</span> 1. Instalar no celular</h2>
-    <p>O sistema funciona como aplicativo (PWA). Não precisa baixar nada na loja.</p>
+    <p>O sistema funciona como aplicativo (PWA), sem baixar nada na loja.</p>
     <ul>
       <li class="item">Abra <b>app.hiperplay.com.br</b> no Chrome (Android) ou Safari (iPhone).</li>
-      <li class="item">Android: toque no menu de três pontos e escolha <b>“Instalar app”</b>.</li>
-      <li class="item">iPhone: toque em <b>Compartilhar</b> e depois em <b>“Adicionar à Tela de Início”</b>.</li>
-      <li class="item">Faça login com seu e mail e senha. Pronto: abre em tela cheia, como um app.</li>
+      <li class="item">Android: menu de três pontos, depois <b>“Instalar app”</b>.</li>
+      <li class="item">iPhone: <b>Compartilhar</b>, depois <b>“Adicionar à Tela de Início”</b>.</li>
+      <li class="item">Faça login e pronto: abre em tela cheia, como um app.</li>
     </ul>
   </section>
 
   <section class="card" id="visao">
     <h2><span class="ico" style="background:#0b6aa1">📊</span> 2. Visão Geral (painel)</h2>
-    <p>É a tela inicial. Mostra o resumo do negócio num relance.</p>
+    <p>Tela inicial com o resumo do negócio num relance.</p>
     <ul>
-      <li class="item">Indicadores de vendas, orçamentos em aberto e produção do momento.</li>
-      <li class="item">Atalhos rápidos para as áreas mais usadas.</li>
-      <li class="item">Use a busca no topo para achar produto, cliente ou orçamento.</li>
+      <li class="item">Indicadores de vendas, orçamentos em aberto e produção.</li>
+      <li class="item">Atalhos para as áreas mais usadas.</li>
+      <li class="item">Busca no topo para achar produto, cliente ou orçamento.</li>
     </ul>
   </section>
 
   <section class="card" id="catalogo">
     <h2><span class="ico" style="background:#f5a623">📦</span> 3. Catálogo e Linhas</h2>
-    <p>Onde ficam os produtos que aparecem no site público em tempo real.</p>
+    <p>Os produtos que aparecem no site público em tempo real.</p>
     <ul>
-      <li class="item"><b>Novo produto</b>: nome, preço, prazo, descrição, escolha a Linha e anexe várias fotos (a 1ª vira capa).</li>
-      <li class="item"><b>Linhas</b>: crie e organize as famílias (DiverKids, HomePlay, EcoPlay, HiperPlay, Promoção do Mês).</li>
-      <li class="item">Tudo que você ativa aparece na hora em <b>hiperplay.com.br</b>, na rota da linha (ex.: /diverkids).</li>
-      <li class="item">Apagar uma linha com produtos fica bloqueado, para não deixar item órfão.</li>
+      <li class="item"><b>Novo produto</b>: nome, preço, prazo, Linha e várias fotos (a 1ª vira capa).</li>
+      <li class="item"><b>Linhas</b>: organize as famílias (DiverKids, HomePlay, EcoPlay, HiperPlay, Promoção do Mês).</li>
+      <li class="item">O que você ativa aparece na hora em <b>hiperplay.com.br</b>, na rota da linha.</li>
+      <li class="item">Apagar uma linha com produtos fica bloqueado.</li>
     </ul>
   </section>
 
@@ -94,8 +138,8 @@
     <h2><span class="ico" style="background:#27c08a">🧾</span> 4. Orçamentos e Vendas</h2>
     <p>Registra e acompanha cada proposta até virar venda.</p>
     <ul>
-      <li class="item">Crie um orçamento manual ou receba os que a SARAH montou no WhatsApp.</li>
-      <li class="item">Cada orçamento tem número automático, itens, valor e estágio (enviado, negociação, vendido).</li>
+      <li class="item">Crie um orçamento manual ou receba os que a SARAH montou.</li>
+      <li class="item">Número automático, itens, valor e estágio (enviado, negociação, vendido).</li>
       <li class="item">Ao fechar, a equipe assume e dá andamento na produção.</li>
     </ul>
   </section>
@@ -114,7 +158,7 @@
     <p>Da fábrica até a montagem no cliente.</p>
     <ul>
       <li class="item">Agende e acompanhe entregas e montagens.</li>
-      <li class="item">Registre o status de cada projeto (a caminho, montado, concluído).</li>
+      <li class="item">Registre o status (a caminho, montado, concluído).</li>
     </ul>
   </section>
 
@@ -122,7 +166,7 @@
     <h2><span class="ico" style="background:#16a6b6">📍</span> 7. Mapa</h2>
     <p>Visão geográfica dos clientes e instalações.</p>
     <ul>
-      <li class="item">Veja onde estão os projetos e planeje rotas de entrega.</li>
+      <li class="item">Veja onde estão os projetos e planeje as rotas de entrega.</li>
     </ul>
   </section>
 
@@ -130,11 +174,11 @@
     <h2><span class="ico" style="background:#25D366">💬</span> 8. WhatsApp (atendimento)</h2>
     <p>O WhatsApp da empresa dentro do sistema, com a SARAH atendendo.</p>
     <ul>
-      <li class="item">Na barra de baixo (celular) o <b>WhatsApp vem em 1º</b>. Arraste para o lado para ver as outras seções.</li>
-      <li class="item">Abas: <b>Minhas</b> (transferidas para você), <b>IA</b> (a SARAH atende), <b>Não lidas</b> e <b>Todas</b>.</li>
-      <li class="item">Cada conversa mostra os <b>dois lados no mesmo chat</b>. Bolinha verde significa mensagem nova e some ao abrir.</li>
-      <li class="item">No topo da conversa: botão <b>IA</b> (liga ou desliga a SARAH só naquele contato) e <b>Cliente / Copilot</b>.</li>
-      <li class="item">Se você responder manualmente, a IA <b>pausa sozinha</b> e a conversa vai para a aba Minhas.</li>
+      <li class="item">No celular, o <b>WhatsApp vem em 1º</b> na barra de baixo. Arraste para ver as outras seções.</li>
+      <li class="item">Abas: <b>Minhas</b>, <b>IA</b>, <b>Não lidas</b> e <b>Todas</b>.</li>
+      <li class="item">Cada conversa mostra os <b>dois lados no mesmo chat</b>. Bolinha verde é mensagem nova e some ao abrir.</li>
+      <li class="item">No topo: botão <b>IA</b> (liga ou desliga só naquele contato) e <b>Cliente / Copilot</b>.</li>
+      <li class="item">Se você responder manualmente, a IA <b>pausa sozinha</b> e a conversa vai para Minhas.</li>
     </ul>
   </section>
 
@@ -143,9 +187,9 @@
     <p>Onde você configura a atendente virtual, de forma simples.</p>
     <ul>
       <li class="item">A SARAH apresenta produtos, tira dúvidas, calcula frete e <b>monta o orçamento</b>.</li>
-      <li class="item">Ao fechar uma venda (ou quando o cliente pede), ela <b>transfere e avisa a equipe com som</b>.</li>
-      <li class="item">Configure o número que recebe a notificação, as ferramentas da IA e o padrão de ativação.</li>
-      <li class="item">Ela <b>nunca inventa</b> preço, garantia ou desconto: nesses casos encaminha para o comercial.</li>
+      <li class="item">Ao fechar uma venda, <b>transfere e avisa a equipe com som</b>.</li>
+      <li class="item">Configure o número da notificação, as ferramentas da IA e o padrão.</li>
+      <li class="item">Ela <b>nunca inventa</b> preço, garantia ou desconto: encaminha para o comercial.</li>
     </ul>
   </section>
 
@@ -154,7 +198,7 @@
     <p>Ajustes da conta e da equipe.</p>
     <ul>
       <li class="item">Perfil: seu nome, foto e dados de acesso.</li>
-      <li class="item">Membros: convide e defina o papel de cada pessoa da equipe.</li>
+      <li class="item">Membros: convide e defina o papel de cada pessoa.</li>
     </ul>
   </section>
 
@@ -162,5 +206,43 @@
 
   <footer>Hiper Play · Fábrica de Sonhos · app.hiperplay.com.br</footer>
 </div>
+
+<button id="top" aria-label="Voltar ao topo">↑</button>
+
+<script>
+  var cards=[].slice.call(document.querySelectorAll('.card'));
+  var links=[].slice.call(document.querySelectorAll('.chips a'));
+  var prog=document.getElementById('progress');
+  var topBtn=document.getElementById('top');
+
+  // revelar cards ao rolar (com escalonamento leve)
+  if('IntersectionObserver' in window){
+    var io=new IntersectionObserver(function(es){
+      es.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } });
+    },{threshold:.12,rootMargin:'0px 0px -8% 0px'});
+    cards.forEach(function(c,i){ c.style.transitionDelay=(Math.min(i,4)*40)+'ms'; io.observe(c); });
+  } else { cards.forEach(function(c){c.classList.add('in');}); }
+
+  // scroll-spy: destaca a seção atual no sumário + barra de progresso + botão topo
+  function onScroll(){
+    var h=document.documentElement;
+    var max=h.scrollHeight-h.clientHeight;
+    prog.style.width=(max>0?(h.scrollTop/max*100):0)+'%';
+    topBtn.classList.toggle('show', h.scrollTop>320);
+    var cur=cards[0], mid=window.innerHeight*0.35;
+    for(var i=0;i<cards.length;i++){ if(cards[i].getBoundingClientRect().top<=mid) cur=cards[i]; }
+    var id=cur.id;
+    links.forEach(function(a){
+      var on=a.getAttribute('href')==='#'+id;
+      a.classList.toggle('active',on);
+      if(on) a.scrollIntoView({inline:'center',block:'nearest',behavior:'smooth'});
+    });
+  }
+  document.addEventListener('scroll',onScroll,{passive:true});
+  window.addEventListener('resize',onScroll);
+  onScroll();
+
+  topBtn.addEventListener('click',function(){ window.scrollTo({top:0,behavior:'smooth'}); });
+</script>
 </body>
 </html>
