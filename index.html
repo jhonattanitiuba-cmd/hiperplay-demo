@@ -193,6 +193,68 @@
 <script>
 const WPP='5515997670033';
 const slug=s=>(s||'').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[^a-z0-9]+/g,'_');
+
+// ===== Origem do clique (Google Ads) =====
+// Quando alguém chega por um anúncio, o Google põe ?gclid=... na URL. Guardamos
+// isso para saber, lá na frente, qual campanha trouxe a venda.
+//
+// O gclid tem ~90 caracteres e a mensagem do WhatsApp é lida pelo cliente:
+// colar aquilo ali gera desconfiança e ele apaga. Então o gclid NUNCA entra na
+// mensagem. Geramos um código de 6 caracteres e mandamos só ele, embutido na
+// "Ref:" que a mensagem já tem hoje. O cliente vê um número de protocolo comum;
+// o sistema resolve o código e recupera a origem inteira.
+const API_SISTEMA='https://app.hiperplay.com.br';
+const HP_CLIQUE='hp_clique';
+const VALIDADE_CLIQUE=90*24*60*60*1000;  // o próprio Google descarta gclid mais velho que 90 dias
+// Alfabeto sem I, L, O, 0 e 1: um dia alguém vai ler este código em voz alta.
+const ALFABETO='ABCDEFGHJKMNPQRSTUVWXYZ23456789';
+
+function novoCodigo(){
+  const b=new Uint8Array(6);
+  (window.crypto||window.msCrypto).getRandomValues(b);
+  let s='';
+  for(let i=0;i<6;i++) s+=ALFABETO[b[i]%ALFABETO.length];
+  return s;
+}
+function lerClique(){
+  try{
+    const r=JSON.parse(localStorage.getItem(HP_CLIQUE)||'null');
+    if(!r||!r.cod) return null;
+    if(Date.now()-(r.ts||0)>VALIDADE_CLIQUE){ localStorage.removeItem(HP_CLIQUE); return null; }
+    return r;
+  }catch(e){ return null; }
+}
+(function capturarClique(){
+  try{
+    const q=new URLSearchParams(location.search);
+    // gbraid e wbraid vêm no lugar do gclid em iPhone com restrição de rastreio.
+    // Ignorá-los seria perder a maior parte do tráfego de celular.
+    const gclid=q.get('gclid'), gbraid=q.get('gbraid'), wbraid=q.get('wbraid');
+    if(!gclid&&!gbraid&&!wbraid) return;
+    // Chegou clique novo: ele vence o anterior (last-click, o modelo do Google).
+    localStorage.setItem(HP_CLIQUE,JSON.stringify({
+      cod:novoCodigo(), gclid, gbraid, wbraid, ts:Date.now(),
+      camp:q.get('utm_campaign')||null, enviado:false
+    }));
+  }catch(e){}
+})();
+/** Manda o par código→gclid para o sistema. Best-effort: tenta de novo depois. */
+function registrarClique(){
+  const r=lerClique();
+  if(!r||r.enviado) return;
+  fetch(API_SISTEMA+'/api/ads/click',{
+    method:'POST', headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({cod:r.cod,gclid:r.gclid,gbraid:r.gbraid,wbraid:r.wbraid,camp:r.camp}),
+    keepalive:true
+  }).then(res=>{
+    if(res.ok){ r.enviado=true; try{ localStorage.setItem(HP_CLIQUE,JSON.stringify(r)); }catch(e){} }
+  }).catch(()=>{});
+}
+/** Acrescenta o código à Ref que já existe na mensagem. */
+function comCodigo(ref){
+  const r=lerClique();
+  return r? ref+'-'+r.cod : ref;
+}
 // ===== Linha HiperPlay (representação Nátali-Brink) + rotas por linha =====
 const NB_PALETTE=['#7b2fbe','#f5a623','#ffd23f','#16a6b6','#4aa3df','#e63c66'];
 const HP_LINE='HiperPlay';
@@ -366,7 +428,7 @@ function renderGrid(){
   gridEl.innerHTML=list.map((p,i)=>{
     const foto=p.foto||getFoto(p.nome);
     const imgs=(p.imgs&&p.imgs.length)?p.imgs:(foto?[foto]:[]);
-    const ref='HP-'+slug(p.nome).slice(0,22).toUpperCase();
+    const ref=comCodigo('HP-'+slug(p.nome).slice(0,22).toUpperCase());
     const msg=encodeURIComponent(`Olá! Tenho interesse neste brinquedo da *Loja Hiper Play*:\n\n*Produto:* ${p.nome}\n*Linha:* ${linhaAtual}\n*Valor:* ${p.preco}\n\n_Origem: Loja • Ref: ${ref}_`);
     return `
     <div class="card prod overflow-hidden flex flex-col" style="animation:pop .4s ease ${i*0.05}s both">
@@ -516,12 +578,12 @@ function enviarPedido(){
 (doc?`*CPF/CNPJ:* ${encodeURIComponent(doc)}%0A`:'')+
 `*Endereço:* ${encodeURIComponent(end)}, ${encodeURIComponent(cidade)}-${uf}${cep?(', CEP '+encodeURIComponent(cep)):''}%0A%0A`+
 `*Frete:* ${encodeURIComponent(frete)}%0A%0A`+
-`_Origem: Loja Hiper Play • Ref: HP-${slug(_pedido.nome).slice(0,22).toUpperCase()}_`;
+`_Origem: Loja Hiper Play • Ref: ${comCodigo("HP-"+slug(_pedido.nome).slice(0,22).toUpperCase())}_`;
   window.open('https://wa.me/'+WPP+'?text='+txt,'_blank');
   sucessoPedido(frete);
 }
 function sucessoPedido(frete){
-  const ref='HP-'+slug(_pedido.nome).slice(0,22).toUpperCase();
+  const ref=comCodigo('HP-'+slug(_pedido.nome).slice(0,22).toUpperCase());
   abrirModal(`
     <div class="text-center py-2">
       <div class="w-16 h-16 rounded-full grid place-items-center mx-auto text-white" style="background:var(--wpp)">
@@ -585,6 +647,30 @@ selecionarLinha(lineByPath()||Object.keys(LINHAS)[0],false,false); // render ini
 bootstrapCatalogo();                // busca linhas+produtos no Supabase + assina realtime (plug-and-play)
 initReveal();
 lucide.createIcons();
+registrarClique();
+
+// Os links fixos de WhatsApp (topo, hero, botão flutuante) são HTML estático e
+// não passam por comCodigo. Uma varredura acrescenta a Ref a todos, então
+// "Pedir orçamento" e o botão flutuante também ficam rastreados.
+(function marcarLinksFixos(){
+  const r=lerClique();
+  if(!r) return;
+  document.querySelectorAll('a[href*="wa.me/"]').forEach(a=>{
+    try{
+      const u=new URL(a.href);
+      const t=u.searchParams.get('text')||'';
+      if(t.indexOf('Ref:')>=0) return;          // já tem código: veio do produto
+      u.searchParams.set('text', t+(t?'\n\n':'')+'_Ref: '+r.cod+'_');
+      a.href=u.toString();
+    }catch(e){}
+  });
+  // Registra de novo no clique: se o primeiro envio falhou, é a última chance
+  // antes de a mensagem chegar na SARAH com um código que ninguém conhece.
+  document.addEventListener('click',e=>{
+    const a=e.target && e.target.closest && e.target.closest('a[href*="wa.me/"]');
+    if(a) registrarClique();
+  },{capture:true});
+})();
 </script>
 </body>
 </html>
