@@ -274,6 +274,7 @@ function renderLinhas(){
   document.getElementById('lineTabs').innerHTML=Object.keys(LINHAS).map(k=>`
     <button class="line-tab chip ${k===linhaAtual?'active':'card'}" data-l="${k}" style="${k===linhaAtual?'background:'+(isHP(k)?'#7b2fbe':LINHAS[k].cor):''}" onclick="selecionarLinha('${k}',true)">${k}</button>`).join('');
   lucide.createIcons();
+  observeReveals();   // cards recriados (ex.: após carregar do Supabase) também precisam ser observados
 }
 
 function selecionarLinha(k,scroll,updateUrl){
@@ -448,9 +449,28 @@ function cxScroll(i,dir){ const el=document.getElementById('cx'+i); if(el) el.sc
 document.addEventListener('keydown',e=>{ if(e.key==='Escape') fecharModal(); });
 
 // ===== reveal on scroll =====
+// O observer precisa ser reaproveitável: os cards de linha são RECRIADOS quando
+// o Supabase carrega (renderLinhas roda de novo), e os nós novos também têm de
+// ser observados, senão ficam presos em opacity:0 e viram uma lacuna branca.
+let _revealIO=null;
+function observeReveals(){
+  if(!_revealIO) return;
+  document.querySelectorAll('.reveal').forEach(el=>{
+    if(el.dataset.revObs) return;   // não observa o mesmo nó duas vezes
+    el.dataset.revObs='1';
+    _revealIO.observe(el);
+  });
+}
 function initReveal(){
-  const io=new IntersectionObserver(es=>es.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target);} }),{threshold:.12});
-  document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+  if(!('IntersectionObserver' in window)){                       // sem suporte: mostra tudo
+    document.querySelectorAll('.reveal').forEach(el=>el.classList.add('in'));
+    return;
+  }
+  _revealIO=new IntersectionObserver(es=>es.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('in'); _revealIO.unobserve(e.target);} }),{threshold:.12});
+  observeReveals();
+  // Failsafe: numa loja, nenhum conteúdo pode ficar invisível. Se algo não
+  // revelou (observer não disparou, card recriado tarde), revela na marra.
+  setTimeout(()=>document.querySelectorAll('.reveal:not(.in)').forEach(el=>el.classList.add('in')),1500);
 }
 
 // ===== sync ao vivo (Supabase; fallback: catálogo-semente) =====
