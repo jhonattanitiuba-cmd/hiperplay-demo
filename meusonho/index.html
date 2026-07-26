@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Montar meu Sonho · Hiper Play Playgrounds</title>
+<meta name="description" content="Monte o playground dos seus sonhos peça por peça. Combo com 2 ou mais peças ganha 20% de desconto.">
+<meta name="theme-color" content="#1CA9F1">
+<link rel="icon" type="image/svg+xml" href="/icon.svg">
+<link rel="apple-touch-icon" href="/icon.svg">
+<link rel="manifest" href="/manifest.webmanifest">
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://unpkg.com/lucide@latest"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Baloo+2:wght@600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --blue:#1CA9F1; --blue-d:#1492d6; --ink:#16324a; --muted:#65788c; --ice:#eef4fb; --line:#e2e9f2;
+    --green:#34c88f; --rosa:#ff7fb0; --amarelo:#ffcf5c; --roxo:#a78bfa; --laranja:#ff9a62;
+    --wpp:#25D366; --sarah:#7b2fbe;
+  }
+  *{font-family:'Montserrat',sans-serif;-webkit-tap-highlight-color:transparent;}
+  body{color:var(--ink);background:#fff;overflow-x:hidden;}
+  .brand{font-family:'Baloo 2',cursive;}
+  .wordmark span{-webkit-text-stroke:3px #fff;paint-order:stroke fill;}
+  ::-webkit-scrollbar{width:9px}::-webkit-scrollbar-thumb{background:#cdd8e6;border-radius:9px}
+  .card{background:#fff;border:1px solid var(--line);border-radius:22px;}
+  .chip{border-radius:999px;font-weight:700;font-size:12px;padding:7px 15px;transition:.18s;}
+  .btn{border-radius:14px;font-weight:700;transition:.18s;cursor:pointer;}
+  .btn:active{transform:scale(.96)}
+  @keyframes floaty{0%,100%{transform:translateY(0)}50%{transform:translateY(-9px)}}
+  .floaty{animation:floaty 3.5s ease-in-out infinite}
+  @keyframes pop{from{opacity:0;transform:translateY(16px) scale(.96)}to{opacity:1;transform:none}}
+  /* card de peça: seleção viva */
+  .peca{transition:.2s;cursor:pointer;position:relative;overflow:hidden}
+  .peca:hover{transform:translateY(-4px);box-shadow:0 18px 34px -22px rgba(20,50,80,.5)}
+  .peca.on{border-color:var(--ac);box-shadow:0 0 0 2px var(--ac) inset}
+  .step{width:34px;height:34px;border-radius:11px;display:grid;place-items:center;font-weight:800;font-size:18px;line-height:1;border:none;cursor:pointer;transition:.15s}
+  .step:active{transform:scale(.9)}
+  /* barra de resumo fixa */
+  #resumo{position:fixed;left:0;right:0;bottom:0;z-index:60;transform:translateY(120%);transition:transform .35s cubic-bezier(.2,.8,.3,1)}
+  #resumo.show{transform:none}
+  /* SARAH flutuante */
+  #sarah{position:fixed;right:16px;z-index:65;bottom:96px;display:flex;align-items:flex-end;gap:10px;flex-direction:row-reverse}
+  #sarahFala{max-width:220px;background:#fff;border:1px solid var(--line);border-radius:16px;border-bottom-right-radius:4px;padding:10px 13px;font-size:13px;font-weight:600;color:var(--ink);box-shadow:0 14px 34px -16px rgba(20,50,80,.5);animation:pop .3s ease}
+  #sarahAv{width:56px;height:56px;border-radius:50%;flex:0 0 auto;display:grid;place-items:center;color:#fff;box-shadow:0 14px 30px -10px rgba(123,47,190,.7);background:linear-gradient(135deg,#8b5cf6,#4aa3df);cursor:pointer}
+  @media (max-width:420px){ #sarahFala{max-width:170px} }
+  @media (prefers-reduced-motion: reduce){ .floaty{animation:none} }
+</style>
+</head>
+<body class="pb-40">
+
+<!-- HEADER -->
+<header class="sticky top-0 z-50 backdrop-blur border-b" style="background:linear-gradient(135deg,#28b4f5,#1492d6);border-color:rgba(255,255,255,.18)">
+  <div class="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between gap-3">
+    <a href="/" class="select-none leading-none">
+      <span class="wordmark brand text-2xl sm:text-3xl font-extrabold block">
+        <span style="color:#ff5a5f">H</span><span style="color:#ff8a3d">i</span><span style="color:#27c08a">p</span><span style="color:#ffc534">e</span><span style="color:#ff5a5f">r</span>
+        <span style="color:#8b5cf6">P</span><span style="color:#ffc534">l</span><span style="color:#27c08a">a</span><span style="color:#ff8a3d">y</span>
+      </span>
+      <span class="block italic font-semibold text-white/90 text-[10px] sm:text-xs tracking-wide -mt-0.5">Fábrica de Sonhos</span>
+    </a>
+    <a href="/" class="flex items-center gap-1.5 text-white text-sm font-semibold px-3 py-2 rounded-full transition hover:bg-white/25" style="background:#ffffff1f">
+      <i data-lucide="arrow-left" style="width:16px;height:16px"></i> Voltar à loja
+    </a>
+  </div>
+</header>
+
+<!-- HERO -->
+<section class="relative overflow-hidden" style="background:linear-gradient(135deg,#28b4f5,#1492d6)">
+  <div class="max-w-4xl mx-auto px-4 py-10 sm:py-14 text-center text-white">
+    <div class="inline-flex items-center gap-2 chip mb-3" style="background:#ffffff2e">
+      <i data-lucide="sparkles" style="width:14px;height:14px"></i> Combo com 2+ peças ganha 20% OFF
+    </div>
+    <h1 class="brand text-3xl sm:text-5xl font-extrabold leading-tight">Montar meu Sonho</h1>
+    <p class="mt-3 text-white/90 max-w-xl mx-auto">Escolha as peças e monte o playground perfeito. O valor vai se ajustando enquanto você seleciona.</p>
+  </div>
+  <svg viewBox="0 0 1440 80" class="block w-full" style="margin-bottom:-2px"><path fill="#ffffff" d="M0,40 C240,90 480,0 720,30 C960,60 1200,10 1440,40 L1440,80 L0,80 Z"/></svg>
+</section>
+
+<!-- PEÇAS -->
+<main class="max-w-5xl mx-auto px-4 py-8" id="secoes"></main>
+
+<!-- SARAH flutuante -->
+<div id="sarah">
+  <button id="sarahAv" onclick="montarSonho()" title="Falar com a SARAH no WhatsApp" aria-label="Falar com a SARAH">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:26px;height:26px"><path d="M12 8V4H8"/><rect width="16" height="12" x="4" y="8" rx="2"/><path d="M2 14h2"/><path d="M20 14h2"/><path d="M15 13v2"/><path d="M9 13v2"/></svg>
+  </button>
+  <div id="sarahFala">Oi! Sou a SARAH 💜 Toque nas peças para montar seu sonho.</div>
+</div>
+
+<!-- BARRA DE RESUMO FIXA -->
+<div id="resumo">
+  <div class="max-w-5xl mx-auto px-3 pb-3">
+    <div class="card p-3 sm:p-4 flex items-center gap-3" style="box-shadow:0 -10px 40px -20px rgba(20,50,80,.5)">
+      <div class="min-w-0 flex-1">
+        <div class="flex items-baseline gap-2 flex-wrap">
+          <span id="rTotal" class="brand text-2xl font-extrabold" style="color:var(--blue-d)">R$ 0,00</span>
+          <span id="rSubRiscado" class="text-sm text-[var(--muted)] line-through hidden"></span>
+        </div>
+        <div id="rLinha" class="text-[11px] text-[var(--muted)] mt-0.5">Nenhuma peça ainda</div>
+      </div>
+      <button class="btn text-white text-sm px-4 sm:px-5 py-3 flex items-center gap-2 shrink-0" style="background:var(--wpp)" onclick="montarSonho()">
+        <svg viewBox="0 0 24 24" fill="currentColor" style="width:18px;height:18px"><path d="M.057 24l1.687-6.163a11.867 11.867 0 01-1.587-5.945C.16 5.335 5.495 0 12.05 0a11.817 11.817 0 018.413 3.488 11.824 11.824 0 013.48 8.414c-.003 6.557-5.338 11.892-11.893 11.892a11.9 11.9 0 01-5.688-1.448L.057 24zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884a9.86 9.86 0 001.51 5.26l-.999 3.648 3.978-1.042zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413z"/></svg>
+        <span class="hidden sm:inline">Montar meu Sonho</span><span class="sm:hidden">Finalizar</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<script>
+const WPP='5515997670033';
+const DESCONTO_COMBO=0.20;     // combo (2+ peças) ganha 20%
+const COMBO_MINIMO=2;          // a partir de quantas peças vira combo
+const slug=s=>(s||'').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[^a-z0-9]+/g,'_');
+function fmtBRL(v){ const n=Number(v)||0; return n.toLocaleString('pt-BR',{style:'currency',currency:'BRL'}); }
+
+// ===== Origem do clique (Google Ads) — mesmo mecanismo da loja =====
+// gclid nunca vai na mensagem; guardamos um código curto e mandamos só ele na Ref.
+const API_SISTEMA='https://app.hiperplay.com.br';
+const HP_CLIQUE='hp_clique';
+const VALIDADE_CLIQUE=90*24*60*60*1000;
+const ALFABETO='ABCDEFGHJKMNPQRSTUVWXYZ23456789';
+function novoCodigo(){ const b=new Uint8Array(6); (window.crypto||window.msCrypto).getRandomValues(b); let s=''; for(let i=0;i<6;i++) s+=ALFABETO[b[i]%ALFABETO.length]; return s; }
+function lerClique(){ try{ const r=JSON.parse(localStorage.getItem(HP_CLIQUE)||'null'); if(!r||!r.cod) return null; if(Date.now()-(r.ts||0)>VALIDADE_CLIQUE){ localStorage.removeItem(HP_CLIQUE); return null; } return r; }catch(e){ return null; } }
+(function capturarClique(){ try{ const q=new URLSearchParams(location.search); const gclid=q.get('gclid'),gbraid=q.get('gbraid'),wbraid=q.get('wbraid'); if(!gclid&&!gbraid&&!wbraid) return; localStorage.setItem(HP_CLIQUE,JSON.stringify({cod:novoCodigo(),gclid,gbraid,wbraid,ts:Date.now(),camp:q.get('utm_campaign')||null,enviado:false})); }catch(e){} })();
+function registrarClique(){ const r=lerClique(); if(!r||r.enviado) return; fetch(API_SISTEMA+'/api/ads/click',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({cod:r.cod,gclid:r.gclid,gbraid:r.gbraid,wbraid:r.wbraid,camp:r.camp}),keepalive:true}).then(res=>{ if(res.ok){ r.enviado=true; try{ localStorage.setItem(HP_CLIQUE,JSON.stringify(r)); }catch(e){} } }).catch(()=>{}); }
+function comCodigo(ref){ const r=lerClique(); return r? ref+'-'+r.cod : ref; }
+
+// ===== PEÇAS (lista inicial vinda do rascunho; preços a confirmar com o cliente) =====
+// Editar aqui é o único lugar. Cada peça: id, nome, categoria e preço em reais.
+// Migração futura: trocar este array pela leitura da tabela products (Supabase).
+const CATS=[
+  {cat:'Balanços',      cor:'#1CA9F1', ic:'move-vertical'},
+  {cat:'Escorregadores',cor:'#ff9a62', ic:'trending-down'},
+  {cat:'Gira-giras',    cor:'#34c88f', ic:'disc-3'},
+  {cat:'Gangorras',     cor:'#ff7fb0', ic:'scale'},
+];
+const PECAS=[
+  {nome:'Balanço duplo',          cat:'Balanços',       preco:1450},
+  {nome:'Balança dupla',          cat:'Balanços',       preco:1450},
+  {nome:'Escorregador',           cat:'Escorregadores', preco:1350},
+  {nome:'Escorregador reto',      cat:'Escorregadores', preco:1360},
+  {nome:'Gira-gira simples',      cat:'Gira-giras',     preco:1450},
+  {nome:'Gira-gira com assento',  cat:'Gira-giras',     preco:1450},
+  {nome:'Gangorra simples',       cat:'Gangorras',      preco:960},
+  {nome:'Gangorra dupla',         cat:'Gangorras',      preco:1450},
+].map(p=>({...p, id:slug(p.nome)}));
+const corCat=c=>(CATS.find(x=>x.cat===c)||{}).cor||'#1CA9F1';
+
+// ===== estado =====
+const estado={};   // id -> quantidade
+const qtd=id=>estado[id]||0;
+const totalPecas=()=>Object.values(estado).reduce((a,b)=>a+b,0);
+function inc(id){ estado[id]=qtd(id)+1; render(); }
+function dec(id){ estado[id]=Math.max(0,qtd(id)-1); if(!estado[id]) delete estado[id]; render(); }
+
+// ===== render das seções (uma vez) =====
+function renderSecoes(){
+  const wrap=document.getElementById('secoes');
+  wrap.innerHTML=CATS.map(c=>{
+    const itens=PECAS.filter(p=>p.cat===c.cat);
+    if(!itens.length) return '';
+    return `
+    <section class="mb-8">
+      <div class="flex items-center gap-2 mb-3">
+        <span class="w-8 h-8 rounded-xl grid place-items-center text-white" style="background:${c.cor}"><i data-lucide="${c.ic}" style="width:17px;height:17px"></i></span>
+        <h2 class="brand text-xl font-extrabold">${c.cat}</h2>
+      </div>
+      <div class="grid grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
+        ${itens.map(p=>`
+          <div class="card peca p-4 flex flex-col" id="card_${p.id}" style="--ac:${c.cor}">
+            <div class="w-11 h-11 rounded-2xl grid place-items-center mb-2" style="background:${c.cor}1a;color:${c.cor}"><i data-lucide="${c.ic}" style="width:22px;height:22px"></i></div>
+            <h3 class="font-bold leading-snug flex-1">${p.nome}</h3>
+            <div class="font-extrabold text-lg mt-1" style="color:${c.cor}">${fmtBRL(p.preco)}</div>
+            <div class="flex items-center justify-between mt-3">
+              <div class="flex items-center gap-2">
+                <button class="step" style="background:${c.cor}1a;color:${c.cor}" onclick="dec('${p.id}')" aria-label="Remover">−</button>
+                <span class="w-6 text-center font-bold tabular-nums" id="q_${p.id}">0</span>
+                <button class="step text-white" style="background:${c.cor}" onclick="inc('${p.id}')" aria-label="Adicionar">+</button>
+              </div>
+              <button class="text-[11px] font-bold px-2.5 py-1.5 rounded-full" style="background:${c.cor}1a;color:${c.cor}" onclick="inc('${p.id}')">Adicionar</button>
+            </div>
+          </div>`).join('')}
+      </div>
+    </section>`;
+  }).join('');
+  lucide.createIcons();
+}
+
+// ===== fala da SARAH conforme o progresso =====
+function falaSarah(n, subtotal){
+  if(n===0) return 'Oi! Sou a SARAH 💜 Toque nas peças para montar seu sonho.';
+  if(n===1) return 'Boa escolha! Adicione mais 1 peça e ganhe 20% no combo.';
+  if(n>=COMBO_MINIMO && n<=3) return 'Combo ativado! Você já está com 20% de desconto 🎉';
+  return 'Que sonho lindo! Quando quiser, é só finalizar comigo no WhatsApp.';
+}
+
+// ===== render vivo (barra + quantidades + SARAH) =====
+function render(){
+  let subtotal=0;
+  PECAS.forEach(p=>{
+    const q=qtd(p.id); subtotal+=q*p.preco;
+    const qEl=document.getElementById('q_'+p.id); if(qEl) qEl.textContent=q;
+    const card=document.getElementById('card_'+p.id); if(card) card.classList.toggle('on',q>0);
+  });
+  const n=totalPecas();
+  const combo=n>=COMBO_MINIMO;
+  const desconto=combo?subtotal*DESCONTO_COMBO:0;
+  const total=subtotal-desconto;
+
+  document.getElementById('resumo').classList.toggle('show',n>0);
+  document.getElementById('rTotal').textContent=fmtBRL(total);
+  const risc=document.getElementById('rSubRiscado');
+  if(combo){ risc.textContent=fmtBRL(subtotal); risc.classList.remove('hidden'); }
+  else risc.classList.add('hidden');
+
+  const plural=n===1?'peça':'peças';
+  document.getElementById('rLinha').innerHTML = n===0
+    ? 'Nenhuma peça ainda'
+    : combo
+      ? `${n} ${plural} · <b style="color:var(--green)">combo −20% (${fmtBRL(desconto)})</b>`
+      : `${n} ${plural} · adicione +1 e ganhe <b>20%</b>`;
+
+  document.getElementById('sarahFala').textContent=falaSarah(n,subtotal);
+}
+
+// ===== finalizar: leva o sonho montado pro WhatsApp =====
+function montarSonho(){
+  const escolhidas=PECAS.filter(p=>qtd(p.id)>0);
+  const ref=comCodigo('HP-MEUSONHO');
+  if(!escolhidas.length){
+    const msg=encodeURIComponent('Olá! Quero montar meu playground dos sonhos na Hiper Play. Pode me ajudar?');
+    window.open('https://wa.me/'+WPP+'?text='+msg,'_blank'); return;
+  }
+  let subtotal=0;
+  const linhas=escolhidas.map(p=>{ const q=qtd(p.id); const st=q*p.preco; subtotal+=st; return `• ${q}x ${p.nome} — ${fmtBRL(st)}`; });
+  const n=totalPecas();
+  const combo=n>=COMBO_MINIMO;
+  const desconto=combo?subtotal*DESCONTO_COMBO:0;
+  const total=subtotal-desconto;
+
+  let txt='*Meu Sonho — Hiper Play*%0A%0A*Peças escolhidas:*%0A';
+  txt+=linhas.map(l=>encodeURIComponent(l)).join('%0A');
+  txt+='%0A%0A'+encodeURIComponent(`*Subtotal:* ${fmtBRL(subtotal)}`);
+  if(combo) txt+='%0A'+encodeURIComponent(`*Desconto combo (20%):* -${fmtBRL(desconto)}`);
+  txt+='%0A'+encodeURIComponent(`*Total:* ${fmtBRL(total)}`);
+  txt+='%0A%0A'+encodeURIComponent(`_Origem: Loja Hiper Play • Montar meu Sonho • Ref: ${ref}_`);
+  window.open('https://wa.me/'+WPP+'?text='+txt,'_blank');
+}
+
+// init
+renderSecoes();
+render();
+registrarClique();
+lucide.createIcons();
+</script>
+</body>
+</html>

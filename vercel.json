@@ -59,6 +59,10 @@
     {
       "source": "/baixar",
       "destination": "/baixar/index.html"
+    },
+    {
+      "source": "/meusonho",
+      "destination": "/meusonho/index.html"
     }
   ]
 }
