@@ -11,6 +11,16 @@
       "permanent": false
     },
     {
+      "source": "/catalogo",
+      "destination": "/",
+      "permanent": false
+    },
+    {
+      "source": "/catalogo/",
+      "destination": "/",
+      "permanent": false
+    },
+    {
       "source": "/login",
       "destination": "https://app.hiperplay.com.br/login",
       "permanent": false
