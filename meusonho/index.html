@@ -42,7 +42,15 @@
   /* stickers/mascotes decorativos (estilo da referência: carinhas fofas) */
   .nuvem{position:absolute;color:#fff;opacity:.9;animation:floaty 6s ease-in-out infinite}
   .sticker{position:absolute;animation:floaty 5s ease-in-out infinite}
-  .fita{position:absolute;pointer-events:none;opacity:.9}
+  .clic{cursor:pointer;pointer-events:auto;transition:transform .15s}
+  .clic:active{transform:scale(.85)}
+  /* chuva de stickers ao clicar */
+  #ceu{position:fixed;inset:0;pointer-events:none;z-index:90;overflow:hidden}
+  .gota{position:absolute;top:-8vh;will-change:transform,opacity;animation:cair linear forwards}
+  @keyframes cair{0%{transform:translateY(-8vh) rotate(0);opacity:0}12%{opacity:1}100%{transform:translateY(112vh) rotate(var(--r,360deg));opacity:.25}}
+  /* toast */
+  #toast{position:fixed;left:50%;bottom:150px;transform:translateX(-50%) translateY(10px);z-index:95;background:#16324a;color:#fff;font-size:13px;font-weight:600;padding:10px 16px;border-radius:999px;box-shadow:0 12px 30px -10px rgba(0,0,0,.5);opacity:0;pointer-events:none;transition:.25s}
+  #toast.in{opacity:1;transform:translateX(-50%) translateY(0)}
   /* tile de categoria com gradiente (como os cards da referência) */
   .cat-tile{background:linear-gradient(135deg,var(--c1),var(--c2));color:#fff;box-shadow:0 10px 22px -12px var(--c2)}
   /* card de peça: seleção viva */
@@ -66,6 +74,8 @@
 </style>
 </head>
 <body class="pb-40">
+<div id="ceu" aria-hidden="true"></div>
+<div id="toast"></div>
 
 <!-- HEADER -->
 <header class="sticky top-0 z-50 backdrop-blur border-b" style="background:linear-gradient(135deg,#28b4f5,#1492d6);border-color:rgba(255,255,255,.18)">
@@ -85,13 +95,11 @@
 
 <!-- HERO com céu, nuvenzinhas e jardim -->
 <section class="relative overflow-hidden" style="background:linear-gradient(150deg,#2f6bff 0%,#1CA9F1 55%,#1492d6 100%)">
-  <!-- fita ondulada (assinatura da referência) -->
-  <div class="fita" style="top:44%;left:0;right:0" data-svg="fita" aria-hidden="true"></div>
-  <!-- mascotes/stickers com carinha -->
-  <div class="nuvem floaty" style="top:20px;left:5%;width:96px" data-svg="nuvem"></div>
-  <div class="nuvem" style="top:70px;right:8%;width:70px;opacity:.8;animation-delay:1.2s" data-svg="nuvem"></div>
-  <div class="sticker" style="top:30px;right:16%;width:52px;animation-delay:.4s" data-svg="sol"></div>
-  <div class="sticker" style="bottom:96px;left:8%;width:40px;animation-delay:.9s" data-svg="coracao"></div>
+  <!-- mascotes/stickers com carinha (clicáveis: fazem chuva) -->
+  <div class="nuvem floaty clic" style="top:20px;left:5%;width:96px" data-svg="nuvem" onclick="chuva('nuvem')" title="Toque em mim!"></div>
+  <div class="nuvem clic" style="top:70px;right:8%;width:70px;opacity:.8;animation-delay:1.2s" data-svg="nuvem" onclick="chuva('nuvem')" title="Toque em mim!"></div>
+  <div class="sticker clic" style="top:30px;right:16%;width:52px;animation-delay:.4s" data-svg="sol" onclick="chuva('sol')" title="Toque em mim!"></div>
+  <div class="sticker clic" style="bottom:96px;left:8%;width:40px;animation-delay:.9s" data-svg="coracao" onclick="chuva('coracao')" title="Toque em mim!"></div>
 
   <div class="max-w-4xl mx-auto px-4 pt-10 pb-24 sm:pt-14 sm:pb-28 text-center text-white relative">
     <div class="inline-flex items-center gap-2 chip mb-3 text-white" style="background:var(--orange);box-shadow:0 8px 20px -8px var(--orange)">
@@ -129,6 +137,12 @@
         </div>
         <div id="rLinha" class="text-[11px] text-[var(--muted)] mt-0.5">Nenhuma peça ainda</div>
       </div>
+      <button class="btn shrink-0 grid place-items-center" style="width:44px;height:44px;background:var(--ice);color:var(--blue-d)" onclick="copiarLink()" title="Copiar link" aria-label="Copiar link">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:19px;height:19px"><rect width="14" height="14" x="8" y="8" rx="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>
+      </button>
+      <button class="btn shrink-0 grid place-items-center" style="width:44px;height:44px;background:var(--sarah);color:#fff" onclick="compartilhar()" title="Compartilhar no WhatsApp" aria-label="Compartilhar">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:19px;height:19px"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="m8.6 13.5 6.8 4M15.4 6.5l-6.8 4"/></svg>
+      </button>
       <button class="btn text-white text-sm px-4 sm:px-5 py-3 flex items-center gap-2 shrink-0" style="background:var(--wpp)" onclick="montarSonho()">
         <svg viewBox="0 0 24 24" fill="currentColor" style="width:18px;height:18px"><path d="M.057 24l1.687-6.163a11.867 11.867 0 01-1.587-5.945C.16 5.335 5.495 0 12.05 0a11.817 11.817 0 018.413 3.488 11.824 11.824 0 013.48 8.414c-.003 6.557-5.338 11.892-11.893 11.892a11.9 11.9 0 01-5.688-1.448L.057 24zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884a9.86 9.86 0 001.51 5.26l-.999 3.648 3.978-1.042zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413z"/></svg>
         <span class="hidden sm:inline">Montar meu Sonho</span><span class="sm:hidden">Finalizar</span>
@@ -351,10 +365,59 @@ function observarReveal(){
   setTimeout(()=>document.querySelectorAll('.reveal:not(.in)').forEach(el=>el.classList.add('in')),1400);
 }
 
+// ===== stickers interativos: chuva de nuvem/sol/coração ao clicar =====
+function chuva(tipo){
+  const ceu=document.getElementById('ceu'); if(!ceu||!SVG[tipo]) return;
+  for(let i=0;i<16;i++){
+    const s=document.createElement('span');
+    s.className='gota'; s.innerHTML=SVG[tipo];
+    const tam=18+Math.random()*28;
+    s.style.width=tam+'px';
+    s.style.left=(Math.random()*96)+'vw';
+    s.style.setProperty('--r',(Math.random()*720-360)+'deg');
+    const dur=2.2+Math.random()*1.8;
+    s.style.animationDuration=dur+'s';
+    s.style.animationDelay=(Math.random()*0.5)+'s';
+    ceu.appendChild(s);
+    setTimeout(()=>s.remove(),(dur+0.7)*1000);
+  }
+}
+
+// ===== compartilhar / copiar link (com a montagem embutida) =====
+function linkComSelecao(){
+  const partes=PECAS.filter(p=>qtd(p.id)>0).map(p=>p.id+':'+qtd(p.id));
+  const base=location.origin+'/meusonho';
+  return partes.length ? base+'?s='+encodeURIComponent(partes.join(',')) : base;
+}
+function restaurarSelecao(){
+  try{
+    const s=new URLSearchParams(location.search).get('s'); if(!s) return;
+    s.split(',').forEach(par=>{ const [id,q]=par.split(':'); const n=parseInt(q,10); if(id&&n>0&&PECAS.some(p=>p.id===id)) estado[id]=Math.min(n,99); });
+  }catch(e){}
+}
+let _toastT=null;
+function toast(msg){ const t=document.getElementById('toast'); if(!t) return; t.textContent=msg; t.classList.add('in'); clearTimeout(_toastT); _toastT=setTimeout(()=>t.classList.remove('in'),1900); }
+async function copiarLink(){
+  const url=linkComSelecao();
+  try{ await navigator.clipboard.writeText(url); toast('Link copiado! 📋'); }
+  catch(e){ window.prompt('Copie o link do seu sonho:', url); }
+}
+async function compartilhar(){
+  const url=linkComSelecao();
+  const texto='Olha o playground que montei na Hiper Play! 😍';
+  if(navigator.share){
+    try{ await navigator.share({title:'Meu Sonho — Hiper Play', text:texto, url}); return; }
+    catch(e){ if(e && e.name==='AbortError') return; }
+  }
+  // fallback: abre o WhatsApp e deixa escolher a conversa
+  window.open('https://wa.me/?text='+encodeURIComponent(texto+' '+url),'_blank');
+}
+
 // ===== init =====
 async function bootstrap(){
   const doBanco=await carregarDoBanco();
   PECAS = (doBanco && doBanco.length) ? doBanco : [];   // só produtos reais; nada inventado
+  restaurarSelecao();   // se o link trouxe uma montagem, reidrata antes de renderizar
   renderSecoes();
   // tempo real: catálogo mudou no sistema → recarrega as peças
   if(sb){
