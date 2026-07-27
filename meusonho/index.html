@@ -80,12 +80,9 @@
 <!-- HEADER -->
 <header class="sticky top-0 z-50 backdrop-blur border-b" style="background:linear-gradient(135deg,#28b4f5,#1492d6);border-color:rgba(255,255,255,.18)">
   <div class="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between gap-3">
-    <a href="/" class="select-none leading-none">
-      <span class="wordmark brand text-2xl sm:text-3xl font-extrabold block">
-        <span style="color:#ff5a5f">H</span><span style="color:#ff8a3d">i</span><span style="color:#27c08a">p</span><span style="color:#ffc534">e</span><span style="color:#ff5a5f">r</span>
-        <span style="color:#8b5cf6">P</span><span style="color:#ffc534">l</span><span style="color:#27c08a">a</span><span style="color:#ff8a3d">y</span>
-      </span>
-      <span class="block italic font-semibold text-white/90 text-[10px] sm:text-xs tracking-wide -mt-0.5">Fábrica de Sonhos</span>
+    <a href="/" class="wordmark brand text-2xl sm:text-3xl font-extrabold leading-none select-none">
+      <span style="color:#ff5a5f">H</span><span style="color:#ff8a3d">i</span><span style="color:#27c08a">p</span><span style="color:#ffc534">e</span><span style="color:#ff5a5f">r</span>
+      <span style="color:#8b5cf6">P</span><span style="color:#ffc534">l</span><span style="color:#27c08a">a</span><span style="color:#ff8a3d">y</span>
     </a>
     <a href="/" class="flex items-center gap-1.5 text-white text-sm font-semibold px-3 py-2 rounded-full transition hover:bg-white/25" style="background:#ffffff1f">
       <i data-lucide="arrow-left" style="width:16px;height:16px"></i> Voltar à loja
@@ -208,30 +205,19 @@ function lerClique(){ try{ const r=JSON.parse(localStorage.getItem(HP_CLIQUE)||'
 function registrarClique(){ const r=lerClique(); if(!r||r.enviado) return; fetch(API_SISTEMA+'/api/ads/click',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({cod:r.cod,gclid:r.gclid,gbraid:r.gbraid,wbraid:r.wbraid,camp:r.camp}),keepalive:true}).then(res=>{ if(res.ok){ r.enviado=true; try{ localStorage.setItem(HP_CLIQUE,JSON.stringify(r)); }catch(e){} } }).catch(()=>{}); }
 function comCodigo(ref){ const r=lerClique(); return r? ref+'-'+r.cod : ref; }
 
-// ===== CATÁLOGO: peças vêm do Supabase (foto + preço reais); fallback no rascunho =====
-const SB_URL='https://fzdhuyxwgasjkqyyojwc.supabase.co';
-const SB_ANON='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZ6ZGh1eXh3Z2FzamtxeXlvandjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODI4MTE5NTYsImV4cCI6MjA5ODM4Nzk1Nn0.hg1tsb4tFadL8o0FHx4CSk-ASsNCkDxf9yTG9jrbOrE';
-const SB_ORG='cfc1030d-4905-4718-9095-05ca66ec6705';
-let sb=null; try{ if(window.supabase) sb=window.supabase.createClient(SB_URL,SB_ANON); }catch(e){}
-
-// Sem lista fixa: a pagina mostra APENAS os produtos reais cadastrados no
-// sistema (folha tecnica). Nada e inventado; sem banco, fica o estado vazio.
-async function carregarDoBanco(){
-  if(!sb) return null;
-  try{
-    const [cats, prods] = await Promise.all([
-      sb.from('product_categories').select('id,name,position').eq('org_id',SB_ORG).order('position'),
-      sb.from('products').select('name,description,price,images,image_url,category_id,linha,active').eq('org_id',SB_ORG).eq('active',true).order('name'),
-    ]);
-    const data=prods.data;
-    if(prods.error||!data||!data.length) return null;
-    const nomeCat={}; (cats.data||[]).forEach(c=>{ nomeCat[c.id]=c.name; });
-    return data.map(p=>{
-      const imgs=Array.isArray(p.images)&&p.images.length?p.images.filter(Boolean):(p.image_url?[p.image_url]:[]);
-      return { id:slug(p.name), nome:p.name, cat:(nomeCat[p.category_id]||p.linha||'Outros'), preco:Number(p.price)||0, foto:imgs[0]||null };
-    });
-  }catch(e){ console.warn('supabase:',e.message||e); return null; }
-}
+// ===== FOLHA TÉCNICA — APENAS os produtos enviados pelo cliente =====
+// Lista fixa, exatamente da folha técnica. É o único lugar para editar
+// nome/preço/categoria. Nada além destes itens aparece na página.
+const FOLHA=[
+  { nome: "Balanço Duplo",         cat: "Balanços",       preco: 1450 },
+  { nome: "Balança Dupla",         cat: "Balanços",       preco: 1450 },
+  { nome: "Escorregador",          cat: "Escorregadores", preco: 1360 },
+  { nome: "Escorregador Grande",   cat: "Escorregadores", preco: 1350 },
+  { nome: "Gira-gira com Assento", cat: "Gira-giras",     preco: 1450 },
+  { nome: "Gira-gira",             cat: "Gira-giras",     preco: 1450 },
+  { nome: "Gangorra Simples",      cat: "Gangorras",      preco: 960 },
+  { nome: "Gangorra Dupla",        cat: "Gangorras",      preco: 1450 },
+].map((p) => ({ ...p, id: slug(p.nome), foto: null }));
 
 // ===== estado =====
 let PECAS=[];         // peças atuais (banco ou fallback)
@@ -439,16 +425,9 @@ async function compartilhar(){
 // ===== init =====
 async function bootstrap(){
   await carregarConfig();   // aplica desconto/textos definidos no painel
-  const doBanco=await carregarDoBanco();
-  PECAS = (doBanco && doBanco.length) ? doBanco : [];   // só produtos reais; nada inventado
-  restaurarSelecao();   // se o link trouxe uma montagem, reidrata antes de renderizar
+  PECAS = FOLHA;            // APENAS os produtos da folha técnica enviada
+  restaurarSelecao();       // se o link trouxe uma montagem, reidrata antes de renderizar
   renderSecoes();
-  // tempo real: catálogo mudou no sistema → recarrega as peças
-  if(sb){
-    sb.channel('pub-meusonho')
-      .on('postgres_changes',{event:'*',schema:'public',table:'products'}, async ()=>{ const d=await carregarDoBanco(); if(d&&d.length){ PECAS=d; renderSecoes(); } })
-      .subscribe();
-  }
 }
 
 pintarDecor();
