@@ -33,6 +33,12 @@
   .floaty{animation:floaty 3.5s ease-in-out infinite}
   @keyframes drift{0%{transform:translateX(0)}100%{transform:translateX(30px)}}
   @keyframes pop{from{opacity:0;transform:translateY(16px) scale(.96)}to{opacity:1;transform:none}}
+  @keyframes cardIn{from{opacity:0;transform:translateY(20px) scale(.96)}to{opacity:1;transform:none}}
+  @keyframes bump{0%{transform:scale(1)}30%{transform:scale(1.14)}100%{transform:scale(1)}}
+  .card-in{animation:cardIn .5s cubic-bezier(.2,.8,.3,1) both}
+  .bump{animation:bump .42s ease}
+  .reveal{opacity:0;transform:translateY(20px);transition:opacity .6s ease,transform .6s cubic-bezier(.2,.8,.3,1)}
+  .reveal.in{opacity:1;transform:none}
   /* stickers/mascotes decorativos (estilo da referência: carinhas fofas) */
   .nuvem{position:absolute;color:#fff;opacity:.9;animation:floaty 6s ease-in-out infinite}
   .sticker{position:absolute;animation:floaty 5s ease-in-out infinite}
@@ -49,14 +55,14 @@
   .step{width:34px;height:34px;border-radius:11px;display:grid;place-items:center;font-weight:800;font-size:18px;line-height:1;border:none;cursor:pointer;transition:.15s}
   .step:active{transform:scale(.9)}
   /* barra de resumo fixa */
-  #resumo{position:fixed;left:0;right:0;bottom:0;z-index:60;transform:translateY(120%);transition:transform .35s cubic-bezier(.2,.8,.3,1)}
+  #resumo{position:fixed;left:0;right:0;bottom:0;z-index:60;transform:translateY(120%);transition:transform .35s cubic-bezier(.2,.8,.3,1);padding-bottom:env(safe-area-inset-bottom,0)}
   #resumo.show{transform:none}
   /* SARAH flutuante */
   #sarah{position:fixed;right:16px;z-index:65;bottom:96px;display:flex;align-items:flex-end;gap:10px;flex-direction:row-reverse}
   #sarahFala{max-width:220px;background:#fff;border:1px solid var(--line);border-radius:16px;border-bottom-right-radius:4px;padding:10px 13px;font-size:13px;font-weight:600;color:var(--ink);box-shadow:0 14px 34px -16px rgba(20,50,80,.5);animation:pop .3s ease}
   #sarahAv{width:56px;height:56px;border-radius:50%;flex:0 0 auto;display:grid;place-items:center;color:#fff;box-shadow:0 14px 30px -10px rgba(123,47,190,.7);background:linear-gradient(135deg,#8b5cf6,#4aa3df);cursor:pointer}
-  @media (max-width:420px){ #sarahFala{max-width:170px} }
-  @media (prefers-reduced-motion: reduce){ .floaty,.nuvem{animation:none} }
+  @media (max-width:420px){ #sarahFala{max-width:150px;font-size:12px} #sarah{bottom:104px;right:12px} }
+  @media (prefers-reduced-motion: reduce){ .floaty,.nuvem,.sticker,.card-in,.bump{animation:none} .reveal{opacity:1;transform:none} }
 </style>
 </head>
 <body class="pb-40">
@@ -142,12 +148,13 @@ function esc(s){ return String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&l
 // ===== ICONOGRAFIA — SVGs próprios dos brinquedos (estilo lúdico da marca) =====
 // currentColor pega a cor da categoria; desenhados com primitivas para ficarem nítidos.
 const SVG={
-  balanco:`<svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><path d="M32 12 16 52M32 12 48 52"/><path d="M22 12h20"/><path d="M27 13v23M37 13v23"/><rect x="24" y="36" width="16" height="4" rx="2" fill="currentColor"/></svg>`,
-  escorregador:`<svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><path d="M10 52C10 32 28 30 46 22"/><path d="M16 40v12"/><path d="M46 22v30M54 26v26"/><path d="M46 32h8M46 40h8M46 48h8"/><path d="M8 52h48"/></svg>`,
-  giragira:`<svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><circle cx="32" cy="9" r="2.5" fill="currentColor"/><path d="M14 26 32 15 50 26"/><path d="M14 26Q32 35 50 26"/><path d="M32 17v27"/><ellipse cx="32" cy="49" rx="21" ry="5"/><path d="M20 47 32 41 44 47"/></svg>`,
-  gangorra:`<svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 40 52 24"/><path d="M32 32 26 51h12z" fill="currentColor" stroke="none"/><path d="M32 32 26 51h12z"/><circle cx="12" cy="40" r="3.2" fill="currentColor"/><circle cx="52" cy="24" r="3.2" fill="currentColor"/><path d="M8 52h48"/></svg>`,
-  playground:`<svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><path d="M16 26 30 13 44 26"/><path d="M22 26v24M38 26v24"/><path d="M22 34h16"/><path d="M38 34C52 37 53 49 51 51"/><path d="M8 52h48"/></svg>`,
-  brinquedo:`<svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><circle cx="32" cy="32" r="20"/><path d="M32 12C22 24 22 40 32 52M32 12C42 24 42 40 32 52M12 32h40"/></svg>`,
+  // brinquedos como stickers coloridos e cheios (universo lúdico da marca)
+  balanco:`<svg viewBox="0 0 64 64" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M32 12 17 52M32 12 47 52M22 12h20" stroke="#2f6bff" stroke-width="6"/><path d="M28 15v18M36 15v18" stroke="#8bd0ff" stroke-width="3"/><rect x="22" y="33" width="20" height="7" rx="3.5" fill="#ffc534"/></svg>`,
+  escorregador:`<svg viewBox="0 0 64 64" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M44 20v30M52 20v30" stroke="#ff8a3d" stroke-width="5"/><path d="M44 28h8M44 36h8M44 44h8" stroke="#ff8a3d" stroke-width="4"/><path d="M45 19c-19 6-31 15-35 31 0 2 2 3 4 3 6-16 18-25 34-28z" fill="#ffc534"/><path d="M9 53h47" stroke="#34c88f" stroke-width="5"/></svg>`,
+  giragira:`<svg viewBox="0 0 64 64" fill="none" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="32" cy="50" rx="21" ry="5" fill="#8bd0ff"/><path d="M32 15v31" stroke="#2f6bff" stroke-width="5"/><path d="M13 27 32 14 51 27z" fill="#ff5a7a"/><circle cx="32" cy="12" r="3" fill="#ffc534"/><path d="M20 46 32 40 44 46" stroke="#2f6bff" stroke-width="4" fill="none"/></svg>`,
+  gangorra:`<svg viewBox="0 0 64 64" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M32 30 25 52h14z" fill="#ff8a3d"/><path d="M12 42 52 22" stroke="#34c88f" stroke-width="6"/><circle cx="12" cy="42" r="4.5" fill="#ff5a7a"/><circle cx="52" cy="22" r="4.5" fill="#2f6bff"/><path d="M8 53h48" stroke="#8bd0ff" stroke-width="4"/></svg>`,
+  playground:`<svg viewBox="0 0 64 64" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M14 27 30 13 46 27z" fill="#ff5a7a"/><path d="M20 27v23M40 27v23" stroke="#2f6bff" stroke-width="5"/><rect x="19" y="34" width="22" height="5" rx="2.5" fill="#ffc534"/><path d="M40 35c14 3 15 12 12 17" stroke="#34c88f" stroke-width="5" fill="none"/><path d="M8 53h48" stroke="#8bd0ff" stroke-width="4"/></svg>`,
+  brinquedo:`<svg viewBox="0 0 64 64" fill="none"><circle cx="32" cy="32" r="19" fill="#2f6bff"/><path d="M32 13c-8 8-8 30 0 38M32 13c8 8 8 30 0 38M13 32h38" stroke="#fff" stroke-width="3"/><circle cx="32" cy="32" r="4" fill="#ffc534"/></svg>`,
   // nuvem com carinha fofa (estilo sticker da referência)
   nuvem:`<svg viewBox="0 0 96 64" fill="none"><path fill="#fff" d="M26 56h44a15 15 0 0 0 3-29.7A20 20 0 0 0 35 20 14 14 0 0 0 14 32a13 13 0 0 0 12 24z"/><circle cx="40" cy="38" r="2.6" fill="#16324a"/><circle cx="56" cy="38" r="2.6" fill="#16324a"/><path d="M40 45q8 6 16 0" stroke="#16324a" stroke-width="2.6" stroke-linecap="round" fill="none"/><circle cx="34" cy="44" r="3" fill="#ff7fb0" opacity=".7"/><circle cx="62" cy="44" r="3" fill="#ff7fb0" opacity=".7"/></svg>`,
   sol:`<svg viewBox="0 0 64 64" fill="none"><g stroke="#ffcf5c" stroke-width="4" stroke-linecap="round"><path d="M32 6v7M32 51v7M6 32h7M51 32h7M13 13l5 5M46 46l5 5M51 13l-5 5M18 46l-5 5"/></g><circle cx="32" cy="32" r="14" fill="#ffcf5c"/><circle cx="27" cy="30" r="2" fill="#16324a"/><circle cx="37" cy="30" r="2" fill="#16324a"/><path d="M27 37q5 4 10 0" stroke="#16324a" stroke-width="2.4" stroke-linecap="round" fill="none"/></svg>`,
@@ -157,7 +164,12 @@ const SVG={
   jardim:`<svg viewBox="0 0 1440 90" preserveAspectRatio="none" style="display:block;width:100%;height:64px"><path fill="#3fbf88" d="M0 40c120 26 260 26 380 8s260-30 380-14 240 34 360 30 200-20 320-30v96H0z"/><path fill="#34c88f" d="M0 58c150 18 300 6 470-4s330-8 500 4 240 18 470 6v26H0z"/></svg>`,
 };
 
-// ===== estilo por categoria (cor + ícone) — casa pelo nome, venha do banco ou do fallback =====
+// ===== estilo por categoria (cor + ícone) — 100% plug-and-play =====
+// Casa a categoria cadastrada no app com um ícone do universo da marca pelo nome.
+// Categoria nova que não casa: ganha o ícone genérico e uma cor estável da paleta
+// (derivada do nome), então o admin cria categorias no sistema sem tocar no código.
+const PALETA_CAT=['#1CA9F1','#ff9a62','#34c88f','#ff7fb0','#a78bfa','#2f6bff','#f5661e','#ffcf5c'];
+function corEstavel(nome){ let h=0; for(let i=0;i<(nome||'').length;i++) h=(h*31+nome.charCodeAt(i))>>>0; return PALETA_CAT[h%PALETA_CAT.length]; }
 function estiloCat(nome){
   const n=(nome||'').toLowerCase();
   if(n.includes('balanc')||n.includes('balanç')) return {cor:'#1CA9F1', svg:SVG.balanco};
@@ -165,7 +177,7 @@ function estiloCat(nome){
   if(n.includes('gira'))                          return {cor:'#34c88f', svg:SVG.giragira};
   if(n.includes('gangorra'))                      return {cor:'#ff7fb0', svg:SVG.gangorra};
   if(n.includes('conjunto')||n.includes('combo')||n.includes('playground')) return {cor:'#a78bfa', svg:SVG.playground};
-  return {cor:'#1CA9F1', svg:SVG.brinquedo};
+  return {cor:corEstavel(nome), svg:SVG.brinquedo};
 }
 
 // ===== Origem do clique (Google Ads) — mesmo mecanismo da loja =====
@@ -226,25 +238,27 @@ function renderSecoes(){
     return;
   }
 
+  let idx=0;   // índice global p/ escalonar a entrada dos cards
   wrap.innerHTML=ordem.map(cat=>{
     const st=estiloCat(cat);
     return `
-    <section class="mb-8">
-      <div class="flex items-center gap-2 mb-3">
-        <span class="cat-tile w-10 h-10 rounded-2xl grid place-items-center p-2" style="--c1:${st.cor};--c2:color-mix(in srgb, ${st.cor} 60%, #16324a)">${st.svg}</span>
-        <h2 class="brand text-xl font-extrabold">${esc(cat)}</h2>
+    <section class="mb-8 reveal">
+      <div class="flex items-center gap-2.5 mb-3">
+        <span class="w-11 h-11 rounded-2xl grid place-items-center p-1.5 shrink-0" style="background:${st.cor}1f">${st.svg}</span>
+        <h2 class="brand text-lg sm:text-xl font-extrabold">${esc(cat)}</h2>
       </div>
-      <div class="grid grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
+      <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4">
         ${grupos[cat].map(p=>{
           const c=estiloCat(p.cat).cor;
           const visual = p.foto
             ? `<img src="${esc(p.foto)}" alt="${esc(p.nome)}" loading="lazy">`
-            : `<span class="svgwrap" style="color:${c}">${estiloCat(p.cat).svg}</span>`;
+            : `<span class="svgwrap">${estiloCat(p.cat).svg}</span>`;
+          const d=(idx++)*45;
           return `
-          <div class="card peca p-3 flex flex-col" id="card_${p.id}" style="--ac:${c}">
+          <div class="card peca card-in p-3 flex flex-col" id="card_${p.id}" style="--ac:${c};animation-delay:${d}ms">
             <div class="pecaimg mb-2">${visual}</div>
             <h3 class="font-bold leading-snug flex-1 text-sm sm:text-base">${esc(p.nome)}</h3>
-            <div class="font-extrabold text-lg mt-1" style="color:${c}">${fmtBRL(p.preco)}</div>
+            <div class="font-extrabold text-base sm:text-lg mt-1" style="color:${c}">${fmtBRL(p.preco)}</div>
             <div class="flex items-center gap-2 mt-3">
               <button class="step" style="background:${c}1a;color:${c}" onclick="dec('${p.id}')" aria-label="Remover">−</button>
               <span class="w-6 text-center font-bold tabular-nums" id="q_${p.id}">0</span>
@@ -255,6 +269,7 @@ function renderSecoes(){
       </div>
     </section>`;
   }).join('');
+  observarReveal();
   render();
 }
 
@@ -280,7 +295,9 @@ function render(){
   const total=subtotal-desconto;
 
   document.getElementById('resumo').classList.toggle('show',n>0);
-  document.getElementById('rTotal').textContent=fmtBRL(total);
+  const rTotal=document.getElementById('rTotal');
+  const novoTotal=fmtBRL(total);
+  if(rTotal.textContent!==novoTotal){ rTotal.textContent=novoTotal; rTotal.classList.remove('bump'); void rTotal.offsetWidth; rTotal.classList.add('bump'); }
   const risc=document.getElementById('rSubRiscado');
   if(combo){ risc.textContent=fmtBRL(subtotal); risc.classList.remove('hidden'); }
   else risc.classList.add('hidden');
@@ -322,6 +339,16 @@ function montarSonho(){
 // ===== decorações (nuvens + jardim) =====
 function pintarDecor(){
   document.querySelectorAll('[data-svg]').forEach(el=>{ const k=el.getAttribute('data-svg'); if(SVG[k]) el.innerHTML=SVG[k]; });
+}
+
+// ===== reveal das seções ao rolar (observer reaproveitável p/ conteúdo dinâmico) =====
+let _io=null;
+function observarReveal(){
+  if(!('IntersectionObserver' in window)){ document.querySelectorAll('.reveal').forEach(el=>el.classList.add('in')); return; }
+  if(!_io) _io=new IntersectionObserver(es=>es.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('in'); _io.unobserve(e.target); } }),{threshold:.08});
+  document.querySelectorAll('.reveal:not(.in)').forEach(el=>{ if(!el.dataset.obs){ el.dataset.obs='1'; _io.observe(el); } });
+  // failsafe: nada pode ficar invisível
+  setTimeout(()=>document.querySelectorAll('.reveal:not(.in)').forEach(el=>el.classList.add('in')),1400);
 }
 
 // ===== init =====
