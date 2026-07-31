@@ -63,6 +63,10 @@
     {
       "source": "/meusonho",
       "destination": "/meusonho/index.html"
+    },
+    {
+      "source": "/promocao",
+      "destination": "/promocao/index.html"
     }
   ]
 }
