@@ -67,6 +67,10 @@
     {
       "source": "/promocao",
       "destination": "/promocao/index.html"
+    },
+    {
+      "source": "/institucional",
+      "destination": "/institucional/index.html"
     }
   ]
 }

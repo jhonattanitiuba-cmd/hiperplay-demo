@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Playgrounds para Escolas, Condomínios e Prefeituras · Hiper Play</title>
+<meta name="description" content="Fábrica de playgrounds para escolas, creches, condomínios e prefeituras. Projeto sob medida, nota fiscal, dentro das normas ABNT, entrega e instalação. Peça sua cotação.">
+<meta name="theme-color" content="#1CA9F1">
+<link rel="icon" type="image/svg+xml" href="/icon.svg">
+<link rel="apple-touch-icon" href="/icon.svg">
+<link rel="manifest" href="/manifest.webmanifest">
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://unpkg.com/lucide@latest"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Baloo+2:wght@600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --blue:#1CA9F1; --blue-d:#1492d6; --blue-royal:#2f6bff; --ink:#16324a; --muted:#65788c; --ice:#eef4fb; --line:#e2e9f2;
+    --green:#34c88f; --rosa:#ff7fb0; --amarelo:#ffcf5c; --roxo:#a78bfa; --orange:#f5661e; --wpp:#25D366;
+  }
+  *{font-family:'Montserrat',sans-serif;-webkit-tap-highlight-color:transparent;}
+  body{color:var(--ink);background:#fff;overflow-x:hidden;}
+  .brand{font-family:'Baloo 2',cursive;}
+  .wordmark span{-webkit-text-stroke:3px #fff;paint-order:stroke fill;}
+  .card{background:#fff;border:1px solid var(--line);border-radius:22px;}
+  .chip{border-radius:999px;font-weight:700;font-size:12px;padding:7px 15px;}
+  .btn{border-radius:16px;font-weight:800;transition:.18s;cursor:pointer;}
+  .btn:active{transform:scale(.97)}
+  @keyframes floaty{0%,100%{transform:translateY(0)}50%{transform:translateY(-9px)}}
+  .floaty{animation:floaty 3.5s ease-in-out infinite}
+  .nuvem,.sticker{position:absolute}
+  .wfloat{position:fixed;right:18px;bottom:18px;z-index:70;box-shadow:0 14px 30px -10px rgba(37,211,102,.7)}
+  @keyframes pulse{0%,100%{box-shadow:0 14px 30px -8px rgba(37,211,102,.6)}50%{box-shadow:0 16px 40px -6px rgba(37,211,102,.95)}}
+  .pulse{animation:pulse 2s ease-in-out infinite}
+  @media (prefers-reduced-motion: reduce){ .floaty,.pulse{animation:none} }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="sticky top-0 z-50 backdrop-blur border-b" style="background:linear-gradient(135deg,#28b4f5,#1492d6);border-color:rgba(255,255,255,.18)">
+  <div class="max-w-5xl mx-auto px-4 h-16 flex items-center justify-between gap-3">
+    <a href="/" class="wordmark brand text-2xl sm:text-3xl font-extrabold leading-none select-none">
+      <span style="color:#ff5a5f">H</span><span style="color:#ff8a3d">i</span><span style="color:#27c08a">p</span><span style="color:#ffc534">e</span><span style="color:#ff5a5f">r</span>
+      <span style="color:#8b5cf6">P</span><span style="color:#ffc534">l</span><span style="color:#27c08a">a</span><span style="color:#ff8a3d">y</span>
+    </a>
+    <a href="/" class="text-white text-sm font-semibold px-3 py-2 rounded-full transition hover:bg-white/25" style="background:#ffffff1f">Ver loja</a>
+  </div>
+</header>
+
+<!-- HERO -->
+<section class="relative overflow-hidden" style="background:linear-gradient(150deg,#2f6bff 0%,#1CA9F1 55%,#1492d6 100%)">
+  <div class="nuvem floaty" style="top:20px;left:5%;width:82px" data-svg="nuvem"></div>
+  <div class="sticker floaty" style="top:26px;right:12%;width:48px;animation-delay:.5s" data-svg="sol"></div>
+
+  <div class="max-w-3xl mx-auto px-4 pt-10 pb-24 sm:pt-14 text-center text-white relative">
+    <div class="inline-flex items-center gap-2 chip mb-4 text-white" style="background:var(--orange);box-shadow:0 8px 20px -8px var(--orange)">
+      <i data-lucide="building-2" style="width:14px;height:14px"></i> Vendas para instituições
+    </div>
+    <h1 class="brand text-3xl sm:text-5xl font-extrabold leading-tight">Playgrounds para Escolas, Condomínios e Prefeituras</h1>
+    <p class="mt-3 text-lg font-semibold text-white/95">Fábrica própria · projeto sob medida · <b>nota fiscal</b> · dentro das <b>normas</b> · entrega e instalação em todo o Brasil.</p>
+    <p class="mt-2 text-white/85">Do pedido único ao grande volume. Atendemos compras institucionais e processos de licitação.</p>
+
+    <div class="mt-7 flex flex-col items-center gap-3">
+      <button onclick="cotar('topo')" class="btn pulse text-white text-lg px-8 py-4 inline-flex items-center gap-3" style="background:var(--wpp)">
+        <svg viewBox="0 0 24 24" fill="currentColor" style="width:24px;height:24px"><path d="M.057 24l1.687-6.163a11.867 11.867 0 01-1.587-5.945C.16 5.335 5.495 0 12.05 0a11.817 11.817 0 018.413 3.488 11.824 11.824 0 013.48 8.414c-.003 6.557-5.338 11.892-11.893 11.892a11.9 11.9 0 01-5.688-1.448L.057 24zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884a9.86 9.86 0 001.51 5.26l-.999 3.648 3.978-1.042zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413z"/></svg>
+        Pedir cotação no WhatsApp
+      </button>
+      <span class="text-white/85 text-sm">Resposta rápida com a nossa equipe comercial</span>
+    </div>
+  </div>
+  <svg viewBox="0 0 1440 80" class="block w-full" style="margin-bottom:-2px"><path fill="#ffffff" d="M0,40 C240,90 480,0 720,30 C960,60 1200,10 1440,40 L1440,80 L0,80 Z"/></svg>
+</section>
+
+<!-- POR QUE A HIPER PLAY -->
+<section class="max-w-5xl mx-auto px-4 py-8">
+  <h2 class="brand text-2xl font-extrabold text-center mb-6">Por que comprar direto da fábrica</h2>
+  <div class="grid grid-cols-2 lg:grid-cols-4 gap-3">
+    <div class="card p-5 text-center"><i data-lucide="factory" class="mx-auto mb-2" style="width:26px;height:26px;color:var(--blue-d)"></i><p class="font-bold text-sm">Fábrica própria</p><p class="text-xs text-[var(--muted)] mt-1">Preço de fábrica, sem atravessador.</p></div>
+    <div class="card p-5 text-center"><i data-lucide="file-check-2" class="mx-auto mb-2" style="width:26px;height:26px;color:var(--green)"></i><p class="font-bold text-sm">Nota fiscal</p><p class="text-xs text-[var(--muted)] mt-1">Empenho, licitação e compra formal.</p></div>
+    <div class="card p-5 text-center"><i data-lucide="shield-check" class="mx-auto mb-2" style="width:26px;height:26px;color:var(--roxo)"></i><p class="font-bold text-sm">Dentro das normas</p><p class="text-xs text-[var(--muted)] mt-1">Segurança infantil e estrutura reforçada.</p></div>
+    <div class="card p-5 text-center"><i data-lucide="truck" class="mx-auto mb-2" style="width:26px;height:26px;color:var(--orange)"></i><p class="font-bold text-sm">Entrega e instalação</p><p class="text-xs text-[var(--muted)] mt-1">Montagem por equipe própria.</p></div>
+  </div>
+</section>
+
+<!-- PARA QUEM -->
+<section class="max-w-5xl mx-auto px-4 pb-4">
+  <div class="grid sm:grid-cols-3 gap-4">
+    <button onclick="cotar('escola')" class="card p-6 text-left hover:-translate-y-1 transition" style="border-top:5px solid var(--blue)">
+      <div class="w-12 h-12 rounded-2xl grid place-items-center text-white mb-3" style="background:var(--blue)"><i data-lucide="graduation-cap" style="width:24px;height:24px"></i></div>
+      <h3 class="brand text-xl font-extrabold">Escolas e creches</h3>
+      <p class="text-sm text-[var(--muted)] mt-1">Playgrounds resistentes para uso intenso, com laudo e nota fiscal.</p>
+      <span class="inline-flex items-center gap-1 text-sm font-bold mt-3" style="color:var(--blue-d)">Cotar para escola <i data-lucide="arrow-right" style="width:15px;height:15px"></i></span>
+    </button>
+    <button onclick="cotar('condominio')" class="card p-6 text-left hover:-translate-y-1 transition" style="border-top:5px solid var(--green)">
+      <div class="w-12 h-12 rounded-2xl grid place-items-center text-white mb-3" style="background:var(--green)"><i data-lucide="building" style="width:24px;height:24px"></i></div>
+      <h3 class="brand text-xl font-extrabold">Condomínios</h3>
+      <p class="text-sm text-[var(--muted)] mt-1">Área de lazer que valoriza o empreendimento. Projeto sob medida.</p>
+      <span class="inline-flex items-center gap-1 text-sm font-bold mt-3" style="color:var(--green)">Cotar para condomínio <i data-lucide="arrow-right" style="width:15px;height:15px"></i></span>
+    </button>
+    <button onclick="cotar('prefeitura')" class="card p-6 text-left hover:-translate-y-1 transition" style="border-top:5px solid var(--roxo)">
+      <div class="w-12 h-12 rounded-2xl grid place-items-center text-white mb-3" style="background:var(--roxo)"><i data-lucide="landmark" style="width:24px;height:24px"></i></div>
+      <h3 class="brand text-xl font-extrabold">Prefeituras / Praças</h3>
+      <p class="text-sm text-[var(--muted)] mt-1">Atendemos licitação e compra pública, do orçamento ao empenho.</p>
+      <span class="inline-flex items-center gap-1 text-sm font-bold mt-3" style="color:var(--roxo)">Cotar para órgão público <i data-lucide="arrow-right" style="width:15px;height:15px"></i></span>
+    </button>
+  </div>
+</section>
+
+<!-- FAIXA VOLUME -->
+<section class="max-w-5xl mx-auto px-4 py-8">
+  <div class="card p-6 sm:p-8 text-center" style="background:linear-gradient(135deg,var(--ice),#fff)">
+    <h2 class="brand text-2xl sm:text-3xl font-extrabold">Comprou em volume? O preço melhora.</h2>
+    <p class="text-[var(--muted)] mt-1">Quanto maior o pedido, melhor a condição. Monte um parquinho completo com desconto de escala.</p>
+    <button onclick="cotar('volume')" class="btn text-white text-lg px-8 py-4 inline-flex items-center gap-3 mt-4" style="background:var(--wpp)">
+      <svg viewBox="0 0 24 24" fill="currentColor" style="width:22px;height:22px"><path d="M.057 24l1.687-6.163a11.867 11.867 0 01-1.587-5.945C.16 5.335 5.495 0 12.05 0a11.817 11.817 0 018.413 3.488 11.824 11.824 0 013.48 8.414c-.003 6.557-5.338 11.892-11.893 11.892a11.9 11.9 0 01-5.688-1.448L.057 24zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884a9.86 9.86 0 001.51 5.26l-.999 3.648 3.978-1.042zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413z"/></svg>
+      Pedir cotação em volume
+    </button>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="text-white" style="background:linear-gradient(135deg,#28b4f5,#1492d6)">
+  <div class="max-w-5xl mx-auto px-4 py-8 flex flex-wrap items-center justify-between gap-4 text-sm">
+    <div class="wordmark brand text-2xl font-extrabold">
+      <span style="color:#ff5a5f">H</span><span style="color:#ff8a3d">i</span><span style="color:#27c08a">p</span><span style="color:#ffc534">e</span><span style="color:#ff5a5f">r</span>
+      <span style="color:#8b5cf6">P</span><span style="color:#ffc534">l</span><span style="color:#27c08a">a</span><span style="color:#ff8a3d">y</span>
+    </div>
+    <div class="flex items-center gap-4 text-white/90">
+      <span class="inline-flex items-center gap-1.5"><i data-lucide="phone" style="width:15px;height:15px"></i> (15) 99767-0033</span>
+      <a href="https://www.instagram.com/hiperplaygrounds/" target="_blank" class="inline-flex items-center gap-1.5 hover:underline"><i data-lucide="instagram" style="width:15px;height:15px"></i> @hiperplaygrounds</a>
+    </div>
+  </div>
+</footer>
+
+<!-- WhatsApp flutuante -->
+<button onclick="cotar('flutuante')" class="wfloat w-14 h-14 rounded-full grid place-items-center text-white floaty" style="background:var(--wpp)" title="WhatsApp" aria-label="WhatsApp">
+  <svg viewBox="0 0 24 24" fill="currentColor" style="width:28px;height:28px"><path d="M.057 24l1.687-6.163a11.867 11.867 0 01-1.587-5.945C.16 5.335 5.495 0 12.05 0a11.817 11.817 0 018.413 3.488 11.824 11.824 0 013.48 8.414c-.003 6.557-5.338 11.892-11.893 11.892a11.9 11.9 0 01-5.688-1.448L.057 24zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884a9.86 9.86 0 001.51 5.26l-.999 3.648 3.978-1.042zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413z"/></svg>
+</button>
+
+<script>
+const WPP='5515997670033';
+
+const SVG={
+  nuvem:'<svg viewBox="0 0 96 64" fill="none"><path fill="#fff" d="M26 56h44a15 15 0 0 0 3-29.7A20 20 0 0 0 35 20 14 14 0 0 0 14 32a13 13 0 0 0 12 24z"/><circle cx="40" cy="38" r="2.6" fill="#16324a"/><circle cx="56" cy="38" r="2.6" fill="#16324a"/><path d="M40 45q8 6 16 0" stroke="#16324a" stroke-width="2.6" stroke-linecap="round" fill="none"/><circle cx="34" cy="44" r="3" fill="#ff7fb0" opacity=".7"/><circle cx="62" cy="44" r="3" fill="#ff7fb0" opacity=".7"/></svg>',
+  sol:'<svg viewBox="0 0 64 64" fill="none"><g stroke="#ffcf5c" stroke-width="4" stroke-linecap="round"><path d="M32 6v7M32 51v7M6 32h7M51 32h7M13 13l5 5M46 46l5 5M51 13l-5 5M18 46l-5 5"/></g><circle cx="32" cy="32" r="14" fill="#ffcf5c"/><circle cx="27" cy="30" r="2" fill="#16324a"/><circle cx="37" cy="30" r="2" fill="#16324a"/><path d="M27 37q5 4 10 0" stroke="#16324a" stroke-width="2.4" stroke-linecap="round" fill="none"/></svg>'
+};
+document.querySelectorAll('[data-svg]').forEach(el=>{ const k=el.getAttribute('data-svg'); if(SVG[k]) el.innerHTML=SVG[k]; });
+
+// ===== Rastreio de anúncio (mesmo mecanismo da loja) =====
+const API_SISTEMA='https://app.hiperplay.com.br';
+const HP_CLIQUE='hp_clique';
+const VALIDADE_CLIQUE=90*24*60*60*1000;
+const ALFABETO='ABCDEFGHJKMNPQRSTUVWXYZ23456789';
+function novoCodigo(){ const b=new Uint8Array(6); (window.crypto||window.msCrypto).getRandomValues(b); let s=''; for(let i=0;i<6;i++) s+=ALFABETO[b[i]%ALFABETO.length]; return s; }
+function lerClique(){ try{ const r=JSON.parse(localStorage.getItem(HP_CLIQUE)||'null'); if(!r||!r.cod) return null; if(Date.now()-(r.ts||0)>VALIDADE_CLIQUE){ localStorage.removeItem(HP_CLIQUE); return null; } return r; }catch(e){ return null; } }
+(function capturarClique(){ try{ const q=new URLSearchParams(location.search); const gclid=q.get('gclid'),gbraid=q.get('gbraid'),wbraid=q.get('wbraid'); if(!gclid&&!gbraid&&!wbraid) return; localStorage.setItem(HP_CLIQUE,JSON.stringify({cod:novoCodigo(),gclid,gbraid,wbraid,ts:Date.now(),camp:q.get('utm_campaign')||null,enviado:false})); }catch(e){} })();
+function registrarClique(){ const r=lerClique(); if(!r||r.enviado) return; fetch(API_SISTEMA+'/api/ads/click',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({cod:r.cod,gclid:r.gclid,gbraid:r.gbraid,wbraid:r.wbraid,camp:r.camp}),keepalive:true}).then(res=>{ if(res.ok){ r.enviado=true; try{ localStorage.setItem(HP_CLIQUE,JSON.stringify(r)); }catch(e){} } }).catch(()=>{}); }
+function comCodigo(ref){ const r=lerClique(); return r? ref+'-'+r.cod : ref; }
+
+// ===== Cotação B2B no WhatsApp =====
+const MENSAGENS={
+  topo:'Olá! Represento uma *instituição* e quero uma *cotação* de playground.',
+  escola:'Olá! Sou de uma *escola/creche* e quero uma cotação de playground (com nota fiscal).',
+  condominio:'Olá! Sou de um *condomínio* e quero uma cotação de playground para a área de lazer.',
+  prefeitura:'Olá! Sou de um *órgão público/prefeitura* e preciso de cotação para licitação/compra.',
+  volume:'Olá! Quero uma *cotação em volume* (vários aparelhos) com condição de escala.',
+  flutuante:'Olá! Quero uma *cotação institucional* de playground.'
+};
+function cotar(origem){
+  const ref=comCodigo('HP-B2B');
+  const base=MENSAGENS[origem]||MENSAGENS.topo;
+  const msg=encodeURIComponent(base+'\n\n_Origem: Institucional Hiper Play • Ref: '+ref+'_');
+  window.open('https://wa.me/'+WPP+'?text='+msg,'_blank');
+}
+
+registrarClique();
+lucide.createIcons();
+</script>
+</body>
+</html>
