@@ -159,6 +159,14 @@ function lerClique(){ try{ const r=JSON.parse(localStorage.getItem(HP_CLIQUE)||'
 (function capturarClique(){ try{ const q=new URLSearchParams(location.search); const gclid=q.get('gclid'),gbraid=q.get('gbraid'),wbraid=q.get('wbraid'); if(!gclid&&!gbraid&&!wbraid) return; localStorage.setItem(HP_CLIQUE,JSON.stringify({cod:novoCodigo(),gclid,gbraid,wbraid,ts:Date.now(),camp:q.get('utm_campaign')||null,enviado:false})); }catch(e){} })();
 function registrarClique(){ const r=lerClique(); if(!r||r.enviado) return; fetch(API_SISTEMA+'/api/ads/click',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({cod:r.cod,gclid:r.gclid,gbraid:r.gbraid,wbraid:r.wbraid,camp:r.camp}),keepalive:true}).then(res=>{ if(res.ok){ r.enviado=true; try{ localStorage.setItem(HP_CLIQUE,JSON.stringify(r)); }catch(e){} } }).catch(()=>{}); }
 function comCodigo(ref){ const r=lerClique(); return r? ref+'-'+r.cod : ref; }
+// ===== pixel interno (funil first-party) =====
+function px(evt){
+  try{
+    var r=lerClique();
+    var camp=new URLSearchParams(location.search).get('utm_campaign');
+    fetch(API_SISTEMA+'/api/px',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({evt:evt,cod:r&&r.cod,camp:camp,path:location.pathname}),keepalive:true}).catch(function(){});
+  }catch(e){}
+}
 
 // ===== CTA WhatsApp (com rastreio da campanha) =====
 const MENSAGENS={
@@ -169,6 +177,7 @@ const MENSAGENS={
   flutuante:'Olá! Vim pela *promoção* da Hiper Play e quero mais informações.'
 };
 function falarWhats(origem){
+  px('whatsapp_click');
   const ref=comCodigo('HP-PROMO');
   const base=MENSAGENS[origem]||MENSAGENS.rodape;
   const msg=encodeURIComponent(base+'\n\n_Origem: Promoção Hiper Play • Ref: '+ref+'_');
@@ -176,6 +185,7 @@ function falarWhats(origem){
 }
 
 registrarClique();
+px('pageview');
 lucide.createIcons();
 </script>
 </body>
