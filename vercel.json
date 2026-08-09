@@ -71,6 +71,14 @@
     {
       "source": "/institucional",
       "destination": "/institucional/index.html"
+    },
+    {
+      "source": "/whatsapp",
+      "destination": "/whatsapp/index.html"
+    },
+    {
+      "source": "/contato",
+      "destination": "/whatsapp/index.html"
     }
   ]
 }
