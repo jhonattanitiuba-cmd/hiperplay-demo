@@ -485,7 +485,7 @@ function enviarPedido(forma){
     `*Endereço:* ${endereco}${p.cep?' - CEP '+p.cep:''}`,
     p.km!=null?`*Distância da fábrica:* ${Math.round(p.km)} km`:null,
     '',
-    `_Origem: Kit 3 em 1 Hiper Play • Ref: ${comCodigo('HP-KIT3')}_`
+    `_Origem: anuncio Kit 3 em 1 • Ref: ${comCodigo('HP-KIT3')}_`
   ].filter(l=>l!==null);
   window.open('https://wa.me/'+WPP+'?text='+encodeURIComponent(linhas.join('\n')),'_blank');
 }
@@ -513,7 +513,7 @@ const MENSAGENS={
 function falarWhats(origem){
   const ref=comCodigo('HP-KIT3');
   const base=MENSAGENS[origem]||MENSAGENS.rodape;
-  const msg=encodeURIComponent(base+'\n\n_Origem: Kit 3 em 1 Hiper Play • Ref: '+ref+'_');
+  const msg=encodeURIComponent(base+'\n\n_Origem: anuncio Kit 3 em 1 • Ref: '+ref+'_');
   window.open('https://wa.me/'+WPP+'?text='+msg,'_blank');
 }
 
