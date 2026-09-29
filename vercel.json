@@ -71,6 +71,10 @@
     {
       "source": "/institucional",
       "destination": "/institucional/index.html"
+    },
+    {
+      "source": "/kit3em1",
+      "destination": "/kit3em1/index.html"
     }
   ]
 }
