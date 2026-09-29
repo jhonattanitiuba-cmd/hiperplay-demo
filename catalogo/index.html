@@ -10,6 +10,7 @@
 <link rel="manifest" href="/manifest.webmanifest">
 <script src="https://cdn.tailwindcss.com"></script>
 <script src="https://unpkg.com/lucide@latest"></script>
+<script src="/rastreio.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Baloo+2:wght@600;700;800&display=swap" rel="stylesheet">
@@ -353,6 +354,7 @@ const RAIO100=['sorocaba','votorantim','aracoiaba da serra','capela do alto','sa
 let _pedido=null;
 function comprar(p){
   _pedido=p;
+  hpEvento('InitiateCheckout',{content_name:p.nome,value:hpValor(p.preco),currency:'BRL'});
   abrirModal(`
     <div class="flex items-center justify-between mb-3">
       <h3 class="brand text-2xl font-extrabold">Comprar</h3>

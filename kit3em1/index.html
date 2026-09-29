@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Kit 3 em 1 direto da fábrica · Hiper Play Playgrounds</title>
+<meta name="description" content="Balança dupla, escorregador e gangorra por R$ 2.890 à vista ou 10x de R$ 320. Direto da fábrica, em Araçoiaba da Serra. Até o Dia das Crianças.">
+<meta name="theme-color" content="#1CA9F1">
+<link rel="icon" type="image/svg+xml" href="/icon.svg">
+<link rel="apple-touch-icon" href="/icon.svg">
+<link rel="manifest" href="/manifest.webmanifest">
+<!-- Open Graph: sem isso o link compartilhado no WhatsApp nao mostra previa nenhuma -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Hiper Play Playgrounds">
+<meta property="og:title" content="O quintal vira o lugar preferido da casa">
+<meta property="og:description" content="Kit 3 em 1 direto da fábrica: balança dupla, escorregador e gangorra. R$ 2.890 à vista ou 10x de R$ 320, até o Dia das Crianças.">
+<meta property="og:image" content="https://hiperplay.com.br/kit3em1/img/kit-1.jpg">
+<meta property="og:url" content="https://hiperplay.com.br/kit3em1">
+<meta property="og:locale" content="pt_BR">
+<meta name="twitter:card" content="summary_large_image">
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://unpkg.com/lucide@latest"></script>
+<script src="/rastreio.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Baloo+2:wght@600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --blue:#1CA9F1; --blue-d:#1492d6; --blue-royal:#2f6bff; --ink:#16324a; --muted:#65788c; --ice:#eef4fb; --line:#e2e9f2;
+    --green:#34c88f; --rosa:#ff7fb0; --amarelo:#ffcf5c; --roxo:#a78bfa; --orange:#f5661e; --wpp:#25D366;
+  }
+  *{font-family:'Montserrat',sans-serif;-webkit-tap-highlight-color:transparent;}
+  body{color:var(--ink);background:#fff;overflow-x:hidden;}
+  .brand{font-family:'Baloo 2',cursive;}
+  .wordmark span{-webkit-text-stroke:3px #fff;paint-order:stroke fill;}
+  .card{background:#fff;border:1px solid var(--line);border-radius:22px;}
+  .chip{border-radius:999px;font-weight:700;font-size:12px;padding:7px 15px;}
+  .btn{border-radius:16px;font-weight:800;transition:.18s;cursor:pointer;}
+  .btn:active{transform:scale(.97)}
+  @keyframes floaty{0%,100%{transform:translateY(0)}50%{transform:translateY(-9px)}}
+  .floaty{animation:floaty 3.5s ease-in-out infinite}
+  .nuvem,.sticker{position:absolute}
+  .wfloat{position:fixed;right:18px;bottom:18px;z-index:70;box-shadow:0 14px 30px -10px rgba(37,211,102,.7)}
+  @keyframes pulse{0%,100%{box-shadow:0 14px 30px -8px rgba(37,211,102,.6)}50%{box-shadow:0 16px 40px -6px rgba(37,211,102,.95)}}
+  .pulse{animation:pulse 2s ease-in-out infinite}
+  @media (prefers-reduced-motion: reduce){ .floaty,.pulse{animation:none} }
+  /* Moldura branca com fio e sombra: destaca a foto do fundo branco da pagina
+     e segue o mesmo raio dos cards da marca. */
+  .foto{border-radius:22px;object-fit:cover;width:100%;background:var(--ice);
+        border:4px solid #fff;outline:1px solid var(--line);outline-offset:-5px;
+        box-shadow:0 10px 24px -12px rgba(22,50,74,.45)}
+  /* Modal de compra */
+  #modal{position:fixed;inset:0;z-index:90;display:none}
+  #modal.aberto{display:block}
+  #modal .fundo{position:absolute;inset:0;background:rgba(8,26,43,.55);backdrop-filter:blur(2px)}
+  #modal .caixa{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:min(560px,94vw);
+                max-height:92vh;overflow:auto;background:#fff;border-radius:24px;padding:22px}
+  .campo{width:100%;border:1px solid var(--line);border-radius:14px;padding:11px 13px;font-size:14px;background:#fff}
+  .campo:focus{outline:2px solid var(--blue);outline-offset:1px}
+  .rotulo{font-size:12px;font-weight:700;color:var(--muted);margin-bottom:4px;display:block}
+  .passo{display:none} .passo.on{display:block}
+  .linha-resumo{display:flex;justify-content:space-between;gap:12px;padding:9px 0;border-bottom:1px dashed var(--line);font-size:14px}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="sticky top-0 z-50 backdrop-blur border-b" style="background:linear-gradient(135deg,#28b4f5,#1492d6);border-color:rgba(255,255,255,.18)">
+  <div class="max-w-5xl mx-auto px-4 h-16 flex items-center justify-between gap-3">
+    <a href="/" class="wordmark brand text-2xl sm:text-3xl font-extrabold leading-none select-none">
+      <span style="color:#ff5a5f">H</span><span style="color:#ff8a3d">i</span><span style="color:#27c08a">p</span><span style="color:#ffc534">e</span><span style="color:#ff5a5f">r</span>
+      <span style="color:#8b5cf6">P</span><span style="color:#ffc534">l</span><span style="color:#27c08a">a</span><span style="color:#ff8a3d">y</span>
+    </a>
+    <a href="/diverkids" class="text-white text-sm font-semibold px-3 py-2 rounded-full transition hover:bg-white/25" style="background:#ffffff1f">Ver catálogo</a>
+  </div>
+</header>
+
+<!-- HERO: felicidade primeiro, produto depois -->
+<section class="relative overflow-hidden" style="background:linear-gradient(150deg,#2f6bff 0%,#1CA9F1 55%,#1492d6 100%)">
+  <div class="nuvem floaty" style="top:20px;left:4%;width:88px" data-svg="nuvem"></div>
+  <div class="sticker floaty" style="top:26px;right:10%;width:50px;animation-delay:.5s" data-svg="sol"></div>
+  <div class="sticker floaty" style="bottom:140px;left:8%;width:40px;animation-delay:1s" data-svg="coracao"></div>
+
+  <div class="max-w-5xl mx-auto px-4 pt-10 pb-24 sm:pt-14 relative">
+    <div class="grid lg:grid-cols-2 gap-8 items-center">
+      <div class="text-center lg:text-left text-white">
+        <div class="inline-flex items-center gap-2 chip mb-4 text-white" style="background:var(--orange);box-shadow:0 8px 20px -8px var(--orange)">
+          <i data-lucide="sparkles" style="width:14px;height:14px"></i> Direto da fábrica, até o Dia das Crianças
+        </div>
+        <h1 class="brand text-4xl sm:text-6xl font-extrabold leading-tight">O quintal vira o lugar<br class="hidden sm:block"> <span style="color:#ffcf5c">preferido da casa</span></h1>
+        <p class="mt-4 text-lg sm:text-xl font-semibold text-white/95">Kit 3 em 1: balança dupla, escorregador e gangorra, tudo acoplado.</p>
+        <p class="mt-2 text-white/85">Sábado de manhã sem tela, e o parquinho que não fecha às 18h.</p>
+
+        <div class="mt-7 flex flex-col items-center lg:items-start gap-3">
+          <button onclick="falarWhats('topo')" class="btn pulse text-white text-lg px-8 py-4 inline-flex items-center gap-3" style="background:var(--wpp)">
+            <svg viewBox="0 0 24 24" fill="currentColor" style="width:24px;height:24px"><path d="M.057 24l1.687-6.163a11.867 11.867 0 01-1.587-5.945C.16 5.335 5.495 0 12.05 0a11.817 11.817 0 018.413 3.488 11.824 11.824 0 013.48 8.414c-.003 6.557-5.338 11.892-11.893 11.892a11.9 11.9 0 01-5.688-1.448L.057 24zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884a9.86 9.86 0 001.51 5.26l-.999 3.648 3.978-1.042zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413z"/></svg>
+            Quero o meu
+          </button>
+          <span class="text-white/85 text-sm">Resposta na hora, todo dia.</span>
+        </div>
+      </div>
+
+      <div class="relative">
+        <!-- Imagens servidas locais e comprimidas: o original no Supabase tem 4160px e
+             1,6 MB, e tráfego pago em 4G não espera isso carregar. -->
+        <picture>
+          <source srcset="/kit3em1/img/kit-1.webp" type="image/webp">
+          <img class="foto shadow-2xl" style="aspect-ratio:4/3" width="1200" height="900"
+               fetchpriority="high" decoding="async"
+               src="/kit3em1/img/kit-1.jpg"
+               alt="Kit 3 em 1 da Hiper Play instalado num quintal: balança dupla, escorregador e gangorra">
+        </picture>
+      </div>
+    </div>
+  </div>
+  <svg viewBox="0 0 1440 80" class="block w-full" style="margin-bottom:-2px"><path fill="#ffffff" d="M0,40 C240,90 480,0 720,30 C960,60 1200,10 1440,40 L1440,80 L0,80 Z"/></svg>
+</section>
+
+<!-- PREÇO: ancora na compra separada, nao no preco de tabela -->
+<section class="max-w-5xl mx-auto px-4 -mt-10 relative z-10">
+  <div class="card p-6 sm:p-8 shadow-xl">
+    <div class="grid sm:grid-cols-2 gap-6 items-center">
+      <div>
+        <p class="text-sm font-bold" style="color:var(--muted)">Comprando separado você pagaria</p>
+        <p class="text-2xl font-extrabold line-through" style="color:var(--muted)">R$ 4.450</p>
+        <p class="mt-3 text-sm font-bold" style="color:var(--orange)">No kit, direto da fábrica</p>
+        <p class="brand text-5xl font-extrabold" style="color:var(--blue-d)">R$ 2.890</p>
+        <p class="text-lg font-bold mt-1">ou <b>10x de R$ 320</b></p>
+        <p class="mt-3 inline-flex items-center gap-2 chip text-white" style="background:var(--green)">
+          <i data-lucide="piggy-bank" style="width:14px;height:14px"></i> Economia de R$ 1.560
+        </p>
+        <button onclick="abrirCompra()" class="btn w-full mt-4 text-white text-lg py-4 inline-flex items-center justify-center gap-2" style="background:var(--orange)">
+          <i data-lucide="shopping-cart" style="width:20px;height:20px"></i> Comprar agora
+        </button>
+        <p class="text-xs text-center mt-2" style="color:var(--muted)">Calcule frete e instalação em 1 minuto</p>
+      </div>
+      <div class="text-sm space-y-2">
+        <p class="flex items-start gap-2"><i data-lucide="check" style="width:18px;height:18px;color:var(--green);flex:none"></i> <span><b>Balança dupla</b>, corrente de 4&nbsp;mm</span></p>
+        <p class="flex items-start gap-2"><i data-lucide="check" style="width:18px;height:18px;color:var(--green);flex:none"></i> <span><b>Escorregador</b> acoplado</span></p>
+        <p class="flex items-start gap-2"><i data-lucide="check" style="width:18px;height:18px;color:var(--green);flex:none"></i> <span><b>Gangorra</b> no mesmo conjunto</span></p>
+        <p class="flex items-start gap-2"><i data-lucide="check" style="width:18px;height:18px;color:var(--green);flex:none"></i> <span>Ferro reforçado, <b>aguenta adulto</b></span></p>
+        <p class="flex items-start gap-2"><i data-lucide="calendar-clock" style="width:18px;height:18px;color:var(--orange);flex:none"></i> <span><b>Condição válida até 12/10</b>, o Dia das Crianças</span></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SELOS -->
+<section class="max-w-5xl mx-auto px-4 py-8">
+  <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+    <div class="card p-4 text-center"><i data-lucide="factory" class="mx-auto mb-1" style="width:22px;height:22px;color:var(--blue-d)"></i><p class="text-xs font-bold">Fábrica própria em Araçoiaba da Serra</p></div>
+    <div class="card p-4 text-center"><i data-lucide="shield-check" class="mx-auto mb-1" style="width:22px;height:22px;color:var(--roxo)"></i><p class="text-xs font-bold">Dentro das normas de segurança</p></div>
+    <div class="card p-4 text-center"><i data-lucide="truck" class="mx-auto mb-1" style="width:22px;height:22px;color:var(--green)"></i><p class="text-xs font-bold">Receba em casa ou retire na fábrica</p></div>
+    <div class="card p-4 text-center"><i data-lucide="credit-card" class="mx-auto mb-1" style="width:22px;height:22px;color:var(--blue)"></i><p class="text-xs font-bold">Pix ou cartão em até 10x</p></div>
+  </div>
+</section>
+
+<!-- FOTOS REAIS -->
+<section class="max-w-5xl mx-auto px-4 pb-4">
+  <h2 class="brand text-2xl sm:text-3xl font-extrabold text-center">É esse, de verdade</h2>
+  <p class="text-center text-[var(--muted)] mt-1">Fotos do kit que sai da nossa fábrica.</p>
+  <!-- 2 colunas no celular: empilhadas, as 3 fotos somavam 1.157px de rolagem. -->
+  <div class="grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-4 mt-5">
+    <picture>
+      <source srcset="/kit3em1/img/kit-1.webp" type="image/webp">
+      <img class="foto" style="aspect-ratio:1/1" loading="lazy" decoding="async" width="1200" height="1200"
+           src="/kit3em1/img/kit-1.jpg" alt="Kit 3 em 1 montado no quintal, visão geral">
+    </picture>
+    <picture>
+      <source srcset="/kit3em1/img/kit-2.webp" type="image/webp">
+      <img class="foto" style="aspect-ratio:1/1" loading="lazy" decoding="async" width="1200" height="1200"
+           src="/kit3em1/img/kit-2.jpg" alt="Kit 3 em 1 visto de outro ângulo">
+    </picture>
+    <picture class="col-span-2 sm:col-span-1">
+      <source srcset="/kit3em1/img/kit-3.webp" type="image/webp">
+      <img class="foto" style="aspect-ratio:1/1" loading="lazy" decoding="async" width="1200" height="1200"
+           src="/kit3em1/img/kit-3.jpg" alt="Detalhe da estrutura de ferro do Kit 3 em 1">
+    </picture>
+  </div>
+</section>
+
+<!-- RETIRE OU RECEBA -->
+<section class="max-w-5xl mx-auto px-4 py-8">
+  <div class="grid sm:grid-cols-2 gap-4">
+    <button onclick="falarWhats('retirar')" class="card p-6 text-left hover:-translate-y-1 transition" style="border-top:5px solid var(--green)">
+      <div class="w-12 h-12 rounded-2xl grid place-items-center text-white mb-3" style="background:var(--green)"><i data-lucide="store" style="width:24px;height:24px"></i></div>
+      <h3 class="brand text-xl font-extrabold">Retire na fábrica</h3>
+      <p class="text-sm text-[var(--muted)] mt-1">Você busca em Araçoiaba da Serra e economiza no frete.</p>
+      <span class="inline-flex items-center gap-1 text-sm font-bold mt-3" style="color:var(--green)">Quero retirar <i data-lucide="arrow-right" style="width:15px;height:15px"></i></span>
+    </button>
+    <button onclick="falarWhats('entrega')" class="card p-6 text-left hover:-translate-y-1 transition" style="border-top:5px solid var(--blue)">
+      <div class="w-12 h-12 rounded-2xl grid place-items-center text-white mb-3" style="background:var(--blue)"><i data-lucide="truck" style="width:24px;height:24px"></i></div>
+      <h3 class="brand text-xl font-extrabold">Receba em casa</h3>
+      <p class="text-sm text-[var(--muted)] mt-1">A gente confirma prazo e frete da sua cidade na conversa.</p>
+      <span class="inline-flex items-center gap-1 text-sm font-bold mt-3" style="color:var(--blue-d)">Quero receber <i data-lucide="arrow-right" style="width:15px;height:15px"></i></span>
+    </button>
+  </div>
+</section>
+
+<!-- CTA FINAL + CATALOGO -->
+<section class="max-w-5xl mx-auto px-4 py-10 text-center">
+  <h2 class="brand text-2xl sm:text-3xl font-extrabold">Garanta o seu até o Dia das Crianças</h2>
+  <p class="text-[var(--muted)] mt-1">Fale com a gente e tire suas dúvidas agora.</p>
+  <button onclick="falarWhats('rodape')" class="btn text-white text-lg px-8 py-4 inline-flex items-center gap-3 mt-4" style="background:var(--wpp)">
+    <svg viewBox="0 0 24 24" fill="currentColor" style="width:22px;height:22px"><path d="M.057 24l1.687-6.163a11.867 11.867 0 01-1.587-5.945C.16 5.335 5.495 0 12.05 0a11.817 11.817 0 018.413 3.488 11.824 11.824 0 013.48 8.414c-.003 6.557-5.338 11.892-11.893 11.892a11.9 11.9 0 01-5.688-1.448L.057 24zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884a9.86 9.86 0 001.51 5.26l-.999 3.648 3.978-1.042zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413z"/></svg>
+    Falar no WhatsApp
+  </button>
+  <p class="mt-6 text-sm"><a href="/diverkids" class="font-bold underline underline-offset-4" style="color:var(--blue-d)">Ver o catálogo completo de playgrounds de ferro →</a></p>
+</section>
+
+<!-- FAQ -->
+<section class="max-w-3xl mx-auto px-4 py-10">
+  <h2 class="brand text-2xl sm:text-3xl font-extrabold text-center">Perguntas frequentes</h2>
+  <p class="text-center text-[var(--muted)] mt-1 mb-6">O que mais perguntam pra gente no WhatsApp.</p>
+
+  <div class="space-y-3">
+    <details class="card p-5">
+      <summary class="font-bold cursor-pointer">O que vem no Kit 3 em 1?</summary>
+      <p class="text-sm text-[var(--muted)] mt-2">Balança dupla, escorregador e gangorra, todos acoplados na mesma estrutura. Corrente de 4 mm e ferro reforçado, dentro das normas técnicas de segurança infantil.</p>
+    </details>
+
+    <details class="card p-5">
+      <summary class="font-bold cursor-pointer">Quanto custa e como posso pagar?</summary>
+      <p class="text-sm text-[var(--muted)] mt-2">R$ 2.890 à vista no Pix ou 10x de R$ 320 no cartão. Comprando os três aparelhos separados daria R$ 4.450, então a economia é de R$ 1.560. A condição vale para compras feitas até 12 de outubro.</p>
+    </details>
+
+    <details class="card p-5">
+      <summary class="font-bold cursor-pointer">Quanto custa a entrega e a instalação?</summary>
+      <p class="text-sm text-[var(--muted)] mt-2">R$ 180 até 30 km da fábrica, já com a instalação. Acima disso o valor acompanha a distância, e a calculadora aqui da página mostra o total antes de você falar com a gente. Para regiões mais distantes, a equipe confirma na conversa. Retirando na fábrica, não há esse custo.</p>
+    </details>
+
+    <details class="card p-5">
+      <summary class="font-bold cursor-pointer">Qual é o prazo para receber?</summary>
+      <p class="text-sm text-[var(--muted)] mt-2">A produção leva até 20 dias e a entrega na região de Sorocaba acontece em até 7 dias úteis depois de pronto. Se você precisa do playground montado numa data específica, confirme com a gente antes de fechar.</p>
+    </details>
+
+    <details class="card p-5">
+      <summary class="font-bold cursor-pointer">A balança aguenta adulto?</summary>
+      <p class="text-sm text-[var(--muted)] mt-2">Sim. A linha é reforçada e a balança aguenta o peso de um adulto, seguindo as normas técnicas de segurança infantil.</p>
+    </details>
+
+    <details class="card p-5">
+      <summary class="font-bold cursor-pointer">Quais cores estão disponíveis?</summary>
+      <p class="text-sm text-[var(--muted)] mt-2">O padrão é vermelho, amarelo e azul. Dá para personalizar a cor, com custo adicional que a equipe informa na conversa.</p>
+    </details>
+
+    <details class="card p-5">
+      <summary class="font-bold cursor-pointer">Tem garantia?</summary>
+      <p class="text-sm text-[var(--muted)] mt-2">Sim, todos os nossos produtos têm garantia. O prazo e as condições exatas quem confirma é a equipe no atendimento.</p>
+    </details>
+
+    <details class="card p-5">
+      <summary class="font-bold cursor-pointer">Serve para escola, creche ou condomínio?</summary>
+      <p class="text-sm text-[var(--muted)] mt-2">Serve. Fabricamos para casa, escola, praça e condomínio, e emitimos nota fiscal. Para vários aparelhos, fale com a gente que montamos a condição.</p>
+    </details>
+
+    <details class="card p-5">
+      <summary class="font-bold cursor-pointer">Posso retirar na fábrica?</summary>
+      <p class="text-sm text-[var(--muted)] mt-2">Pode. Ficamos em Araçoiaba da Serra, em São Paulo, e você economiza o valor da entrega.</p>
+    </details>
+  </div>
+
+  <div class="text-center mt-7">
+    <button onclick="falarWhats('faq')" class="btn text-white px-7 py-3.5 inline-flex items-center gap-2" style="background:var(--wpp)">
+      <i data-lucide="message-circle" style="width:18px;height:18px"></i> Ficou outra dúvida? Chame no WhatsApp
+    </button>
+  </div>
+</section>
+
+<!-- FAQ para o Google entender a página -->
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"O que vem no Kit 3 em 1?","acceptedAnswer":{"@type":"Answer","text":"Balança dupla, escorregador e gangorra, todos acoplados na mesma estrutura. Corrente de 4 mm e ferro reforçado, dentro das normas técnicas de segurança infantil."}},
+{"@type":"Question","name":"Quanto custa e como posso pagar?","acceptedAnswer":{"@type":"Answer","text":"R$ 2.890 à vista no Pix ou 10x de R$ 320 no cartão. Separados, os três aparelhos sairiam por R$ 4.450. A condição vale para compras feitas até 12 de outubro."}},
+{"@type":"Question","name":"Quanto custa a entrega e a instalação?","acceptedAnswer":{"@type":"Answer","text":"R$ 180 até 30 km da fábrica, já com instalação. Acima disso o valor acompanha a distância. Retirando na fábrica não há esse custo."}},
+{"@type":"Question","name":"Qual é o prazo para receber?","acceptedAnswer":{"@type":"Answer","text":"A produção leva até 20 dias e a entrega na região de Sorocaba acontece em até 7 dias úteis depois de pronto."}},
+{"@type":"Question","name":"A balança aguenta adulto?","acceptedAnswer":{"@type":"Answer","text":"Sim. A linha é reforçada e a balança aguenta o peso de um adulto, seguindo as normas técnicas de segurança infantil."}},
+{"@type":"Question","name":"Quais cores estão disponíveis?","acceptedAnswer":{"@type":"Answer","text":"O padrão é vermelho, amarelo e azul. A personalização de cor tem custo adicional."}},
+{"@type":"Question","name":"Tem garantia?","acceptedAnswer":{"@type":"Answer","text":"Sim, todos os produtos têm garantia. O prazo e as condições exatas são confirmados pela equipe no atendimento."}},
+{"@type":"Question","name":"Serve para escola, creche ou condomínio?","acceptedAnswer":{"@type":"Answer","text":"Serve. Fabricamos para casa, escola, praça e condomínio, com nota fiscal."}},
+{"@type":"Question","name":"Posso retirar na fábrica?","acceptedAnswer":{"@type":"Answer","text":"Pode. A fábrica fica em Araçoiaba da Serra, em São Paulo, e a retirada dispensa o valor da entrega."}}
+]}
+</script>
+
+<!-- FOOTER -->
+<footer class="text-white" style="background:linear-gradient(135deg,#28b4f5,#1492d6)">
+  <div class="max-w-5xl mx-auto px-4 py-8 flex flex-wrap items-center justify-between gap-4 text-sm">
+    <div class="wordmark brand text-2xl font-extrabold">
+      <span style="color:#ff5a5f">H</span><span style="color:#ff8a3d">i</span><span style="color:#27c08a">p</span><span style="color:#ffc534">e</span><span style="color:#ff5a5f">r</span>
+      <span style="color:#8b5cf6">P</span><span style="color:#ffc534">l</span><span style="color:#27c08a">a</span><span style="color:#ff8a3d">y</span>
+    </div>
+    <div class="flex items-center gap-4 text-white/90">
+      <span class="inline-flex items-center gap-1.5"><i data-lucide="phone" style="width:15px;height:15px"></i> (15) 99767-0033</span>
+      <a href="https://www.instagram.com/hiperplaygrounds/" target="_blank" class="inline-flex items-center gap-1.5 hover:underline"><i data-lucide="instagram" style="width:15px;height:15px"></i> @hiperplaygrounds</a>
+    </div>
+  </div>
+</footer>
+
+<!-- WhatsApp flutuante -->
+<button onclick="falarWhats('flutuante')" class="wfloat w-14 h-14 rounded-full grid place-items-center text-white floaty" style="background:var(--wpp)" title="WhatsApp" aria-label="WhatsApp">
+  <svg viewBox="0 0 24 24" fill="currentColor" style="width:28px;height:28px"><path d="M.057 24l1.687-6.163a11.867 11.867 0 01-1.587-5.945C.16 5.335 5.495 0 12.05 0a11.817 11.817 0 018.413 3.488 11.824 11.824 0 013.48 8.414c-.003 6.557-5.338 11.892-11.893 11.892a11.9 11.9 0 01-5.688-1.448L.057 24zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884a9.86 9.86 0 001.51 5.26l-.999 3.648 3.978-1.042zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413z"/></svg>
+</button>
+
+<!-- MODAL DE COMPRA -->
+<div id="modal" role="dialog" aria-modal="true" aria-label="Comprar Kit 3 em 1">
+  <div class="fundo" onclick="fecharCompra()"></div>
+  <div class="caixa">
+    <div class="flex items-center justify-between mb-4">
+      <h3 class="brand text-2xl font-extrabold">Comprar o Kit 3 em 1</h3>
+      <button onclick="fecharCompra()" aria-label="Fechar" class="w-9 h-9 rounded-full grid place-items-center" style="background:var(--ice)">
+        <i data-lucide="x" style="width:18px;height:18px"></i>
+      </button>
+    </div>
+
+    <!-- PASSO 1: endereco -->
+    <div class="passo on" id="p1">
+      <p class="text-sm mb-3" style="color:var(--muted)">Informe onde o playground vai ser montado. Calculamos frete e instalação na hora.</p>
+      <div class="grid gap-3">
+        <div><label class="rotulo" for="c_nome">Seu nome</label><input id="c_nome" class="campo" autocomplete="name" placeholder="Como podemos te chamar"></div>
+        <div><label class="rotulo" for="c_fone">WhatsApp</label><input id="c_fone" class="campo" inputmode="tel" autocomplete="tel" placeholder="(15) 99999-0000"></div>
+        <div class="grid grid-cols-3 gap-3">
+          <div><label class="rotulo" for="c_cep">CEP</label><input id="c_cep" class="campo" inputmode="numeric" autocomplete="postal-code" placeholder="18000-000" oninput="cepDigitado()"></div>
+          <div class="col-span-2"><label class="rotulo" for="c_cidade">Cidade</label><input id="c_cidade" class="campo" autocomplete="address-level2" placeholder="Cidade"></div>
+        </div>
+        <div class="grid grid-cols-4 gap-3">
+          <div class="col-span-3"><label class="rotulo" for="c_end">Endereço e número</label><input id="c_end" class="campo" autocomplete="street-address" placeholder="Rua, número, bairro"></div>
+          <div><label class="rotulo" for="c_uf">UF</label><input id="c_uf" class="campo" maxlength="2" placeholder="SP"></div>
+        </div>
+      </div>
+      <p id="c_erro" class="text-sm mt-3 hidden" style="color:#e11d48"></p>
+      <button onclick="calcular()" id="c_btn" class="btn w-full mt-4 text-white py-3.5 text-base" style="background:var(--blue-d)">Calcular frete e instalação</button>
+    </div>
+
+    <!-- PASSO 2: resumo -->
+    <div class="passo" id="p2">
+      <div id="c_resumo"></div>
+      <div class="grid sm:grid-cols-2 gap-3 mt-4">
+        <button onclick="enviarPedido('avista')" class="btn text-white py-3.5" style="background:var(--wpp)">Fechar à vista</button>
+        <button onclick="enviarPedido('parcelado')" class="btn py-3.5" style="background:var(--ice);color:var(--ink)">Fechar em 10x</button>
+      </div>
+      <button onclick="voltarPasso()" class="w-full mt-3 text-sm font-semibold" style="color:var(--muted)">Voltar e corrigir o endereço</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const WPP='5515997670033';
+
+// ===== Preço e regra de frete =====
+// Base combinada com a fábrica: R$ 180 cobrindo até 30 km, o que dá R$ 6,00/km.
+// Acima de 30 km mantém a mesma proporção. Acima do limite não chuta preço:
+// manda para a equipe, porque prometer frete errado custa mais caro que perder o lead.
+const PRECO_AVISTA=2890, PARCELAS=10, VALOR_PARCELA=320;
+const FRETE_BASE=180, FRETE_KM_INCLUSO=30, FRETE_POR_KM=6, FRETE_KM_LIMITE=100;
+// A conta de distância é em linha reta. Estrada dá mais, então 1,3 aproxima o
+// percurso real. Sem isso, Itu sairia como 42 km quando de carro passa de 50, e
+// a fábrica cobriria a diferença do próprio bolso.
+const FATOR_ESTRADA=1.3;
+const FABRICA={lat:-23.5057,lng:-47.6122}; // Araçoiaba da Serra/SP
+
+// Mesma tabela do sistema (src/lib/cidades.ts), usada quando o CEP não devolve coordenada.
+const CIDADES={
+  "aracoiaba da serra/SP":[-23.5057,-47.6122], "sorocaba/SP":[-23.5015,-47.4526], "itu/SP":[-23.2637,-47.2992],
+  "tatui/SP":[-23.3556,-47.8569], "salto/SP":[-23.2008,-47.2872], "votorantim/SP":[-23.5447,-47.4386],
+  "piedade/SP":[-23.7114,-47.4278], "ipero/SP":[-23.3506,-47.6889], "boituva/SP":[-23.2831,-47.6714],
+  "porto feliz/SP":[-23.2153,-47.5239], "capela do alto/SP":[-23.4703,-47.7375], "tiete/SP":[-23.1058,-47.7161],
+  "cerquilho/SP":[-23.1650,-47.7439], "indaiatuba/SP":[-23.0886,-47.2119], "campinas/SP":[-22.9099,-47.0626],
+  "jundiai/SP":[-23.1857,-46.8978], "itapetininga/SP":[-23.5917,-48.0533], "sao roque/SP":[-23.5286,-47.1358],
+  "sao paulo/SP":[-23.5505,-46.6333], "salto de pirapora/SP":[-23.6486,-47.5736], "aluminio/SP":[-23.5297,-47.2617],
+  "mairinque/SP":[-23.5461,-47.1836], "sarapui/SP":[-23.6400,-47.8261], "pilar do sul/SP":[-23.8136,-47.7169],
+  "ibiuna/SP":[-23.6561,-47.2225], "laranjal paulista/SP":[-23.0489,-47.8369], "conchas/SP":[-23.0128,-48.0100],
+  "cesario lange/SP":[-23.2244,-47.9539], "quadra/SP":[-23.2967,-48.0592], "porangaba/SP":[-23.1758,-48.1247]
+};
+const chave=(c,uf)=>((c||'').trim().toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/\s+/g,' '))+'/'+((uf||'SP').trim().toUpperCase());
+const brl=v=>v.toLocaleString('pt-BR',{style:'currency',currency:'BRL',maximumFractionDigits:0});
+
+function distanciaKm(a,b){ // haversine
+  const R=6371,g=Math.PI/180;
+  const dLat=(b.lat-a.lat)*g, dLng=(b.lng-a.lng)*g;
+  const h=Math.sin(dLat/2)**2+Math.cos(a.lat*g)*Math.cos(b.lat*g)*Math.sin(dLng/2)**2;
+  return 2*R*Math.asin(Math.sqrt(h));
+}
+function precoFrete(km){
+  if(km==null) return {valor:null, texto:'A combinar com a equipe'};
+  if(km>FRETE_KM_LIMITE) return {valor:null, texto:'A combinar (acima de '+FRETE_KM_LIMITE+' km)'};
+  if(km<=FRETE_KM_INCLUSO) return {valor:FRETE_BASE, texto:brl(FRETE_BASE)+' (até '+FRETE_KM_INCLUSO+' km)'};
+  const v=Math.round(km*FRETE_POR_KM);
+  return {valor:v, texto:brl(v)+' ('+Math.round(km)+' km)'};
+}
+
+let _pedido=null;
+function abrirCompra(){ hpEvento('InitiateCheckout',{content_name:'Kit 3 em 1',value:PRECO_AVISTA,currency:'BRL'});
+  document.getElementById('modal').classList.add('aberto'); lucide.createIcons(); }
+function fecharCompra(){ document.getElementById('modal').classList.remove('aberto'); }
+function voltarPasso(){ document.getElementById('p2').classList.remove('on'); document.getElementById('p1').classList.add('on'); }
+document.addEventListener('keydown',e=>{ if(e.key==='Escape') fecharCompra(); });
+
+// CEP preenche o endereço (ViaCEP, o mesmo que a loja já usa)
+async function cepDigitado(){
+  const el=document.getElementById('c_cep');
+  const cep=(el.value||'').replace(/\D/g,'');
+  if(cep.length===8){
+    el.value=cep.slice(0,5)+'-'+cep.slice(5);
+    try{
+      const r=await (await fetch('https://viacep.com.br/ws/'+cep+'/json/')).json();
+      if(!r.erro){
+        if(r.localidade) document.getElementById('c_cidade').value=r.localidade;
+        if(r.uf) document.getElementById('c_uf').value=r.uf;
+        const rua=[r.logradouro,r.bairro].filter(Boolean).join(', ');
+        const atual=document.getElementById('c_end');
+        if(rua && !atual.value) atual.value=rua+', ';
+      }
+    }catch(e){}
+  }
+}
+
+/** Coordenada do cliente: tenta pelo CEP, cai para a tabela de cidades. */
+async function coordenadaDoCliente(cep,cidade,uf){
+  const limpo=(cep||'').replace(/\D/g,'');
+  if(limpo.length===8){
+    try{
+      const r=await (await fetch('https://brasilapi.com.br/api/cep/v2/'+limpo)).json();
+      const c=r && r.location && r.location.coordinates;
+      if(c && c.latitude) return {lat:+c.latitude, lng:+c.longitude, fonte:'cep'};
+    }catch(e){}
+  }
+  const t=CIDADES[chave(cidade,uf)];
+  return t ? {lat:t[0], lng:t[1], fonte:'cidade'} : null;
+}
+
+async function calcular(){
+  const nome=document.getElementById('c_nome').value.trim();
+  const fone=document.getElementById('c_fone').value.trim();
+  const cep=document.getElementById('c_cep').value.trim();
+  const cidade=document.getElementById('c_cidade').value.trim();
+  const uf=document.getElementById('c_uf').value.trim();
+  const end=document.getElementById('c_end').value.trim();
+  const erro=document.getElementById('c_erro');
+  if(!nome||!fone||!cidade){
+    erro.textContent='Preencha nome, WhatsApp e cidade para calcular.';
+    erro.classList.remove('hidden'); return;
+  }
+  erro.classList.add('hidden');
+  const btn=document.getElementById('c_btn');
+  btn.disabled=true; btn.textContent='Calculando...';
+
+  const co=await coordenadaDoCliente(cep,cidade,uf);
+  const km=co ? distanciaKm(FABRICA,co)*FATOR_ESTRADA : null;
+  const f=precoFrete(km);
+  const total=f.valor!=null ? PRECO_AVISTA+f.valor : null;
+  _pedido={nome,fone,cep,cidade,uf,end,km,frete:f,total};
+
+  document.getElementById('c_resumo').innerHTML=`
+    <div class="linha-resumo"><span>Kit 3 em 1 (balança dupla, escorregador e gangorra)</span><b>${brl(PRECO_AVISTA)}</b></div>
+    <div class="linha-resumo"><span>Frete e instalação${co&&co.fonte==='cidade'?' <span style="color:var(--muted)">(estimado pela cidade)</span>':''}</span><b>${f.texto}</b></div>
+    <div class="linha-resumo" style="border-bottom:none"><span class="font-bold">Total</span>
+      <b class="text-xl" style="color:var(--blue-d)">${total!=null?brl(total):'A combinar'}</b></div>
+    <p class="text-sm mt-2" style="color:var(--muted)">ou <b>${PARCELAS}x de ${brl(VALOR_PARCELA)}</b> no cartão${total!=null?', mais o frete':''}.</p>
+    ${km!=null&&km>FRETE_KM_INCLUSO&&f.valor!=null?'<p class="text-xs mt-2" style="color:var(--muted)">Valor estimado pela distância. Confirmamos com você no WhatsApp antes de fechar.</p>':''}
+    ${f.valor==null?'<p class="text-xs mt-2" style="color:var(--muted)">Sua região fica fora do cálculo automático. A equipe confirma frete e prazo na conversa.</p>':''}`;
+
+  btn.disabled=false; btn.textContent='Calcular frete e instalação';
+  document.getElementById('p1').classList.remove('on');
+  document.getElementById('p2').classList.add('on');
+}
+
+function enviarPedido(forma){
+  if(!_pedido) return;
+  const p=_pedido;
+  const cond = forma==='avista'
+    ? `*À vista:* ${brl(PRECO_AVISTA)}`
+    : `*Parcelado:* ${PARCELAS}x de ${brl(VALOR_PARCELA)}`;
+  // Endereço sem vírgula sobrando: o preenchimento por CEP termina em ", "
+  const endereco=[p.end,p.cidade,p.uf].map(s=>(s||'').replace(/[,\s]+$/,'')).filter(Boolean).join(', ');
+  // null marca linha a remover; '' é linha em branco de propósito
+  const linhas=[
+    '*Pedido do Kit 3 em 1*',
+    '',
+    '*Produto:* Kit 3 em 1 (balança dupla, escorregador e gangorra)',
+    cond,
+    `*Frete e instalação:* ${p.frete.texto}`,
+    p.total!=null&&forma==='avista' ? `*Total:* ${brl(p.total)}` : null,
+    '',
+    `*Cliente:* ${p.nome}`,
+    `*WhatsApp:* ${p.fone}`,
+    `*Endereço:* ${endereco}${p.cep?' - CEP '+p.cep:''}`,
+    p.km!=null?`*Distância da fábrica:* ${Math.round(p.km)} km`:null,
+    '',
+    `_Origem: Kit 3 em 1 Hiper Play • Ref: ${comCodigo('HP-KIT3')}_`
+  ].filter(l=>l!==null);
+  window.open('https://wa.me/'+WPP+'?text='+encodeURIComponent(linhas.join('\n')),'_blank');
+}
+
+// ===== SVGs dos stickers (universo da marca) =====
+const SVG={
+  nuvem:'<svg viewBox="0 0 96 64" fill="none"><path fill="#fff" d="M26 56h44a15 15 0 0 0 3-29.7A20 20 0 0 0 35 20 14 14 0 0 0 14 32a13 13 0 0 0 12 24z"/><circle cx="40" cy="38" r="2.6" fill="#16324a"/><circle cx="56" cy="38" r="2.6" fill="#16324a"/><path d="M40 45q8 6 16 0" stroke="#16324a" stroke-width="2.6" stroke-linecap="round" fill="none"/><circle cx="34" cy="44" r="3" fill="#ff7fb0" opacity=".7"/><circle cx="62" cy="44" r="3" fill="#ff7fb0" opacity=".7"/></svg>',
+  sol:'<svg viewBox="0 0 64 64" fill="none"><g stroke="#ffcf5c" stroke-width="4" stroke-linecap="round"><path d="M32 6v7M32 51v7M6 32h7M51 32h7M13 13l5 5M46 46l5 5M51 13l-5 5M18 46l-5 5"/></g><circle cx="32" cy="32" r="14" fill="#ffcf5c"/><circle cx="27" cy="30" r="2" fill="#16324a"/><circle cx="37" cy="30" r="2" fill="#16324a"/><path d="M27 37q5 4 10 0" stroke="#16324a" stroke-width="2.4" stroke-linecap="round" fill="none"/></svg>',
+  coracao:'<svg viewBox="0 0 64 64" fill="none"><path d="M32 56S8 40 8 24a13 13 0 0 1 24-6 13 13 0 0 1 24 6c0 16-24 32-24 32z" fill="#ff5a7a"/><circle cx="25" cy="27" r="2" fill="#fff"/><circle cx="39" cy="27" r="2" fill="#fff"/><path d="M26 33q6 4 12 0" stroke="#fff" stroke-width="2.4" stroke-linecap="round" fill="none"/></svg>'
+};
+document.querySelectorAll('[data-svg]').forEach(el=>{ const k=el.getAttribute('data-svg'); if(SVG[k]) el.innerHTML=SVG[k]; });
+
+// Rastreio de anúncio (clique, código na Ref, pixels): /rastreio.js
+// A Ref desta campanha é HP-KIT3, para separar no CRM o que veio daqui.
+
+// ===== CTA WhatsApp =====
+const MENSAGENS={
+  topo:'Olá! Quero o *Kit 3 em 1* (balança dupla, escorregador e gangorra) por *R$ 2.890*.',
+  retirar:'Olá! Quero o *Kit 3 em 1* e tenho interesse em *retirar na fábrica*.',
+  entrega:'Olá! Quero o *Kit 3 em 1* e gostaria de saber o *prazo e o frete* para a minha cidade.',
+  rodape:'Olá! Quero garantir o *Kit 3 em 1* na condição do Dia das Crianças.',
+  faq:'Olá! Tenho uma dúvida sobre o *Kit 3 em 1*.',
+  flutuante:'Olá! Vi o *Kit 3 em 1* e quero mais informações.'
+};
+function falarWhats(origem){
+  const ref=comCodigo('HP-KIT3');
+  const base=MENSAGENS[origem]||MENSAGENS.rodape;
+  const msg=encodeURIComponent(base+'\n\n_Origem: Kit 3 em 1 Hiper Play • Ref: '+ref+'_');
+  window.open('https://wa.me/'+WPP+'?text='+msg,'_blank');
+}
+
+lucide.createIcons();
+</script>
+</body>
+</html>
