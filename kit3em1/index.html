@@ -48,6 +48,17 @@
   .foto{border-radius:22px;object-fit:cover;width:100%;background:var(--ice);
         border:4px solid #fff;outline:1px solid var(--line);outline-offset:-5px;
         box-shadow:0 10px 24px -12px rgba(22,50,74,.45)}
+  /* Modal de compra */
+  #modal{position:fixed;inset:0;z-index:90;display:none}
+  #modal.aberto{display:block}
+  #modal .fundo{position:absolute;inset:0;background:rgba(8,26,43,.55);backdrop-filter:blur(2px)}
+  #modal .caixa{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:min(560px,94vw);
+                max-height:92vh;overflow:auto;background:#fff;border-radius:24px;padding:22px}
+  .campo{width:100%;border:1px solid var(--line);border-radius:14px;padding:11px 13px;font-size:14px;background:#fff}
+  .campo:focus{outline:2px solid var(--blue);outline-offset:1px}
+  .rotulo{font-size:12px;font-weight:700;color:var(--muted);margin-bottom:4px;display:block}
+  .passo{display:none} .passo.on{display:block}
+  .linha-resumo{display:flex;justify-content:space-between;gap:12px;padding:9px 0;border-bottom:1px dashed var(--line);font-size:14px}
 </style>
 </head>
 <body>
@@ -117,6 +128,10 @@
         <p class="mt-3 inline-flex items-center gap-2 chip text-white" style="background:var(--green)">
           <i data-lucide="piggy-bank" style="width:14px;height:14px"></i> Economia de R$ 1.560
         </p>
+        <button onclick="abrirCompra()" class="btn w-full mt-4 text-white text-lg py-4 inline-flex items-center justify-center gap-2" style="background:var(--orange)">
+          <i data-lucide="shopping-cart" style="width:20px;height:20px"></i> Comprar agora
+        </button>
+        <p class="text-xs text-center mt-2" style="color:var(--muted)">Calcule frete e instalação em 1 minuto</p>
       </div>
       <div class="text-sm space-y-2">
         <p class="flex items-start gap-2"><i data-lucide="check" style="width:18px;height:18px;color:var(--green);flex:none"></i> <span><b>Balança dupla</b>, corrente de 4&nbsp;mm</span></p>
@@ -211,8 +226,191 @@
   <svg viewBox="0 0 24 24" fill="currentColor" style="width:28px;height:28px"><path d="M.057 24l1.687-6.163a11.867 11.867 0 01-1.587-5.945C.16 5.335 5.495 0 12.05 0a11.817 11.817 0 018.413 3.488 11.824 11.824 0 013.48 8.414c-.003 6.557-5.338 11.892-11.893 11.892a11.9 11.9 0 01-5.688-1.448L.057 24zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884a9.86 9.86 0 001.51 5.26l-.999 3.648 3.978-1.042zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413z"/></svg>
 </button>
 
+<!-- MODAL DE COMPRA -->
+<div id="modal" role="dialog" aria-modal="true" aria-label="Comprar Kit 3 em 1">
+  <div class="fundo" onclick="fecharCompra()"></div>
+  <div class="caixa">
+    <div class="flex items-center justify-between mb-4">
+      <h3 class="brand text-2xl font-extrabold">Comprar o Kit 3 em 1</h3>
+      <button onclick="fecharCompra()" aria-label="Fechar" class="w-9 h-9 rounded-full grid place-items-center" style="background:var(--ice)">
+        <i data-lucide="x" style="width:18px;height:18px"></i>
+      </button>
+    </div>
+
+    <!-- PASSO 1: endereco -->
+    <div class="passo on" id="p1">
+      <p class="text-sm mb-3" style="color:var(--muted)">Informe onde o playground vai ser montado. Calculamos frete e instalação na hora.</p>
+      <div class="grid gap-3">
+        <div><label class="rotulo" for="c_nome">Seu nome</label><input id="c_nome" class="campo" autocomplete="name" placeholder="Como podemos te chamar"></div>
+        <div><label class="rotulo" for="c_fone">WhatsApp</label><input id="c_fone" class="campo" inputmode="tel" autocomplete="tel" placeholder="(15) 99999-0000"></div>
+        <div class="grid grid-cols-3 gap-3">
+          <div><label class="rotulo" for="c_cep">CEP</label><input id="c_cep" class="campo" inputmode="numeric" autocomplete="postal-code" placeholder="18000-000" oninput="cepDigitado()"></div>
+          <div class="col-span-2"><label class="rotulo" for="c_cidade">Cidade</label><input id="c_cidade" class="campo" autocomplete="address-level2" placeholder="Cidade"></div>
+        </div>
+        <div class="grid grid-cols-4 gap-3">
+          <div class="col-span-3"><label class="rotulo" for="c_end">Endereço e número</label><input id="c_end" class="campo" autocomplete="street-address" placeholder="Rua, número, bairro"></div>
+          <div><label class="rotulo" for="c_uf">UF</label><input id="c_uf" class="campo" maxlength="2" placeholder="SP"></div>
+        </div>
+      </div>
+      <p id="c_erro" class="text-sm mt-3 hidden" style="color:#e11d48"></p>
+      <button onclick="calcular()" id="c_btn" class="btn w-full mt-4 text-white py-3.5 text-base" style="background:var(--blue-d)">Calcular frete e instalação</button>
+    </div>
+
+    <!-- PASSO 2: resumo -->
+    <div class="passo" id="p2">
+      <div id="c_resumo"></div>
+      <div class="grid sm:grid-cols-2 gap-3 mt-4">
+        <button onclick="enviarPedido('avista')" class="btn text-white py-3.5" style="background:var(--wpp)">Fechar à vista</button>
+        <button onclick="enviarPedido('parcelado')" class="btn py-3.5" style="background:var(--ice);color:var(--ink)">Fechar em 10x</button>
+      </div>
+      <button onclick="voltarPasso()" class="w-full mt-3 text-sm font-semibold" style="color:var(--muted)">Voltar e corrigir o endereço</button>
+    </div>
+  </div>
+</div>
+
 <script>
 const WPP='5515997670033';
+
+// ===== Preço e regra de frete =====
+// Base combinada com a fábrica: R$ 180 cobrindo até 30 km, o que dá R$ 6,00/km.
+// Acima de 30 km mantém a mesma proporção. Acima do limite não chuta preço:
+// manda para a equipe, porque prometer frete errado custa mais caro que perder o lead.
+const PRECO_AVISTA=2890, PARCELAS=10, VALOR_PARCELA=320;
+const FRETE_BASE=180, FRETE_KM_INCLUSO=30, FRETE_POR_KM=6, FRETE_KM_LIMITE=100;
+const FABRICA={lat:-23.5057,lng:-47.6122}; // Araçoiaba da Serra/SP
+
+// Mesma tabela do sistema (src/lib/cidades.ts), usada quando o CEP não devolve coordenada.
+const CIDADES={
+  "aracoiaba da serra/SP":[-23.5057,-47.6122], "sorocaba/SP":[-23.5015,-47.4526], "itu/SP":[-23.2637,-47.2992],
+  "tatui/SP":[-23.3556,-47.8569], "salto/SP":[-23.2008,-47.2872], "votorantim/SP":[-23.5447,-47.4386],
+  "piedade/SP":[-23.7114,-47.4278], "ipero/SP":[-23.3506,-47.6889], "boituva/SP":[-23.2831,-47.6714],
+  "porto feliz/SP":[-23.2153,-47.5239], "capela do alto/SP":[-23.4703,-47.7375], "tiete/SP":[-23.1058,-47.7161],
+  "cerquilho/SP":[-23.1650,-47.7439], "indaiatuba/SP":[-23.0886,-47.2119], "campinas/SP":[-22.9099,-47.0626],
+  "jundiai/SP":[-23.1857,-46.8978], "itapetininga/SP":[-23.5917,-48.0533], "sao roque/SP":[-23.5286,-47.1358],
+  "sao paulo/SP":[-23.5505,-46.6333], "salto de pirapora/SP":[-23.6486,-47.5736], "aluminio/SP":[-23.5297,-47.2617],
+  "mairinque/SP":[-23.5461,-47.1836], "sarapui/SP":[-23.6400,-47.8261], "pilar do sul/SP":[-23.8136,-47.7169],
+  "ibiuna/SP":[-23.6561,-47.2225], "laranjal paulista/SP":[-23.0489,-47.8369], "conchas/SP":[-23.0128,-48.0100],
+  "cesario lange/SP":[-23.2244,-47.9539], "quadra/SP":[-23.2967,-48.0592], "porangaba/SP":[-23.1758,-48.1247]
+};
+const chave=(c,uf)=>((c||'').trim().toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/\s+/g,' '))+'/'+((uf||'SP').trim().toUpperCase());
+const brl=v=>v.toLocaleString('pt-BR',{style:'currency',currency:'BRL',maximumFractionDigits:0});
+
+function distanciaKm(a,b){ // haversine
+  const R=6371,g=Math.PI/180;
+  const dLat=(b.lat-a.lat)*g, dLng=(b.lng-a.lng)*g;
+  const h=Math.sin(dLat/2)**2+Math.cos(a.lat*g)*Math.cos(b.lat*g)*Math.sin(dLng/2)**2;
+  return 2*R*Math.asin(Math.sqrt(h));
+}
+function precoFrete(km){
+  if(km==null) return {valor:null, texto:'A combinar com a equipe'};
+  if(km>FRETE_KM_LIMITE) return {valor:null, texto:'A combinar (acima de '+FRETE_KM_LIMITE+' km)'};
+  if(km<=FRETE_KM_INCLUSO) return {valor:FRETE_BASE, texto:brl(FRETE_BASE)+' (até '+FRETE_KM_INCLUSO+' km)'};
+  const v=Math.round(km*FRETE_POR_KM);
+  return {valor:v, texto:brl(v)+' ('+Math.round(km)+' km)'};
+}
+
+let _pedido=null;
+function abrirCompra(){ hpEvento('InitiateCheckout',{content_name:'Kit 3 em 1',value:PRECO_AVISTA,currency:'BRL'});
+  document.getElementById('modal').classList.add('aberto'); lucide.createIcons(); }
+function fecharCompra(){ document.getElementById('modal').classList.remove('aberto'); }
+function voltarPasso(){ document.getElementById('p2').classList.remove('on'); document.getElementById('p1').classList.add('on'); }
+document.addEventListener('keydown',e=>{ if(e.key==='Escape') fecharCompra(); });
+
+// CEP preenche o endereço (ViaCEP, o mesmo que a loja já usa)
+async function cepDigitado(){
+  const el=document.getElementById('c_cep');
+  const cep=(el.value||'').replace(/\D/g,'');
+  if(cep.length===8){
+    el.value=cep.slice(0,5)+'-'+cep.slice(5);
+    try{
+      const r=await (await fetch('https://viacep.com.br/ws/'+cep+'/json/')).json();
+      if(!r.erro){
+        if(r.localidade) document.getElementById('c_cidade').value=r.localidade;
+        if(r.uf) document.getElementById('c_uf').value=r.uf;
+        const rua=[r.logradouro,r.bairro].filter(Boolean).join(', ');
+        const atual=document.getElementById('c_end');
+        if(rua && !atual.value) atual.value=rua+', ';
+      }
+    }catch(e){}
+  }
+}
+
+/** Coordenada do cliente: tenta pelo CEP, cai para a tabela de cidades. */
+async function coordenadaDoCliente(cep,cidade,uf){
+  const limpo=(cep||'').replace(/\D/g,'');
+  if(limpo.length===8){
+    try{
+      const r=await (await fetch('https://brasilapi.com.br/api/cep/v2/'+limpo)).json();
+      const c=r && r.location && r.location.coordinates;
+      if(c && c.latitude) return {lat:+c.latitude, lng:+c.longitude, fonte:'cep'};
+    }catch(e){}
+  }
+  const t=CIDADES[chave(cidade,uf)];
+  return t ? {lat:t[0], lng:t[1], fonte:'cidade'} : null;
+}
+
+async function calcular(){
+  const nome=document.getElementById('c_nome').value.trim();
+  const fone=document.getElementById('c_fone').value.trim();
+  const cep=document.getElementById('c_cep').value.trim();
+  const cidade=document.getElementById('c_cidade').value.trim();
+  const uf=document.getElementById('c_uf').value.trim();
+  const end=document.getElementById('c_end').value.trim();
+  const erro=document.getElementById('c_erro');
+  if(!nome||!fone||!cidade){
+    erro.textContent='Preencha nome, WhatsApp e cidade para calcular.';
+    erro.classList.remove('hidden'); return;
+  }
+  erro.classList.add('hidden');
+  const btn=document.getElementById('c_btn');
+  btn.disabled=true; btn.textContent='Calculando...';
+
+  const co=await coordenadaDoCliente(cep,cidade,uf);
+  const km=co ? distanciaKm(FABRICA,co) : null;
+  const f=precoFrete(km);
+  const total=f.valor!=null ? PRECO_AVISTA+f.valor : null;
+  _pedido={nome,fone,cep,cidade,uf,end,km,frete:f,total};
+
+  document.getElementById('c_resumo').innerHTML=`
+    <div class="linha-resumo"><span>Kit 3 em 1 (balança dupla, escorregador e gangorra)</span><b>${brl(PRECO_AVISTA)}</b></div>
+    <div class="linha-resumo"><span>Frete e instalação${co&&co.fonte==='cidade'?' <span style="color:var(--muted)">(estimado pela cidade)</span>':''}</span><b>${f.texto}</b></div>
+    <div class="linha-resumo" style="border-bottom:none"><span class="font-bold">Total</span>
+      <b class="text-xl" style="color:var(--blue-d)">${total!=null?brl(total):'A combinar'}</b></div>
+    <p class="text-sm mt-2" style="color:var(--muted)">ou <b>${PARCELAS}x de ${brl(VALOR_PARCELA)}</b> no cartão${total!=null?', mais o frete':''}.</p>
+    ${km!=null&&km>FRETE_KM_INCLUSO&&f.valor!=null?'<p class="text-xs mt-2" style="color:var(--muted)">Valor estimado pela distância. Confirmamos com você no WhatsApp antes de fechar.</p>':''}
+    ${f.valor==null?'<p class="text-xs mt-2" style="color:var(--muted)">Sua região fica fora do cálculo automático. A equipe confirma frete e prazo na conversa.</p>':''}`;
+
+  btn.disabled=false; btn.textContent='Calcular frete e instalação';
+  document.getElementById('p1').classList.remove('on');
+  document.getElementById('p2').classList.add('on');
+}
+
+function enviarPedido(forma){
+  if(!_pedido) return;
+  const p=_pedido;
+  const cond = forma==='avista'
+    ? `*À vista:* ${brl(PRECO_AVISTA)}`
+    : `*Parcelado:* ${PARCELAS}x de ${brl(VALOR_PARCELA)}`;
+  // Endereço sem vírgula sobrando: o preenchimento por CEP termina em ", "
+  const endereco=[p.end,p.cidade,p.uf].map(s=>(s||'').replace(/[,\s]+$/,'')).filter(Boolean).join(', ');
+  // null marca linha a remover; '' é linha em branco de propósito
+  const linhas=[
+    '*Pedido do Kit 3 em 1*',
+    '',
+    '*Produto:* Kit 3 em 1 (balança dupla, escorregador e gangorra)',
+    cond,
+    `*Frete e instalação:* ${p.frete.texto}`,
+    p.total!=null&&forma==='avista' ? `*Total:* ${brl(p.total)}` : null,
+    '',
+    `*Cliente:* ${p.nome}`,
+    `*WhatsApp:* ${p.fone}`,
+    `*Endereço:* ${endereco}${p.cep?' - CEP '+p.cep:''}`,
+    p.km!=null?`*Distância da fábrica:* ${Math.round(p.km)} km`:null,
+    '',
+    `_Origem: Kit 3 em 1 Hiper Play • Ref: ${comCodigo('HP-KIT3')}_`
+  ].filter(l=>l!==null);
+  window.open('https://wa.me/'+WPP+'?text='+encodeURIComponent(linhas.join('\n')),'_blank');
+}
 
 // ===== SVGs dos stickers (universo da marca) =====
 const SVG={
