@@ -277,6 +277,10 @@ const WPP='5515997670033';
 // manda para a equipe, porque prometer frete errado custa mais caro que perder o lead.
 const PRECO_AVISTA=2890, PARCELAS=10, VALOR_PARCELA=320;
 const FRETE_BASE=180, FRETE_KM_INCLUSO=30, FRETE_POR_KM=6, FRETE_KM_LIMITE=100;
+// A conta de distância é em linha reta. Estrada dá mais, então 1,3 aproxima o
+// percurso real. Sem isso, Itu sairia como 42 km quando de carro passa de 50, e
+// a fábrica cobriria a diferença do próprio bolso.
+const FATOR_ESTRADA=1.3;
 const FABRICA={lat:-23.5057,lng:-47.6122}; // Araçoiaba da Serra/SP
 
 // Mesma tabela do sistema (src/lib/cidades.ts), usada quando o CEP não devolve coordenada.
@@ -366,7 +370,7 @@ async function calcular(){
   btn.disabled=true; btn.textContent='Calculando...';
 
   const co=await coordenadaDoCliente(cep,cidade,uf);
-  const km=co ? distanciaKm(FABRICA,co) : null;
+  const km=co ? distanciaKm(FABRICA,co)*FATOR_ESTRADA : null;
   const f=precoFrete(km);
   const total=f.valor!=null ? PRECO_AVISTA+f.valor : null;
   _pedido={nome,fone,cep,cidade,uf,end,km,frete:f,total};
