@@ -43,7 +43,11 @@
   @keyframes pulse{0%,100%{box-shadow:0 14px 30px -8px rgba(37,211,102,.6)}50%{box-shadow:0 16px 40px -6px rgba(37,211,102,.95)}}
   .pulse{animation:pulse 2s ease-in-out infinite}
   @media (prefers-reduced-motion: reduce){ .floaty,.pulse{animation:none} }
-  .foto{border-radius:22px;object-fit:cover;width:100%;background:var(--ice)}
+  /* Moldura branca com fio e sombra: destaca a foto do fundo branco da pagina
+     e segue o mesmo raio dos cards da marca. */
+  .foto{border-radius:22px;object-fit:cover;width:100%;background:var(--ice);
+        border:4px solid #fff;outline:1px solid var(--line);outline-offset:-5px;
+        box-shadow:0 10px 24px -12px rgba(22,50,74,.45)}
 </style>
 </head>
 <body>
