@@ -40,6 +40,21 @@
   .floaty{animation:floaty 3.5s ease-in-out infinite}
   .nuvem,.sticker{position:absolute}
   .wfloat{position:fixed;right:18px;bottom:18px;z-index:70;box-shadow:0 14px 30px -10px rgba(37,211,102,.7)}
+  /* Barra fixa no celular. O circulo de 56px passava despercebido: de 1.641 visitas
+     na campanha de setembro, so 48 chegaram ao WhatsApp (2,9%). A barra mantem
+     preco e as duas acoes sempre na tela, sem depender de rolagem. */
+  .barra{position:fixed;left:0;right:0;bottom:0;z-index:80;display:none;gap:10px;align-items:center;
+         padding:10px 12px calc(10px + env(safe-area-inset-bottom,0px));
+         background:rgba(255,255,255,.97);backdrop-filter:blur(8px);
+         border-top:1px solid var(--line);box-shadow:0 -8px 26px -12px rgba(22,50,74,.4)}
+  .barra .pq{flex:none;line-height:1.05}
+  .barra .pq b{display:block;font-size:19px;font-weight:800;color:var(--blue-d)}
+  .barra .pq small{display:block;font-size:10px;font-weight:700;color:var(--orange);margin-top:1px}
+  .barra .acoes{display:flex;gap:8px;flex:1;min-width:0}
+  .barra .acoes button{flex:1;min-width:0;border-radius:14px;font-weight:800;font-size:13.5px;
+         padding:12px 6px;color:#fff;cursor:pointer;white-space:nowrap;border:0;
+         display:inline-flex;align-items:center;justify-content:center;gap:6px}
+  @media (max-width:860px){ .barra{display:flex} .wfloat{display:none} body{padding-bottom:80px} }
   @keyframes pulse{0%,100%{box-shadow:0 14px 30px -8px rgba(37,211,102,.6)}50%{box-shadow:0 16px 40px -6px rgba(37,211,102,.95)}}
   .pulse{animation:pulse 2s ease-in-out infinite}
   @media (prefers-reduced-motion: reduce){ .floaty,.pulse{animation:none} }
@@ -84,7 +99,7 @@
     <div class="grid lg:grid-cols-2 gap-8 items-center">
       <div class="text-center lg:text-left text-white">
         <div class="inline-flex items-center gap-2 chip mb-4 text-white" style="background:var(--orange);box-shadow:0 8px 20px -8px var(--orange)">
-          <i data-lucide="sparkles" style="width:14px;height:14px"></i> Direto da fábrica, até o Dia das Crianças
+          <i data-lucide="sparkles" style="width:14px;height:14px"></i> Direto da fábrica · <span id="contagem">até o Dia das Crianças</span>
         </div>
         <h1 class="brand text-4xl sm:text-6xl font-extrabold leading-tight">O quintal vira o lugar<br class="hidden sm:block"> <span style="color:#ffcf5c">preferido da casa</span></h1>
         <p class="mt-4 text-lg sm:text-xl font-semibold text-white/95">Kit 3 em 1: balança dupla, escorregador e gangorra, tudo acoplado.</p>
@@ -138,7 +153,7 @@
         <p class="flex items-start gap-2"><i data-lucide="check" style="width:18px;height:18px;color:var(--green);flex:none"></i> <span><b>Escorregador</b> acoplado</span></p>
         <p class="flex items-start gap-2"><i data-lucide="check" style="width:18px;height:18px;color:var(--green);flex:none"></i> <span><b>Gangorra</b> no mesmo conjunto</span></p>
         <p class="flex items-start gap-2"><i data-lucide="check" style="width:18px;height:18px;color:var(--green);flex:none"></i> <span>Ferro reforçado, <b>aguenta adulto</b></span></p>
-        <p class="flex items-start gap-2"><i data-lucide="calendar-clock" style="width:18px;height:18px;color:var(--orange);flex:none"></i> <span><b>Condição válida até 12/10</b>, o Dia das Crianças</span></p>
+        <p class="flex items-start gap-2"><i data-lucide="calendar-clock" style="width:18px;height:18px;color:var(--orange);flex:none"></i> <span><b>Condição válida até 12/10</b> <span id="contagem2" style="color:var(--orange);font-weight:800"></span></span></p>
       </div>
     </div>
   </div>
@@ -299,6 +314,21 @@
 <button onclick="falarWhats('flutuante')" class="wfloat w-14 h-14 rounded-full grid place-items-center text-white floaty" style="background:var(--wpp)" title="WhatsApp" aria-label="WhatsApp">
   <svg viewBox="0 0 24 24" fill="currentColor" style="width:28px;height:28px"><path d="M.057 24l1.687-6.163a11.867 11.867 0 01-1.587-5.945C.16 5.335 5.495 0 12.05 0a11.817 11.817 0 018.413 3.488 11.824 11.824 0 013.48 8.414c-.003 6.557-5.338 11.892-11.893 11.892a11.9 11.9 0 01-5.688-1.448L.057 24zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884a9.86 9.86 0 001.51 5.26l-.999 3.648 3.978-1.042zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413z"/></svg>
 </button>
+
+<!-- BARRA FIXA (celular) -->
+<div class="barra" role="region" aria-label="Comprar ou falar no WhatsApp">
+  <div class="pq">
+    <b>R$ 2.890</b>
+    <small id="barra_prazo">até 12/10</small>
+  </div>
+  <div class="acoes">
+    <button onclick="falarWhats('barra')" style="background:var(--wpp)">
+      <svg viewBox="0 0 24 24" fill="currentColor" style="width:17px;height:17px;flex:none"><path d="M.057 24l1.687-6.163a11.867 11.867 0 01-1.587-5.945C.16 5.335 5.495 0 12.05 0a11.817 11.817 0 018.413 3.488 11.824 11.824 0 013.48 8.414c-.003 6.557-5.338 11.892-11.893 11.892a11.9 11.9 0 01-5.688-1.448L.057 24zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884a9.86 9.86 0 001.51 5.26l-.999 3.648 3.978-1.042z"/></svg>
+      Falar agora
+    </button>
+    <button onclick="abrirCompra()" style="background:var(--orange)">Calcular frete</button>
+  </div>
+</div>
 
 <!-- MODAL DE COMPRA -->
 <div id="modal" role="dialog" aria-modal="true" aria-label="Comprar Kit 3 em 1">
@@ -485,7 +515,7 @@ function enviarPedido(forma){
     `*Endereço:* ${endereco}${p.cep?' - CEP '+p.cep:''}`,
     p.km!=null?`*Distância da fábrica:* ${Math.round(p.km)} km`:null,
     '',
-    `_Origem: anuncio Kit 3 em 1 • Ref: ${comCodigo('HP-KIT3')}_`
+    `_Ref: ${comCodigo('HP-KIT3')}_`
   ].filter(l=>l!==null);
   window.open('https://wa.me/'+WPP+'?text='+encodeURIComponent(linhas.join('\n')),'_blank');
 }
@@ -508,12 +538,27 @@ const MENSAGENS={
   entrega:'Olá! Quero o *Kit 3 em 1* e gostaria de saber o *prazo e o frete* para a minha cidade.',
   rodape:'Olá! Quero garantir o *Kit 3 em 1* na condição do Dia das Crianças.',
   faq:'Olá! Tenho uma dúvida sobre o *Kit 3 em 1*.',
-  flutuante:'Olá! Vi o *Kit 3 em 1* e quero mais informações.'
+  flutuante:'Olá! Vi o *Kit 3 em 1* e quero mais informações.',
+  barra:'Olá! Quero o *Kit 3 em 1* por *R$ 2.890*. Ainda dá tempo?'
 };
+
+/* Contagem regressiva ate 12/10. A urgencia e real: a condicao expira na data.
+   Conta por dia de calendario, nao por hora, senao "faltam 4 dias" vira "3" a tarde. */
+(function contagem(){
+  const hoje=new Date(); hoje.setHours(0,0,0,0);
+  const dias=Math.round((new Date(2026,9,12)-hoje)/86400000);
+  const txt = dias>1 ? `faltam ${dias} dias` : dias===1 ? 'último dia' : dias===0 ? 'último dia' : 'condição encerrada';
+  const por=(id,v)=>{const e=document.getElementById(id); if(e) e.textContent=v;};
+  por('contagem', txt);
+  por('contagem2', dias>=0?'· '+txt:'');
+  por('barra_prazo', dias>=0?txt:'consulte');
+})();
 function falarWhats(origem){
   const ref=comCodigo('HP-KIT3');
   const base=MENSAGENS[origem]||MENSAGENS.rodape;
-  const msg=encodeURIComponent(base+'\n\n_Origem: anuncio Kit 3 em 1 • Ref: '+ref+'_');
+  // Ref curta de proposito: o texto longo de origem parecia rastreamento e o
+  // cliente apagava a mensagem antes de enviar. O produto ja vai no corpo.
+  const msg=encodeURIComponent(base+'\n\n_Ref: '+ref+'_');
   window.open('https://wa.me/'+WPP+'?text='+msg,'_blank');
 }
 
