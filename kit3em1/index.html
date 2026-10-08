@@ -18,8 +18,12 @@
 <meta property="og:url" content="https://hiperplay.com.br/kit3em1">
 <meta property="og:locale" content="pt_BR">
 <meta name="twitter:card" content="summary_large_image">
-<script src="https://cdn.tailwindcss.com"></script>
-<script src="https://unpkg.com/lucide@latest"></script>
+<!-- Sem cdn.tailwindcss.com de proposito. Aquele script e um compilador que roda
+     NO navegador e injeta o CSS depois de carregar. No WebView do Facebook, que e
+     por onde entra todo o trafego pago, ele nao entregava (a URL responde 302) e a
+     pagina aparecia sem layout nenhum: sem colunas, sem larguras, sem tamanhos de
+     fonte. O CSS das utilidades usadas aqui esta embutido no <style> abaixo. -->
+<script src="https://unpkg.com/lucide@latest" defer></script>
 <script src="/rastreio.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Baloo+2:wght@600;700;800&display=swap" rel="stylesheet">
@@ -60,6 +64,97 @@
   @media (prefers-reduced-motion: reduce){ .floaty,.pulse{animation:none} }
   /* Moldura branca com fio e sombra: destaca a foto do fundo branco da pagina
      e segue o mesmo raio dos cards da marca. */
+  /* ===== Utilidades (antes vinham do cdn.tailwindcss.com) =====
+     Escritas a mao, so as 140 classes que esta pagina usa. Nada de rede: o que
+     nao carrega nao quebra o layout. Ordem importa: vem depois dos componentes
+     acima, como o Tailwind fazia, entao .p-6 vence o padding do .card. */
+  *,::before,::after{box-sizing:border-box}
+  h1,h2,h3,h4,p,figure,blockquote{margin:0}
+  img,svg,video{display:block;max-width:100%}
+  button,input,select,textarea{font:inherit;color:inherit;margin:0}
+  button{cursor:pointer;border:0;background:none}
+  a{color:inherit;text-decoration:none}
+  summary{cursor:pointer}
+
+  /* Item de grid/flex nao encolhe abaixo do conteudo por padrao (min-width:auto).
+     A foto do hero tem 1200px intrinsecos e esticava a coluna, cortando o titulo
+     no celular. O overflow-x:hidden do body escondia o sintoma em vez de resolver. */
+  .grid>*,.flex>*{min-width:0}
+  .block{display:block} .flex{display:flex} .grid{display:grid}
+  .inline-flex{display:inline-flex} .hidden{display:none}
+  .flex-col{flex-direction:column} .flex-wrap{flex-wrap:wrap}
+  .items-center{align-items:center} .items-start{align-items:flex-start}
+  .justify-between{justify-content:space-between} .justify-center{justify-content:center}
+  .place-items-center{place-items:center}
+  .grid-cols-2{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .grid-cols-3{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .grid-cols-4{grid-template-columns:repeat(4,minmax(0,1fr))}
+  .col-span-2{grid-column:span 2/span 2} .col-span-3{grid-column:span 3/span 3}
+  .relative{position:relative} .sticky{position:sticky} .top-0{top:0}
+  .z-10{z-index:10} .z-50{z-index:50}
+  .overflow-hidden{overflow:hidden}
+  .mx-auto{margin-left:auto;margin-right:auto}
+  .max-w-3xl{max-width:48rem} .max-w-5xl{max-width:64rem} .w-full{width:100%}
+  .w-9{width:2.25rem} .w-12{width:3rem} .w-14{width:3.5rem}
+  .h-9{height:2.25rem} .h-12{height:3rem} .h-14{height:3.5rem} .h-16{height:4rem}
+
+  .gap-1{gap:.25rem} .gap-1\.5{gap:.375rem} .gap-2{gap:.5rem} .gap-3{gap:.75rem}
+  .gap-4{gap:1rem} .gap-6{gap:1.5rem} .gap-8{gap:2rem}
+  .space-y-2>*+*{margin-top:.5rem} .space-y-3>*+*{margin-top:.75rem}
+  .p-4{padding:1rem} .p-5{padding:1.25rem} .p-6{padding:1.5rem}
+  .px-3{padding-left:.75rem;padding-right:.75rem} .px-4{padding-left:1rem;padding-right:1rem}
+  .px-7{padding-left:1.75rem;padding-right:1.75rem} .px-8{padding-left:2rem;padding-right:2rem}
+  .py-2{padding-top:.5rem;padding-bottom:.5rem} .py-3\.5{padding-top:.875rem;padding-bottom:.875rem}
+  .py-4{padding-top:1rem;padding-bottom:1rem} .py-8{padding-top:2rem;padding-bottom:2rem}
+  .py-10{padding-top:2.5rem;padding-bottom:2.5rem}
+  .pt-10{padding-top:2.5rem} .pb-4{padding-bottom:1rem} .pb-24{padding-bottom:6rem}
+  .mb-1{margin-bottom:.25rem} .mb-3{margin-bottom:.75rem} .mb-4{margin-bottom:1rem} .mb-6{margin-bottom:1.5rem}
+  .mt-1{margin-top:.25rem} .mt-2{margin-top:.5rem} .mt-3{margin-top:.75rem} .mt-4{margin-top:1rem}
+  .mt-5{margin-top:1.25rem} .mt-6{margin-top:1.5rem} .mt-7{margin-top:1.75rem} .-mt-10{margin-top:-2.5rem}
+
+  .text-xs{font-size:.75rem;line-height:1rem} .text-sm{font-size:.875rem;line-height:1.25rem}
+  .text-base{font-size:1rem;line-height:1.5rem} .text-lg{font-size:1.125rem;line-height:1.75rem}
+  .text-xl{font-size:1.25rem;line-height:1.75rem} .text-2xl{font-size:1.5rem;line-height:2rem}
+  .text-4xl{font-size:2.25rem;line-height:2.5rem} .text-5xl{font-size:3rem;line-height:1}
+  .font-semibold{font-weight:600} .font-bold{font-weight:700} .font-extrabold{font-weight:800}
+  .leading-none{line-height:1} .leading-tight{line-height:1.25}
+  .text-center{text-align:center} .text-left{text-align:left}
+  .underline{text-decoration:underline} .underline-offset-4{text-underline-offset:4px}
+  .line-through{text-decoration:line-through}
+  .text-white{color:#fff} .text-white\/85{color:rgba(255,255,255,.85)}
+  .text-white\/90{color:rgba(255,255,255,.9)} .text-white\/95{color:rgba(255,255,255,.95)}
+  .text-\[var\(--muted\)\]{color:var(--muted)}
+
+  .rounded-full{border-radius:9999px} .rounded-2xl{border-radius:1rem}
+  .border-b{border-bottom-width:1px;border-bottom-style:solid}
+  .shadow-xl{box-shadow:0 20px 25px -5px rgba(22,50,74,.12),0 8px 10px -6px rgba(22,50,74,.1)}
+  .shadow-2xl{box-shadow:0 25px 50px -12px rgba(22,50,74,.25)}
+  .backdrop-blur{backdrop-filter:blur(8px)}
+  .transition{transition:all .18s ease}
+  .cursor-pointer{cursor:pointer} .select-none{user-select:none}
+  .hover\:underline:hover{text-decoration:underline}
+  .hover\:bg-white\/25:hover{background-color:rgba(255,255,255,.25)}
+  .hover\:-translate-y-1:hover{transform:translateY(-.25rem)}
+
+  @media (min-width:640px){
+    .sm\:block{display:block}
+    .sm\:col-span-1{grid-column:span 1/span 1}
+    .sm\:gap-4{gap:1rem}
+    .sm\:grid-cols-2{grid-template-columns:repeat(2,minmax(0,1fr))}
+    .sm\:grid-cols-3{grid-template-columns:repeat(3,minmax(0,1fr))}
+    .sm\:grid-cols-4{grid-template-columns:repeat(4,minmax(0,1fr))}
+    .sm\:p-8{padding:2rem}
+    .sm\:pt-14{padding-top:3.5rem}
+    .sm\:text-xl{font-size:1.25rem;line-height:1.75rem}
+    .sm\:text-3xl{font-size:1.875rem;line-height:2.25rem}
+    .sm\:text-6xl{font-size:3.75rem;line-height:1}
+  }
+  @media (min-width:1024px){
+    .lg\:grid-cols-2{grid-template-columns:repeat(2,minmax(0,1fr))}
+    .lg\:items-start{align-items:flex-start}
+    .lg\:text-left{text-align:left}
+  }
+
   .foto{border-radius:22px;object-fit:cover;width:100%;background:var(--ice);
         border:4px solid #fff;outline:1px solid var(--line);outline-offset:-5px;
         box-shadow:0 10px 24px -12px rgba(22,50,74,.45)}
